@@ -1,0 +1,8 @@
+excerpt_separator: ""
+pygments: true
+markdown: kramdown
+url: http://bchasnov.github.io
+title: matlab unmasked
+tagline: matlab tips and tricks
+description: My awesome new site
+paginate: 20
