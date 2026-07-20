@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UMA Campaign — Feedback Inbox</title>
+
+<!--
+  UMA Campaign — Feedback Inbox
+  -----------------------------
+  A phone-friendly one-tap triage deck for the autonomous UMA chemistry
+  campaign. Two lanes:
+    · BLOCKER cards  — open questions needing a judgment / priority call
+    · TRIAGE cards   — "interesting or mundane?" (from UMA_FLAWS.md + hypotheses)
+  Every card also has an optional free-text comment.
+  Fully self-contained: inline CSS + JS, no network, no external assets.
+  Responses persist in localStorage; "Export verdicts" emits a compact JSON.
+-->
+
+<style>
+  /* ---------- Theme tokens (light default, dark via media + [data-theme]) ---------- */
+  :root {
+    --bg:        #f4f5f7;
+    --panel:     #ffffff;
+    --panel-2:   #fbfbfc;
+    --ink:       #1a1d21;
+    --ink-soft:  #52585f;
+    --ink-faint: #868d95;
+    --line:      #e2e5e9;
+    --line-2:    #d3d7dd;
+    --accent:    #3563e0;
+    --accent-ink:#ffffff;
+    --blocker:   #b4531a;   /* warm — "I'm blind here" */
+    --blocker-bg:#fdf1e7;
+    --triage:    #3f7a52;   /* cool green — "taste" */
+    --triage-bg: #eef5f0;
+    --good:      #2f9e5f;
+    --bad:       #c0483f;
+    --shadow:    0 6px 24px rgba(20,25,35,.08), 0 1px 3px rgba(20,25,35,.06);
+    --radius:    18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #0f1216;
+      --panel:     #1a1f26;
+      --panel-2:   #151a20;
+      --ink:       #e9edf2;
+      --ink-soft:  #b0b8c1;
+      --ink-faint: #7c848e;
+      --line:      #2a313a;
+      --line-2:    #363f4a;
+      --accent:    #6b93ff;
+      --accent-ink:#0b0e12;
+      --blocker:   #e39a63;
+      --blocker-bg:#2a2019;
+      --triage:    #7fc99a;
+      --triage-bg: #18241d;
+      --good:      #5fd08b;
+      --bad:       #f0847b;
+      --shadow:    0 8px 28px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  /* Explicit theme override wins in both directions */
+  :root[data-theme="dark"] {
+    --bg:#0f1216; --panel:#1a1f26; --panel-2:#151a20; --ink:#e9edf2;
+    --ink-soft:#b0b8c1; --ink-faint:#7c848e; --line:#2a313a; --line-2:#363f4a;
+    --accent:#6b93ff; --accent-ink:#0b0e12; --blocker:#e39a63; --blocker-bg:#2a2019;
+    --triage:#7fc99a; --triage-bg:#18241d; --good:#5fd08b; --bad:#f0847b;
+    --shadow:0 8px 28px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f5f7; --panel:#ffffff; --panel-2:#fbfbfc; --ink:#1a1d21;
+    --ink-soft:#52585f; --ink-faint:#868d95; --line:#e2e5e9; --line-2:#d3d7dd;
+    --accent:#3563e0; --accent-ink:#ffffff; --blocker:#b4531a; --blocker-bg:#fdf1e7;
+    --triage:#3f7a52; --triage-bg:#eef5f0; --good:#2f9e5f; --bad:#c0483f;
+    --shadow:0 6px 24px rgba(20,25,35,.08), 0 1px 3px rgba(20,25,35,.06);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 16px 14px 40px;
+    color: var(--ink);
+    background: var(--bg);
+    min-height: 100%;
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;               /* body never scrolls horizontally */
+  }
+
+  /* ---------- Header ---------- */
+  header { margin-bottom: 12px; }
+  .kicker {
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+  }
+  h1 { font-size: 20px; margin: 2px 0 2px; letter-spacing: -.01em; }
+  .sub { color: var(--ink-soft); font-size: 13px; }
+
+  /* ---------- Intro (one-time popup) ---------- */
+  /* Reuses the .modal scrim; unlike the export sheet it centers a dialog card. */
+  .modal.center { align-items: center; padding: 18px; }
+  .introcard {
+    background: var(--panel); width: 100%; max-width: 460px; border-radius: 18px;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+    padding: 20px 18px 18px; max-height: 88vh; overflow-y: auto;
+  }
+  .introcard h3 { margin: 0 0 4px; font-size: 17px; letter-spacing: -.01em; }
+  .introcard .body { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); margin: 8px 0 16px; }
+  .introcard .body b { color: var(--ink); font-weight: 650; }
+  .introcard .start {
+    width: 100%; appearance: none; border: 1px solid var(--accent);
+    background: var(--accent); color: var(--accent-ink); border-radius: 12px;
+    padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; min-height: 50px;
+  }
+  .introcard .start:active { transform: scale(.98); }
+  /* Header "About" affordance to reopen the intro */
+  .abtn {
+    appearance: none; background: transparent; border: 1px solid var(--line-2);
+    color: var(--ink-soft); border-radius: 99px; padding: 3px 10px; font-size: 11px;
+    font-weight: 700; cursor: pointer; margin-left: 8px; vertical-align: middle;
+  }
+  .abtn:active { transform: scale(.96); }
+  .headrow { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+  /* Only animate for users who haven't asked to reduce motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .modal.center .introcard { animation: introIn .22s ease; }
+  }
+  @keyframes introIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .meter {
+    display: flex; align-items: center; gap: 10px; margin-top: 12px;
+  }
+  .bar {
+    flex: 1; height: 6px; border-radius: 99px; background: var(--line);
+    overflow: hidden;
+  }
+  .bar > i { display: block; height: 100%; width: 0%; background: var(--accent);
+    border-radius: 99px; transition: width .25s ease; }
+  .count { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-soft);
+    white-space: nowrap; font-weight: 600; }
+
+  /* ---------- Card deck ---------- */
+  .deck { position: relative; margin-top: 14px; min-height: 430px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 16px 16px;
+    touch-action: pan-y;             /* allow horizontal swipe capture */
+    user-select: none;
+  }
+  .card.swiping { transition: none; }
+  .card.anim { transition: transform .28s cubic-bezier(.22,.61,.36,1), opacity .28s; }
+
+  .lane {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 99px;
+  }
+  .lane.blocker { color: var(--blocker); background: var(--blocker-bg); }
+  .lane.triage  { color: var(--triage);  background: var(--triage-bg); }
+  .lane .dot { width: 6px; height: 6px; border-radius: 99px; background: currentColor; }
+  .idtag { float: right; font-size: 11px; color: var(--ink-faint); font-weight: 600;
+    font-variant-numeric: tabular-nums; margin-top: 4px; }
+
+  .card h2 { font-size: 17px; line-height: 1.3; margin: 12px 0 8px; letter-spacing: -.01em; }
+
+  .row { margin: 9px 0; }
+  .label {
+    font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; margin-bottom: 2px;
+  }
+  .val { font-size: 13.5px; color: var(--ink-soft); }
+  .val strong { color: var(--ink); font-weight: 650; }
+  .val .num { font-variant-numeric: tabular-nums; }
+
+  .conf {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px;
+    border-radius: 6px; margin-left: 4px; border: 1px solid var(--line-2);
+    color: var(--ink-soft);
+  }
+  .conf.high { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+  .conf.med  { color: var(--blocker); border-color: color-mix(in srgb, var(--blocker) 40%, transparent); }
+  .conf.low  { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+
+  .ask {
+    margin-top: 12px; padding: 11px 12px; border-radius: 12px;
+    background: var(--panel-2); border: 1px dashed var(--line-2);
+  }
+  .ask .label { color: var(--accent); }
+  .ask .qtext { font-size: 13.5px; color: var(--ink); font-weight: 550; }
+
+  /* ---------- Reaction buttons ---------- */
+  .reactions {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px;
+  }
+  .rbtn {
+    appearance: none; border: 1px solid var(--line-2); background: var(--panel-2);
+    color: var(--ink); border-radius: 12px; padding: 10px 4px; cursor: pointer;
+    font-size: 12px; font-weight: 600; min-height: 52px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    transition: transform .08s, border-color .12s, background .12s;
+  }
+  .rbtn .emoji { font-size: 19px; line-height: 1; }
+  .rbtn:active { transform: scale(.94); }
+  .rbtn.on {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, var(--panel));
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  /* ---------- Comment box (all cards) ---------- */
+  .commentwrap { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .commentwrap .label { margin-bottom: 0; }
+  .notein {
+    display: block; width: 100%; padding: 12px 13px; border-radius: 12px;
+    border: 1px solid var(--line-2); background: var(--panel); color: var(--ink);
+    font-family: inherit;                 /* readable sans comment box, not mono */
+    font-size: 16px; line-height: 1.45; min-height: 108px; resize: vertical;
+    /* override the bare `textarea { white-space: pre }` (export box) so the
+       comment + its placeholder wrap normally instead of running off one line */
+    white-space: pre-wrap; overflow-wrap: break-word; word-break: break-word;
+  }
+  /* Placeholders: strengthen so they're readable but still clearly fainter than
+     entered ink text. Uses existing tokens so it holds in light AND dark. */
+  .notein::placeholder,
+  textarea::placeholder {
+    color: var(--ink-faint); opacity: 1;   /* opacity:1 defeats Firefox's default fade */
+  }
+  input:focus { outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent); outline-offset: 1px; }
+
+  /* ---------- Nav ---------- */
+  .nav { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .nav button {
+    flex: 1; appearance: none; border: 1px solid var(--line-2); background: var(--panel);
+    color: var(--ink); border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 650;
+    cursor: pointer; min-height: 48px;
+  }
+  .nav button:active { transform: scale(.98); }
+  .nav button:disabled { opacity: .4; cursor: default; }
+  .nav .primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .hint { text-align: center; font-size: 11.5px; color: var(--ink-faint); margin-top: 8px; }
+
+  /* ---------- Taste model ---------- */
+  .taste {
+    margin-top: 18px; padding: 13px 14px; border-radius: 14px;
+    background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .taste .trow { display: flex; gap: 8px; margin-bottom: 8px; }
+  .pill {
+    flex: 1; text-align: center; padding: 8px 6px; border-radius: 10px; font-size: 12px;
+    font-weight: 700; background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .pill .big { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+  .pill.good .big { color: var(--good); }
+  .pill.bad .big  { color: var(--bad); }
+  .pill.neutral .big { color: var(--ink-soft); }
+  .learned { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+  .learned b { color: var(--ink); }
+
+  /* ---------- Export ---------- */
+  .actions { margin-top: 16px; display: flex; gap: 10px; }
+  .actions button {
+    flex: 1; appearance: none; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700;
+    cursor: pointer; min-height: 50px; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink);
+  }
+  .actions .exp { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .actions .reset { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line-2)); }
+  .actions button:active { transform: scale(.98); }
+
+  /* ---------- Export modal ---------- */
+  .modal {
+    position: fixed; inset: 0; background: rgba(10,12,16,.55); display: none;
+    align-items: flex-end; justify-content: center; padding: 0; z-index: 50;
+  }
+  .modal.show { display: flex; }
+  .sheet {
+    background: var(--panel); width: 100%; max-width: 560px; border-radius: 18px 18px 0 0;
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom)); box-shadow: var(--shadow);
+    max-height: 88vh; display: flex; flex-direction: column;
+  }
+  .sheet h3 { margin: 4px 0 2px; font-size: 16px; }
+  .sheet p { margin: 0 0 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .sheet .grab { width: 40px; height: 4px; border-radius: 99px; background: var(--line-2);
+    margin: 0 auto 10px; }
+  textarea {
+    width: 100%; flex: 1; min-height: 220px; resize: none; border-radius: 12px;
+    border: 1px solid var(--line-2); background: var(--panel-2); color: var(--ink);
+    font: 16px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;  /* >=16px readable, no iOS zoom */
+    padding: 12px; overflow: auto; white-space: pre;      /* wide content scrolls inside */
+  }
+  .sheet .mbtns { display: flex; gap: 8px; margin-top: 10px; }
+  .sheet .mbtns button { flex: 1; border-radius: 11px; padding: 12px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); min-height: 46px; }
+  .sheet .mbtns .copy { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 99px;
+    font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: all .2s; z-index: 60;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .done-badge { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700;
+    color: var(--good); }
+
+  /* Instrument-readout treatment: numbers/IDs are output from a compute engine,
+     so set them in mono with tabular figures — reads as a readout, not decoration. */
+  :root { --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Code", Consolas, monospace; }
+  .idtag, .count, .pill .big, .conf, .val .num {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .idtag { letter-spacing: .02em; }
+  .kicker { font-family: var(--mono); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">UMA mechanism campaign · triage inbox</div>
+    <div class="headrow">
+      <h1>UMA Campaign — Feedback Inbox</h1>
+      <button class="abtn" id="aboutBtn" type="button" aria-haspopup="dialog">ⓘ About</button>
+    </div>
+    <div class="sub">100 hypotheses run DFT-free. Your reactions steer the next round.</div>
+    <div class="meter">
+      <div class="bar"><i id="progFill"></i></div>
+      <div class="count" id="progText">1 / 16</div>
+    </div>
+  </header>
+
+  <!-- Card gets rendered here -->
+  <div class="deck">
+    <div class="card anim" id="card"></div>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">‹ Back</button>
+    <button id="nextBtn" class="primary">Next ›</button>
+  </div>
+  <div class="hint">Swipe left/right on the card, or use arrow keys. Taps alone submit — no typing needed.</div>
+
+  <!-- Taste model -->
+  <div class="taste">
+    <div class="trow">
+      <div class="pill good"><span class="big" id="cInt">0</span>interesting</div>
+      <div class="pill bad"><span class="big" id="cBor">0</span>boring</div>
+      <div class="pill neutral"><span class="big" id="cAns">0</span>answered</div>
+    </div>
+    <div class="learned" id="learned">Tap through the deck and I'll learn what you find worth chasing.</div>
+  </div>
+
+  <div class="actions">
+    <button class="exp" id="exportBtn">Export verdicts</button>
+    <button class="reset" id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<!-- Intro popup: shown once automatically, reopenable via the About button -->
+<div class="modal center" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="introcard">
+    <h3 id="introTitle">What is this?</h3>
+    <div class="body">
+      An autonomous agent ran about <b>100 chemistry hypotheses</b> using <b>UMA</b> — a fast
+      machine-learning interatomic potential — as an instrument to explore carbocation and
+      terpene reaction mechanisms. This inbox collects your quick reactions to steer the next
+      round: which findings are worth pursuing, and your judgment calls on the still-open
+      questions. Tap a reaction on each card; every card also has an optional comment box if
+      you want to add a note.
+    </div>
+    <button class="start" id="introStart" type="button">Start reviewing</button>
+  </div>
+</div>
+
+<!-- Export sheet -->
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3>Export verdicts</h3>
+    <p>Compact JSON of every reaction + comment. The agent ingests this next loop. Copy, or select-all the box below (plaintext fallback).</p>
+    <textarea id="exportText" readonly spellcheck="false"></textarea>
+    <div class="mbtns">
+      <button class="copy" id="copyBtn">Copy to clipboard</button>
+      <button id="closeBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   DATA — real content pulled from HYPOTHESES.md, UMA_FLAWS.md, DFT_REQUESTS.md
+   Two lanes: "blocker" (needs a number / fork decision) and "triage" (taste).
+   ========================================================================== */
+
+const CARDS = [
+  /* ----------------------------- BLOCKERS (6) ---------------------------- */
+  {
+    id: "B1", lane: "blocker", ref: "DFT P1 · α-terpinyl",
+    title: "α-Terpinyl cation: is the relocated global minimum real?",
+    why: "Central branch-point of monoterpene cyclization (terpene carbocation chemistry). Its lowest conformer is the reference for every downstream partitioning energy — a wrong reference biases everything.",
+    pred: "UMA's conformer search moved the g-min 2.30 kcal/mol below the one-shot guess (3 basins within 3.2). Ordering probably right, but this is exactly the 1–3 kcal/mol regime where UMA & xTB reorder.",
+    conf: "med", confText: "medium — inside the reorder band",
+    result: "3 basins spread over 3.2 kcal/mol; new g-min 2.30 below prior guess. No DFT arbiter.",
+    ask: "Gut-read: is UMA's re-ranked global minimum trustworthy enough to build on, or should everything downstream wait for an independent check? (👍 / ➡️ = trust it · ⏸ = hold · ❓ = check first.)",
+    commentHint: "Trust the UMA minimum, or hold downstream until it's checked?"
+  },
+  {
+    id: "B2", lane: "blocker", ref: "DFT P2 · C4H9⁺",
+    title: "tert-butyl → sec-butyl gap: which number do we cite?",
+    why: "This gap is the thermodynamic driving force we quote for hydride/methyl shifts. Ordering is robust (both put 3° lower); the magnitude is not.",
+    pred: "UMA says 13.2, GFN2-xTB says 15.7 kcal/mol (Δ = 2.5 — larger than chemical accuracy).",
+    conf: "med", confText: "medium — order solid, magnitude soft",
+    result: "13-atom isomers, trivial for DFT. No wavefunction reference yet.",
+    ask: "Judgment: is the UMA-vs-xTB spread (2.5 kcal/mol) close enough to cite as-is, or does this gap need an independent reference before we quote it? (👍 = fine · ❓ = needs a check.)",
+    commentHint: "Cite the ~13–16 kcal/mol as-is, or does it need a check?"
+  },
+  {
+    id: "B3", lane: "blocker", ref: "DFT P2 · protonation",
+    title: "Limonene → α-terpinyl protonation: we have NO trustworthy number",
+    why: "This ΔE spans different formula AND charge, so UMA vs xTB isn't directly comparable — the ~160 kcal/mol apparent gap is a reference artifact, not chemistry.",
+    pred: "Cyclization itself is downhill (H18/H100: open-chain ~12–13 kcal/mol above cyclic tertiary). But the absolute protonation energy is currently unanchored.",
+    conf: "low", confText: "low — reference cancels only isodesmically",
+    result: "No defensible protonation energy exists yet at any single level of theory.",
+    ask: "Is chasing an absolute protonation energy even the right move, or should we stick to isodesmic comparisons that cancel the proton reference? (➡️ = worth anchoring · ✋ = reframe · ⏸ = low priority.)",
+    commentHint: "Chase an absolute proton affinity, or keep it isodesmic?"
+  },
+  {
+    id: "B4", lane: "blocker", ref: "DFT P2 · Bredt",
+    title: "1-norbornyl bridgehead cation sits BELOW 2-norbornyl — by how much is UMA off?",
+    why: "Bredt's rule: a bridgehead can't planarize, so 1-norbornyl should lie well ABOVE the specially-stabilized 2-norbornyl. Solvolyzes ~10¹³× slower.",
+    pred: "UMA is qualitatively wrong: it puts 1-norbornyl 3.1 kcal/mol BELOW 2-norbornyl (intact cage, verified — not a rearrangement). Expect DFT to flip the sign hard.",
+    conf: "high", confText: "high — sign is wrong, internal check clean",
+    result: "1-norbornyl −3.1 kcal/mol vs 2-norbornyl; only mildly pyramidalized (angle-sum 348°).",
+    ask: "Gut-read: how badly does this wrong sign undercut trust in UMA for strained / bridgehead cations — a headline caveat, or a narrow footnote? (👍 = notable · 👎 = minor.)",
+    commentHint: "Headline caveat for strained cations, or a footnote?"
+  },
+  {
+    id: "B5", lane: "blocker", ref: "DFT P2 · vinyl",
+    title: "Bridged vinyl cation 52.8 kcal/mol below classical — real or UMA over-stabilization?",
+    why: "If UMA systematically over-rewards multi-center-bonded small cations, every non-classical energy in the campaign inherits that bias.",
+    pred: "Known classical/non-classical gap is only ~4–5 kcal/mol. UMA's 52.8 is ~10× too large. Ethyl-cation bridge (−3.08, correct) sits at the safe edge; the effect grows as cations shrink.",
+    conf: "high", confText: "high — cross-checked vs H9/H43 pattern",
+    result: "Bridged C2H3⁺ 52.8 below classical (exp gap ~4–5); halonium 49–67 above open (H23).",
+    ask: "Judgment: convincing enough to report as a genuine UMA over-stabilization flaw, or does it need an independent check first? (➡️ = report it · ❓ = check first.)",
+    commentHint: "Report as a real over-stabilization flaw, or check it first?"
+  },
+  {
+    id: "B6", lane: "blocker", ref: "DFT P2 · halonium",
+    title: "β-chloronium / bromonium: UMA puts BRIDGED above OPEN — anchimeric assistance says otherwise",
+    why: "Anchimeric assistance normally makes the bridged bromonium/chloronium the minimum. UMA's neutral dissociation is fine (H24), so this is specific to the charged bridged-vs-open comparison.",
+    pred: "For β-F, bridged-above-open is reasonable (F bridges poorly). For Cl/Br the ordering is surprising and likely wrong.",
+    conf: "med", confText: "medium — chemistry expectation vs UMA disagree",
+    result: "Symmetric bridged F/Cl/Br are genuine minima but 49–67 kcal/mol ABOVE open forms.",
+    ask: "Priority call: is the chloronium / bromonium ordering worth chasing now, or park it as low-priority? (➡️ = chase · ⏸ = park.)",
+    commentHint: "Chase the chloronium/bromonium ordering now, or park it?"
+  },
+
+  /* ------------------------------ TRIAGE (10) ---------------------------- */
+  {
+    id: "T1", lane: "triage", ref: "FLAW 1 · H14/H15",
+    title: "UMA misses antiaromatic Jahn–Teller distortion in cyclopentadienyl cation",
+    why: "A 4π antiaromatic singlet must distort to a bond-alternated C2v structure — the geometric hallmark of antiaromaticity.",
+    pred: "This is a genuine blind spot, not a saddle artifact — but a NARROW one (Cp⁺ only).",
+    conf: "high", confText: "high — symmetry-break re-relaxes to symmetric, 0 kcal gain",
+    result: "Relaxes to a perfect pentagon (1.419 Å, 1 mÅ spread). Yet neutral cyclobutadiene (H27) & cyclopropenyl anion (H30) ARE handled — blind spot confined to the triplet-GS/degenerate cation.",
+    ask: "Interesting flaw worth a writeup, or a mundane 'ground-state-DFT can't do multireference' footnote?",
+    commentHint: "Notable blind spot, or an expected multireference footnote?",
+    number: false
+  },
+  {
+    id: "T2", lane: "triage", ref: "FLAW 2 · H15/H16",
+    title: "Cyclopentadienyl cation: triplet −200 kcal/mol below singlet (unphysical)",
+    why: "Real spin-state gaps are a few kcal/mol; −200 is nonsense and flags where the surface has no signal.",
+    pred: "Pathology, not a usage error — spin channel is sane on O2 (+26.2) and CH2 (+18.5).",
+    conf: "high", confText: "high — calibrated against known spin gaps",
+    result: "E(triplet)−E(singlet) ≈ −200 kcal/mol, both vertical and relaxed.",
+    ask: "Is a −200 kcal/mol spin gap a striking cautionary result to surface, or just noise from a known-bad regime?",
+    commentHint: "Striking cautionary result, or just noise to ignore?",
+    number: false
+  },
+  {
+    id: "T3", lane: "triage", ref: "FLAW 7 · H77",
+    title: "Dichlorocarbene: UMA predicts triplet ground state (should be singlet)",
+    why: "Cl lone-pair π-donation into the empty carbene p makes CCl2 a singlet (ΔE_ST ≈ +20). UMA treats it like CH2 and misses the donation.",
+    pred: "Wrong sign — part of a broader spin-state unreliability pattern (with Cp⁺ and loose CH2).",
+    conf: "high", confText: "high — clean sign error",
+    result: "Triplet placed 15.7 kcal/mol BELOW singlet — wrong by ~35 kcal/mol.",
+    ask: "Chase the spin-state failure mode as a theme, or note it and move on?",
+    commentHint: "Chase spin-state failures as a theme, or note and move on?",
+    number: false
+  },
+  {
+    id: "T4", lane: "triage", ref: "FLAW 5 · H43/H51",
+    title: "Bare methyl cation over-stabilized ~60–80 kcal/mol (ranks above tert-butyl)",
+    why: "The rest of the hydride-affinity ladder (tBu>benzyl>2°>allyl>1°) is textbook-correct, so the CH3⁺ outlier is a real UMA error, not a reference artifact.",
+    pred: "Effect is specific to the electron-deficient CATION — methyl RADICAL (H51) ranks correctly least stable.",
+    conf: "high", confText: "high — internal-consistency-verified",
+    result: "UMA ranks CH3⁺ MOST stable of all cations; ~60–80 kcal/mol off where its own ladder places it.",
+    ask: "This 'small electron-deficient cations are over-rewarded' rule feels like the campaign's headline flaw — chase it, or already well-established?",
+    commentHint: "Headline flaw worth chasing, or already well-known?",
+    number: false
+  },
+  {
+    id: "T5", lane: "triage", ref: "FLAW 6 · H55",
+    title: "F₂ dissociation curve is non-monotonic and ~4× too strong",
+    why: "Charge-shift F–F bond; stretched F–F geometries are rare in training. Ethane C–C homolysis (H24) is perfectly monotonic, so this is F-specific.",
+    pred: "A training-coverage gap, not a generic dissociation failure.",
+    conf: "high", confText: "high — contrasted against clean C–C curve",
+    result: "Curve rises to +149 at 3.5 Å then DROPS to +127 at 4.5 Å; plateau ~4× the true 38 kcal/mol BDE; bond ~30 mÅ short.",
+    ask: "Worth a focused 'charge-shift bonds' probe (N–N, O–O, peroxides?), or a one-off curiosity?",
+    commentHint: "Worth a charge-shift bond probe, or a one-off curiosity?",
+    number: false
+  },
+  {
+    id: "T6", lane: "triage", ref: "FLAW 3 · H28",
+    title: "Bredt bridgehead cation under-destabilized (see also Blocker B4)",
+    why: "UMA under-penalizes a cationic center prevented from planarizing/delocalizing.",
+    pred: "Sign qualitatively wrong vs Bredt's rule — same over-stabilization family as the small non-classical cations.",
+    conf: "high", confText: "high",
+    result: "1-norbornyl 3.1 kcal/mol BELOW 2-norbornyl, intact cage.",
+    ask: "Is 'UMA under-penalizes geometrically-frustrated cations' a unifying thread with the CH3⁺/vinyl over-stabilization, or a separate effect?",
+    commentHint: "Same over-stabilization thread as CH3⁺/vinyl, or separate?",
+    number: false
+  },
+  {
+    id: "T7", lane: "triage", ref: "LIMITATION 4 · H6/H9",
+    title: "Single-start relaxation misses non-classical minima — even the ethyl cation",
+    why: "A methodological trap, not a model error. If one relaxation misses the global min of the SMALLEST carbocation, it will elsewhere.",
+    pred: "Multi-start / symmetry-broken seeding must be mandatory (justifies explore.py).",
+    conf: "high", confText: "high — reproduced across ethyl, halonium, Cp⁺, RAHB",
+    result: "RDKit-seeded ethyl cation gave classical (C–C 1.456 Å); bridged seed found the true H-bridged min, 3.08 kcal/mol LOWER.",
+    ask: "Is 'always multi-start' the durable methods lesson to lead with, or an obvious best-practice?",
+    commentHint: "Lead with 'always multi-start', or too obvious to feature?",
+    number: false
+  },
+  {
+    id: "T8", lane: "triage", ref: "H99 · confirmation",
+    title: "Cubane strain energy: 166 kcal/mol — essentially exact",
+    why: "Homodesmotic; a stringent test of strain accounting across 8 fused 4-membered rings.",
+    pred: "Expected UMA to be good on closed-shell strain; this nails it.",
+    conf: "high", confText: "high",
+    result: "166 kcal/mol vs experiment ~166 — essentially exact.",
+    ask: "Confirmations like this: keep surfacing them, or trust closed-shell strain and stop reporting the wins?",
+    commentHint: "Keep surfacing clean confirmations, or trust and skip them?",
+    number: false
+  },
+  {
+    id: "T9", lane: "triage", ref: "H72 · nuanced",
+    title: "RAHB flips acetylacetone to the enol — but only with multi-start",
+    why: "Resonance-assisted H-bond (chelated OH···O 1.60 Å) overturns the normal keto preference (contrast H53's plain keto/enol).",
+    pred: "A satisfying case where the methods lesson (multi-start) and the chemistry (RAHB) reinforce each other.",
+    conf: "high", confText: "high — chelated minimum found on second start",
+    result: "Enol 4.2 kcal/mol BELOW keto (multistart); single-start would have missed it.",
+    ask: "Interesting enough to build an 'intramolecular H-bond' mini-series around, or a solved side-quest?",
+    commentHint: "Build an H-bond mini-series, or a solved side-quest?",
+    number: false
+  },
+  {
+    id: "T10", lane: "triage", ref: "H5 · confirmation",
+    title: "β-silicon effect: C–Si bridges, +30.7 kcal/mol stronger σ-donor than β-H",
+    why: "Direct geometric fingerprint of hyperconjugation — the C–Si stretches +403 mÅ and the silicon bridges.",
+    pred: "A clean, quantitative hyperconjugation result squarely in Judy Wu territory.",
+    conf: "high", confText: "high",
+    result: "C–Si +403 mÅ (Si-bridged); β-Si stabilizes +30.7 kcal/mol over β-H.",
+    ask: "Extend the σ-donor ladder (β-Ge/Sn, β-C–C, β-C–H gradient) as a Wu-facing thread, or is the β-Si point made?",
+    commentHint: "Extend the σ-donor ladder, or is the β-Si point made?",
+    number: false
+  }
+];
+
+/* ============================================================================
+   STATE — persisted in localStorage
+   ========================================================================== */
+const STORE_KEY = "will_inbox_v1";
+let state = loadState();
+let idx = state.lastIdx || 0;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* ignore corrupt store */ }
+  return { responses: {}, lastIdx: 0 };
+}
+function saveState() {
+  state.lastIdx = idx;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function respFor(id) {
+  if (!state.responses[id]) state.responses[id] = { reaction: null, note: null };
+  return state.responses[id];
+}
+
+// Escape user text before injecting it back into innerHTML (comment restore).
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+}
+
+/* ============================================================================
+   REACTIONS config
+   ========================================================================== */
+const REACTIONS = [
+  { key: "interesting",  emoji: "👍", label: "interesting" },
+  { key: "boring",       emoji: "👎", label: "boring" },
+  { key: "verify",       emoji: "❓", label: "verify" },
+  { key: "chase",        emoji: "➡️", label: "chase" },
+  { key: "wrong-struct", emoji: "✋", label: "wrong struct" },
+  { key: "hold",         emoji: "⏸", label: "hold" }
+];
+
+/* ============================================================================
+   RENDER
+   ========================================================================== */
+const cardEl   = document.getElementById("card");
+const progFill = document.getElementById("progFill");
+const progText = document.getElementById("progText");
+
+function render() {
+  const c = CARDS[idx];
+  const r = respFor(c.id);
+  const laneClass = c.lane === "blocker" ? "blocker" : "triage";
+  const laneName  = c.lane === "blocker" ? "Blocker" : "Triage";
+  const answered  = !!r.reaction;
+
+  // Build reaction buttons
+  const rbtns = REACTIONS.map(rx => `
+    <button class="rbtn ${r.reaction === rx.key ? "on" : ""}" data-react="${rx.key}" aria-pressed="${r.reaction === rx.key}">
+      <span class="emoji">${rx.emoji}</span>${rx.label}
+    </button>`).join("");
+
+  // Optional free-text comment — on EVERY card (blocker and triage).
+  // Never required; taps alone submit. Value is HTML-escaped so stray
+  // characters (e.g. "</textarea>") can't break the markup on re-render.
+  // Per-card placeholder tuned to this card's question; generic fallback.
+  const commentHint = c.commentHint
+    || "Anything — a priority, why it matters, or just 'chase' / 'skip'.";
+  const commentBlock = `
+    <div class="commentwrap">
+      <div class="label">Comment (optional)</div>
+      <textarea id="noteIn" class="notein" maxlength="400" rows="3"
+                placeholder="${escapeHtml(commentHint)}"
+                aria-label="comment">${escapeHtml(r.note ?? "")}</textarea>
+    </div>`;
+
+  cardEl.innerHTML = `
+    <span class="lane ${laneClass}"><span class="dot"></span>${laneName}${answered ? '<span class="done-badge">✓ logged</span>' : ""}</span>
+    <span class="idtag">${c.ref}</span>
+    <h2>${c.title}</h2>
+
+    <div class="row">
+      <div class="label">Why it matters</div>
+      <div class="val">${c.why}</div>
+    </div>
+    <div class="row">
+      <div class="label">My prediction</div>
+      <div class="val">${c.pred}<span class="conf ${c.conf}">${c.confText}</span></div>
+    </div>
+    <div class="row">
+      <div class="label">Observed</div>
+      <div class="val">${c.result}</div>
+    </div>
+
+    <div class="ask">
+      <div class="label">${c.lane === "blocker" ? "I'm blind here — the ask" : "The ask"}</div>
+      <div class="qtext">${c.ask}</div>
+    </div>
+
+    <div class="reactions">${rbtns}</div>
+    ${commentBlock}
+  `;
+
+  // Wire reaction buttons
+  cardEl.querySelectorAll("[data-react]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const k = btn.getAttribute("data-react");
+      const rr = respFor(c.id);
+      rr.reaction = (rr.reaction === k) ? null : k;   // tap again to clear
+      saveState();
+      render();
+      updateTaste();
+    });
+  });
+
+  // Wire the comment box (persist on input; never blocks submit)
+  const noteIn = document.getElementById("noteIn");
+  if (noteIn) noteIn.addEventListener("input", () => {
+    const rr = respFor(c.id);
+    rr.note = noteIn.value.trim() || null;
+    saveState();
+  });
+
+  // Progress
+  progText.textContent = `${idx + 1} / ${CARDS.length}`;
+  progFill.style.width = `${Math.round(((idx + 1) / CARDS.length) * 100)}%`;
+  document.getElementById("prevBtn").disabled = idx === 0;
+  document.getElementById("nextBtn").disabled = idx === CARDS.length - 1;
+  document.getElementById("nextBtn").textContent = idx === CARDS.length - 1 ? "End" : "Next ›";
+
+  updateTaste();
+}
+
+/* ============================================================================
+   TASTE MODEL — static heuristic, illustrative
+   ========================================================================== */
+function updateTaste() {
+  let interesting = 0, boring = 0, answered = 0;
+  let intFlaws = 0, intConfirm = 0, borConfirm = 0;
+
+  for (const c of CARDS) {
+    const r = state.responses[c.id];
+    if (!r || !r.reaction) continue;
+    answered++;
+    // A card is a "flaw/finding" if it's a blocker or a flaw-derived triage card.
+    const isConfirmation = /confirmation/i.test(c.ref);
+    if (r.reaction === "interesting" || r.reaction === "chase") {
+      interesting++;
+      if (isConfirmation) intConfirm++; else intFlaws++;
+    }
+    if (r.reaction === "boring") {
+      boring++;
+      if (isConfirmation) borConfirm++;
+    }
+  }
+
+  document.getElementById("cInt").textContent = interesting;
+  document.getElementById("cBor").textContent = boring;
+  document.getElementById("cAns").textContent = answered;
+
+  const learned = document.getElementById("learned");
+  if (answered === 0) {
+    learned.innerHTML = "Tap through the deck and I'll learn what you find worth chasing.";
+  } else if (intFlaws > intConfirm && (borConfirm > 0 || intConfirm === 0) && intFlaws >= 2) {
+    learned.innerHTML = "<b>Learned:</b> you find flaws more interesting than confirmations — I'll surface fewer confirmations next digest and lead with the anomalies.";
+  } else if (intConfirm >= intFlaws && intConfirm >= 2) {
+    learned.innerHTML = "<b>Learned:</b> you value confirmations too — I'll keep reporting clean wins alongside the flaws.";
+  } else {
+    learned.innerHTML = `<b>Learned:</b> ${interesting} chase / ${boring} boring so far — a few more taps and I'll tune the next digest to your taste.`;
+  }
+}
+
+/* ============================================================================
+   NAVIGATION — buttons, keyboard, swipe
+   ========================================================================== */
+function go(delta, animate) {
+  const next = idx + delta;
+  if (next < 0 || next >= CARDS.length) return;
+  if (animate) {
+    // slide the outgoing card
+    cardEl.classList.add("anim");
+    cardEl.style.transform = `translateX(${delta > 0 ? -40 : 40}px)`;
+    cardEl.style.opacity = "0";
+    setTimeout(() => {
+      idx = next; saveState(); render();
+      cardEl.style.transform = `translateX(${delta > 0 ? 40 : -40}px)`;
+      requestAnimationFrame(() => {
+        cardEl.style.transform = "translateX(0)";
+        cardEl.style.opacity = "1";
+      });
+    }, 150);
+  } else {
+    idx = next; saveState(); render();
+  }
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => go(-1, true));
+document.getElementById("nextBtn").addEventListener("click", () => go(1, true));
+
+document.addEventListener("keydown", e => {
+  // Don't navigate cards while the intro popup is open
+  if (document.getElementById("introModal").classList.contains("show")) return;
+  if (e.key === "ArrowLeft")  go(-1, true);
+  if (e.key === "ArrowRight") go(1, true);
+});
+
+/* --- touch swipe (horizontal); ignore when starting on an input --- */
+let touchX = 0, touchY = 0, swiping = false;
+cardEl.addEventListener("touchstart", e => {
+  if (e.target.closest("input, textarea")) return;   // let the comment box work normally
+  touchX = e.touches[0].clientX;
+  touchY = e.touches[0].clientY;
+  swiping = true;
+  cardEl.classList.remove("anim");
+}, { passive: true });
+
+cardEl.addEventListener("touchmove", e => {
+  if (!swiping) return;
+  const dx = e.touches[0].clientX - touchX;
+  const dy = e.touches[0].clientY - touchY;
+  if (Math.abs(dx) > Math.abs(dy)) {          // horizontal intent
+    cardEl.style.transform = `translateX(${dx * 0.6}px)`;
+    cardEl.style.opacity = String(1 - Math.min(Math.abs(dx) / 400, 0.4));
+  }
+}, { passive: true });
+
+cardEl.addEventListener("touchend", e => {
+  if (!swiping) return;
+  swiping = false;
+  const dx = e.changedTouches[0].clientX - touchX;
+  cardEl.classList.add("anim");
+  if (dx < -60 && idx < CARDS.length - 1) {   // swipe left → next
+    go(1, true);
+  } else if (dx > 60 && idx > 0) {            // swipe right → back
+    go(-1, true);
+  } else {                                    // snap back
+    cardEl.style.transform = "translateX(0)";
+    cardEl.style.opacity = "1";
+  }
+}, { passive: true });
+
+/* ============================================================================
+   EXPORT — compact JSON, clipboard, plaintext fallback
+   ========================================================================== */
+const modal = document.getElementById("modal");
+const exportText = document.getElementById("exportText");
+
+function buildExport() {
+  const verdicts = CARDS.map(c => {
+    const r = state.responses[c.id] || {};
+    // Every card carries a reaction + an optional free-text comment now.
+    return {
+      id: c.id,
+      lane: c.lane,
+      title: c.title,
+      reaction: r.reaction || null,
+      comment: (r.note || null)
+    };
+  });
+  const answered = verdicts.filter(v => v.reaction).length;
+  return {
+    campaign: "UMA mechanism campaign (H1–H100)",
+    exported_at: new Date().toISOString(),
+    summary: {
+      total: CARDS.length,
+      answered,
+      interesting: verdicts.filter(v => ["interesting","chase"].includes(v.reaction)).length,
+      boring: verdicts.filter(v => v.reaction === "boring").length,
+      verify: verdicts.filter(v => v.reaction === "verify").length,
+      hold: verdicts.filter(v => v.reaction === "hold").length,
+      wrong_structure: verdicts.filter(v => v.reaction === "wrong-struct").length
+    },
+    verdicts
+  };
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  exportText.value = JSON.stringify(buildExport(), null, 2);
+  modal.classList.add("show");
+});
+document.getElementById("closeBtn").addEventListener("click", () => modal.classList.remove("show"));
+modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  const txt = exportText.value;
+  let ok = false;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(txt);
+      ok = true;
+    }
+  } catch (e) { ok = false; }
+  if (!ok) {
+    // plaintext fallback: select the textarea for manual copy
+    exportText.focus();
+    exportText.select();
+    try { ok = document.execCommand("copy"); } catch (e) {}
+  }
+  toast(ok ? "Copied to clipboard" : "Select the text and copy manually");
+});
+
+/* ============================================================================
+   RESET + toast
+   ========================================================================== */
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Clear all your reactions and comments?")) return;
+  state = { responses: {}, lastIdx: 0 };
+  idx = 0;
+  saveState();
+  render();
+  toast("Cleared");
+});
+
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1900);
+}
+
+/* ============================================================================
+   INTRO POPUP — greets once, then remembers (localStorage), reopenable
+   ========================================================================== */
+const INTRO_SEEN_KEY = "uma_inbox_intro_seen_v1";
+const introModal = document.getElementById("introModal");
+const introStart = document.getElementById("introStart");
+const aboutBtn   = document.getElementById("aboutBtn");
+let introPrevFocus = null;
+
+function openIntro() {
+  introPrevFocus = document.activeElement;
+  introModal.classList.add("show");
+  introStart.focus();                       // sane focus on the dismiss button
+}
+function closeIntro(markSeen) {
+  introModal.classList.remove("show");
+  if (markSeen) {
+    try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
+  }
+  // Return focus somewhere sensible for keyboard users
+  if (introPrevFocus && introPrevFocus.focus) introPrevFocus.focus();
+  else if (aboutBtn) aboutBtn.focus();
+}
+
+introStart.addEventListener("click", () => closeIntro(true));
+aboutBtn.addEventListener("click", openIntro);
+// Click on the dimmed scrim (outside the card) dismisses too
+introModal.addEventListener("click", e => { if (e.target === introModal) closeIntro(true); });
+// Keyboard-dismissible
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && introModal.classList.contains("show")) closeIntro(true);
+});
+
+// Show automatically on first visit only
+let introSeen = false;
+try { introSeen = localStorage.getItem(INTRO_SEEN_KEY) === "1"; } catch (e) {}
+
+/* ============================================================================
+   BOOT
+   ========================================================================== */
+if (idx >= CARDS.length) idx = 0;
+render();
+if (!introSeen) openIntro();
+</script>
+</body>
+</html>
