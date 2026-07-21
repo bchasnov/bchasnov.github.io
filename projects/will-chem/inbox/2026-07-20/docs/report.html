@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results report — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  em{color:inherit;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement;
+    var cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="uma-report">UMA report</h1>
+<p>Carbocation &amp; terpene chemistry relevant to an experimental collaborator.</p>
+<ul>
+<li><strong>Model:</strong> <code>uma-s-1p1</code> (task <code>omol</code>)  </li>
+<li><strong>Device:</strong> cpu  </li>
+<li><strong>Force convergence:</strong> fmax = 0.05 eV/Å  </li>
+<li><strong>Systems:</strong> 7</li>
+</ul>
+<p>Energies are potential energies in eV (ASE convention). Relative energies within a group are in kcal/mol, referenced to the lowest-energy member (see each group's note for interpretation).</p>
+<h2 id="part-1-c4h9-carbocation-stability-ladder">Part 1 — C4H9+ carbocation stability ladder</h2>
+<p>All four are C4H9+ isomers, so their relative energies are a clean stability ranking. Expected ordering: tertiary &gt; secondary &gt; primary. This ordering is the thermodynamic driving force behind hydride/methyl shifts and is why terpene cyclization cascades funnel through tertiary/allylic cations.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tert-butyl cation (tertiary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-4285.7755</td>
+<td>0.00</td>
+<td>0.024</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>isobutyl cation (primary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-4285.2361</td>
+<td>12.44</td>
+<td>0.033</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>n-butyl cation (primary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-4285.2199</td>
+<td>12.81</td>
+<td>0.047</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>sec-butyl cation (secondary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-4285.2023</td>
+<td>13.22</td>
+<td>0.044</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Most stable C4H9+ isomer:</strong> tert-butyl cation (tertiary) (reference, ΔE = 0). Textbook expectation: the tertiary <em>tert</em>-butyl cation. Note the primary n-butyl cation typically will not hold a minimum — it collapses via hydride shift, exactly the rearrangement chemistry of interest.</p>
+<h2 id="part-2-monoterpene-cyclization-branch-point">Part 2 — Monoterpene cyclization branch-point</h2>
+<p>Limonene (neutral C10H16) and the alpha-terpinyl cation (C10H17+) it maps to on protonation. Because the cation = limonene + H+, the ΔE here is the <strong>protonation energy</strong> (bare-proton reference): how favourable it is to protonate the ring alkene to the tertiary cation that opens the monoterpene cyclization cascade. It is NOT an isomer-stability comparison.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alpha-terpinyl cation (C10H17+)</td>
+<td>C10H17</td>
+<td>+1</td>
+<td>-10637.7814</td>
+<td>0.00</td>
+<td>0.041</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>(R)-limonene (neutral monoterpene)</td>
+<td>C10H16</td>
+<td>+0</td>
+<td>-10629.1060</td>
+<td>200.06</td>
+<td>0.041</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="part-3-non-classical-sigma-bridged-carbocation">Part 3 — Non-classical (sigma-bridged) carbocation</h2>
+<p>The 2-norbornyl cation, archetype of sigma-participation / Wagner-Meerwein behaviour that pervades bornyl/camphene terpene rearrangements. Reported as a single relaxed structure/energy.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-norbornyl cation (non-classical archetype)</td>
+<td>C7H11</td>
+<td>+1</td>
+<td>-7428.4932</td>
+<td>0.00</td>
+<td>0.046</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><em>Structures relaxed from RDKit ETKDG guesses. Relaxed geometries are in <code>results/*.xyz</code>.</em></p>
+<h1 id="gfn2-xtb-report">GFN2-xTB report</h1>
+<p>Carbocation &amp; terpene chemistry relevant to an experimental collaborator.</p>
+<ul>
+<li><strong>Model:</strong> <code>GFN2-xTB (tblite)</code> (task <code>reference</code>)  </li>
+<li><strong>Device:</strong> cpu  </li>
+<li><strong>Force convergence:</strong> fmax = 0.05 eV/Å  </li>
+<li><strong>Systems:</strong> 7</li>
+</ul>
+<p>Energies are potential energies in eV (ASE convention). Relative energies within a group are in kcal/mol, referenced to the lowest-energy member (see each group's note for interpretation).</p>
+<h2 id="part-1-c4h9-carbocation-stability-ladder_1">Part 1 — C4H9+ carbocation stability ladder</h2>
+<p>All four are C4H9+ isomers, so their relative energies are a clean stability ranking. Expected ordering: tertiary &gt; secondary &gt; primary. This ordering is the thermodynamic driving force behind hydride/methyl shifts and is why terpene cyclization cascades funnel through tertiary/allylic cations.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tert-butyl cation (tertiary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-345.0411</td>
+<td>0.00</td>
+<td>0.045</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>sec-butyl cation (secondary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-344.3609</td>
+<td>15.69</td>
+<td>0.041</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>isobutyl cation (primary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-344.3410</td>
+<td>16.14</td>
+<td>0.050</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>n-butyl cation (primary)</td>
+<td>C4H9</td>
+<td>+1</td>
+<td>-343.3888</td>
+<td>38.10</td>
+<td>0.358</td>
+<td>no</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Most stable C4H9+ isomer:</strong> tert-butyl cation (tertiary) (reference, ΔE = 0). Textbook expectation: the tertiary <em>tert</em>-butyl cation. Note the primary n-butyl cation typically will not hold a minimum — it collapses via hydride shift, exactly the rearrangement chemistry of interest.</p>
+<h2 id="part-2-monoterpene-cyclization-branch-point_1">Part 2 — Monoterpene cyclization branch-point</h2>
+<p>Limonene (neutral C10H16) and the alpha-terpinyl cation (C10H17+) it maps to on protonation. Because the cation = limonene + H+, the ΔE here is the <strong>protonation energy</strong> (bare-proton reference): how favourable it is to protonate the ring alkene to the tertiary cation that opens the monoterpene cyclization cascade. It is NOT an isomer-stability comparison.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alpha-terpinyl cation (C10H17+)</td>
+<td>C10H17</td>
+<td>+1</td>
+<td>-805.7911</td>
+<td>0.00</td>
+<td>0.044</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>(R)-limonene (neutral monoterpene)</td>
+<td>C10H16</td>
+<td>+0</td>
+<td>-803.9326</td>
+<td>42.86</td>
+<td>0.042</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="part-3-non-classical-sigma-bridged-carbocation_1">Part 3 — Non-classical (sigma-bridged) carbocation</h2>
+<p>The 2-norbornyl cation, archetype of sigma-participation / Wagner-Meerwein behaviour that pervades bornyl/camphene terpene rearrangements. Reported as a single relaxed structure/energy.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Formula</th>
+<th>Charge</th>
+<th>E_final (eV)</th>
+<th>ΔE (kcal/mol)</th>
+<th>fmax</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-norbornyl cation (non-classical archetype)</td>
+<td>C7H11</td>
+<td>+1</td>
+<td>-547.0953</td>
+<td>0.00</td>
+<td>0.036</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><em>Structures relaxed from RDKit ETKDG guesses. Relaxed geometries are in <code>results/*.xyz</code>.</em></p>
+<h2 id="method-comparison-relative-energies-kcalmol">Method comparison — relative energies (kcal/mol)</h2>
+<p><strong>Read this carefully.</strong> Only <strong>Part 1</strong> is a valid cross-method comparison: all four C4H9+ species share formula and charge, so each method's absolute-energy reference cancels and the ΔE ladder is apples-to-apples. <strong>Part 2 is not directly comparable across methods</strong> — its ΔE is a bare-proton protonation energy between species of different formula <em>and</em> charge, so it depends on each method's absolute energy zero (this is why UMA and xTB differ by ~160 kcal/mol here; it is a reference-scale artifact, not a chemistry disagreement). <strong>Part 3</strong> has a single member, so its column is trivially 0.00. To compare UMA and xTB on protonation, use a consistent proton reference within each method rather than the numbers below.</p>
+<h3 id="part-1-c4h9-carbocation-stability-ladder_2">Part 1 — C4H9+ carbocation stability ladder</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>UMA</th>
+<th>GFN2-xTB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tert-butyl cation (tertiary)</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>sec-butyl cation (secondary)</td>
+<td>13.22</td>
+<td>15.69</td>
+</tr>
+<tr>
+<td>isobutyl cation (primary)</td>
+<td>12.44</td>
+<td>16.14</td>
+</tr>
+<tr>
+<td>n-butyl cation (primary)</td>
+<td>12.81</td>
+<td>38.10</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="part-2-monoterpene-cyclization-branch-point_2">Part 2 — Monoterpene cyclization branch-point</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>UMA</th>
+<th>GFN2-xTB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(R)-limonene (neutral monoterpene)</td>
+<td>200.06</td>
+<td>42.86</td>
+</tr>
+<tr>
+<td>alpha-terpinyl cation (C10H17+)</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="part-3-non-classical-sigma-bridged-carbocation_2">Part 3 — Non-classical (sigma-bridged) carbocation</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>UMA</th>
+<th>GFN2-xTB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-norbornyl cation (non-classical archetype)</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+<p class="src">Rendered from will-chem <code>report</code> @ <code>858fbe7</code> · snapshot 2026-07-20</p>
+</main>
+</body>
+</html>
