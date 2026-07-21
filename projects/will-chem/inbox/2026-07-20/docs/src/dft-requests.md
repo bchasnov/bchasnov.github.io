@@ -19,7 +19,7 @@ correct?
 
 **Why fast methods can't settle it.** The basins are within ~2–3 kcal/mol — the
 regime where UMA and GFN2-xTB routinely reorder conformers. This cation is the
-central branch-point of monoterpene cyclization (the experimental group territory), so
+central branch-point of monoterpene cyclization (the experimental collaborator's territory), so
 its lowest conformer sets the reference for every downstream partitioning
 energy. A wrong reference conformer biases everything.
 

@@ -1,4 +1,4 @@
-# Hypothesis ledger — UMA mechanism campaign
+# Hypothesis ledger
 
 A wrinkle-driven, DFT-free investigation using UMA (`uma-s-1p1`) as the
 exploration engine. Chemistry framed around the carbocation / terpene (Wagner–Meerwein rearrangement) × **the aromaticity group** (aromaticity,

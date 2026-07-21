@@ -18,9 +18,9 @@ Unlisted project pages. Nothing here is linked from the homepage — share URLs 
 
 | Project | Page | Latest snapshot |
 |---|---|---|
-| [will-chem](https://github.com/bchasnov/will-chem) | `will-chem/inbox/` — UMA campaign feedback inbox (bundles rendered reference docs under `.../<date>/docs/`) | 2026-07-20 |
+| [will-chem](https://github.com/bchasnov/will-chem) | `will-chem/inbox/` — will-chem feedback inbox (bundles rendered reference docs under `.../<date>/docs/`) | 2026-07-20 |
 
 Reference docs are rendered from the will-chem repo's markdown to styled HTML at
-import time (see `scratchpad/render_docs.py` in the session, or re-derive: export
-the `.md` sources, run through python-markdown with the `extra` extension, wrap in
-the inbox theme). Raw `.md` sources are kept alongside under `docs/src/`.
+import time: export the `.md` sources, run them through python-markdown with the
+`extra` extension, and wrap the output in the inbox theme. Raw `.md` sources are
+kept alongside under `docs/src/`.
