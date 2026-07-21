@@ -94,12 +94,11 @@
 <article class="doc">
 <h1 id="hypothesis-ledger-uma-mechanism-campaign">Hypothesis ledger — UMA mechanism campaign</h1>
 <p>A wrinkle-driven, DFT-free investigation using UMA (<code>uma-s-1p1</code>) as the
-exploration engine. Chemistry framed around the DeSnoo (carbocation / terpene
-Wagner–Meerwein rearrangements, Tantillo) × <strong>Judy Wu</strong> (aromaticity,
+exploration engine. Chemistry framed around the carbocation / terpene (Wagner–Meerwein rearrangement) × <strong>the aromaticity group</strong> (aromaticity,
 hyperconjugation, σ-delocalization, stabilization of reactive intermediates)
 intersection. Each hypothesis is developed one at a time, tested with UMA, and
 the <em>wrinkle</em> it exposes seeds the next one. Narrative + feelings live in
-<code>DIARY.md</code>; runnable experiments in <code>uma_desnoo/mechanisms.py</code>.</p>
+<code>DIARY.md</code>; runnable experiments in <code>uma_core/mechanisms.py</code>.</p>
 <p>Ground rules: no DFT (no compute yet — see <code>DFT_REQUESTS.md</code>); energies use
 isodesmic/isomeric comparisons so absolute references cancel; UMA validated as
 an instrument in <code>stress_test.py</code> (6/6).</p>
@@ -741,13 +740,13 @@ multi-start is mandatory. Next (H11): multi-start the C4H7⁺ surface
 <ul>
 <li><strong>Continuum:</strong> ethyl cation H-bridge; β-C–C vs β-C–H vs β-C–Si bridging ladder;
   cyclopropylcarbinyl σ-participation (bicyclobutonium); phenonium (aryl) bridge.</li>
-<li><strong>Rearrangement stereoelectronics (DeSnoo):</strong> antiperiplanar bond migrates;
+<li><strong>Rearrangement stereoelectronics (the experimental collaborator):</strong> antiperiplanar bond migrates;
   1,2-H vs 1,2-CH3 shift preference; endo/exo migration in norbornyl; ring-size
   selectivity; α-terpinyl → pinyl/bornyl/terpinen-4-yl partitioning energetics.</li>
-<li><strong>Aromaticity (Wu):</strong> cyclopropenyl (2π aromatic) vs allyl; tropylium;
+<li><strong>Aromaticity (the aromaticity group):</strong> cyclopropenyl (2π aromatic) vs allyl; tropylium;
   antiaromatic cyclopentadienyl cation destabilization; homoaromaticity
   (homotropylium); arenium (protonated benzene); norbornadienyl (π-participation).</li>
-<li><strong>Heteroatom/substituent (Wu):</strong> oxocarbenium &amp; anomeric effect; acylium;
+<li><strong>Heteroatom/substituent (the aromaticity group):</strong> oxocarbenium &amp; anomeric effect; acylium;
   fluorine hyperconjugation vs induction; H-bond stabilization of cations.</li>
 </ul>
 <hr />
@@ -783,7 +782,7 @@ H-bonds (water dimer, bifluoride, RAHB), dispersion, and Hessian/frequencies.</p
 chelated / degenerate cases (ethyl cation H6→H9, halonium H21→H23, cyclopentadienyl
 H14→H15, acetylacetone RAHB H72). <strong>Multi-start / symmetry-broken seeding is
 mandatory</strong> — the core justification for <code>explore.py</code>.</p>
-<p><em>For Will, heading to Judy Wu's group: UMA is an excellent fast engine for
+<p><em>For the reviewer, heading to the aromaticity group: UMA is an excellent fast engine for
 closed-shell physical-organic mechanism work — map surfaces, rank isomers,
 quantify hyperconjugation/aromaticity/resonance — but spot-check open-shell,
 degenerate, and bare-electron-deficient-cation cases against real theory.</em></p>

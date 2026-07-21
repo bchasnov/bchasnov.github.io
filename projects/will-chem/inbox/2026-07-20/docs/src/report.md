@@ -1,6 +1,6 @@
 # UMA report
 
-Carbocation & terpene chemistry relevant to W. DeSnoo (Tantillo, UC Davis).
+Carbocation & terpene chemistry relevant to an experimental collaborator.
 
 - **Model:** `uma-s-1p1` (task `omol`)  
 - **Device:** cpu  
@@ -49,7 +49,7 @@ _Structures relaxed from RDKit ETKDG guesses. Relaxed geometries are in `results
 
 # GFN2-xTB report
 
-Carbocation & terpene chemistry relevant to W. DeSnoo (Tantillo, UC Davis).
+Carbocation & terpene chemistry relevant to an experimental collaborator.
 
 - **Model:** `GFN2-xTB (tblite)` (task `reference`)  
 - **Device:** cpu  

@@ -2,7 +2,7 @@
 
 Adversarial calibration log. Each entry is a *reproducible* failure or limitation
 discovered while using UMA as a mechanism-exploration engine, with the exact
-experiment that exposes it. Rerun any with `python -m uma_desnoo.mechanisms <id>`.
+experiment that exposes it. Rerun any with `python -m uma_core.mechanisms <id>`.
 
 Context: UMA passed the basic instrument checks (`stress_test.py`, 6/6:
 determinism, translation/rotation invariance, charge sensitivity, basin

@@ -19,12 +19,12 @@ correct?
 
 **Why fast methods can't settle it.** The basins are within ~2–3 kcal/mol — the
 regime where UMA and GFN2-xTB routinely reorder conformers. This cation is the
-central branch-point of monoterpene cyclization (DeSnoo/Tantillo territory), so
+central branch-point of monoterpene cyclization (the experimental group territory), so
 its lowest conformer sets the reference for every downstream partitioning
 energy. A wrong reference conformer biases everything.
 
 **Proposed DFT.** Single-point (or loose reopt) on the top ~3 UMA conformers
-(`uma_desnoo/results/alpha_terpinyl_cation.gmin.xyz` + the two runner-up basins)
+(`uma_core/results/alpha_terpinyl_cation.gmin.xyz` + the two runner-up basins)
 at, e.g., **ωB97X-D/def2-TZVP** with an implicit solvent or gas phase to match.
 Deliverable: DFT relative energies of the 3 basins → confirm/relabel the global
 minimum. ~3 single points; cheap.

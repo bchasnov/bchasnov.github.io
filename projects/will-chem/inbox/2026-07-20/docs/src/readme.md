@@ -1,11 +1,10 @@
 # will-chem — UMA for terpene & carbocation chemistry
 
 Running **UMA** (Meta FAIR's *Universal Model for Atoms*, a machine-learning
-interatomic potential) on the chemistry that **William DeSnoo** (Dean Tantillo's
-group, UC Davis) works on: **terpene/terpenoid biosynthesis, carbocation
+interatomic potential) on the chemistry that **an experimental collaborator** works on: **terpene/terpenoid biosynthesis, carbocation
 rearrangements, and reaction mechanisms**.
 
-DeSnoo's published work (incl. *Nature* 2024 on stereoselective carbocation
+the experimental collaborator's published work (incl. recent work on stereoselective carbocation
 shifts, and diterpene-cyclization mechanism studies) leans on DFT and molecular
 dynamics to rank carbocation intermediates and map rearrangement pathways. UMA
 is a fast, general-purpose surrogate for exactly those single-point energies and
@@ -13,7 +12,7 @@ geometry relaxations — seconds on CPU instead of hours of DFT.
 
 ## What this runs
 
-`uma_desnoo/` builds three sets of DeSnoo-relevant systems, relaxes each with
+`uma_core/` builds three sets of collaborator-relevant systems, relaxes each with
 UMA (via the ASE calculator), and reports energies:
 
 1. **C4H9+ carbocation stability ladder** — does UMA reproduce
@@ -26,7 +25,7 @@ UMA (via the ASE calculator), and reports energies:
    rearrangements.
 
 Each system is a SMILES + total charge + spin multiplicity (see
-`uma_desnoo/systems.py`). UMA molecular predictions use the `omol` task with
+`uma_core/systems.py`). UMA molecular predictions use the `omol` task with
 per-structure charge/spin.
 
 ## Setup
@@ -48,16 +47,16 @@ export HF_TOKEN=hf_xxx        # or: hf auth login
 
 ```bash
 # Validate the chemistry side without downloading UMA:
-python -m uma_desnoo.run_uma --dry-run
+python -m uma_core.run_uma --dry-run
 
 # Relax all systems with UMA and write results/uma_results.json:
-python -m uma_desnoo.run_uma --model uma-s-1p1 --fmax 0.05 --steps 200
+python -m uma_core.run_uma --model uma-s-1p1 --fmax 0.05 --steps 200
 
 # Render the Markdown report (renders UMA and/or the xTB reference):
-python -m uma_desnoo.report
+python -m uma_core.report
 ```
 
-Outputs land in `uma_desnoo/results/`: `uma_results.json`, `REPORT.md`, and a
+Outputs land in `uma_core/results/`: `uma_results.json`, `REPORT.md`, and a
 relaxed `*.xyz` per system.
 
 ## Charge-aware reference (runs today, ungated)
@@ -70,16 +69,16 @@ potential against; when UMA runs, `report.py` shows UMA vs xTB side by side.
 
 ```bash
 pip install tblite
-python -m uma_desnoo.run_xtb --fmax 0.05 --steps 300
-python -m uma_desnoo.report
+python -m uma_core.run_xtb --fmax 0.05 --steps 300
+python -m uma_core.report
 ```
 
-**GFN2-xTB results (see `uma_desnoo/results/REPORT.md`):**
+**GFN2-xTB results (see `uma_core/results/REPORT.md`):**
 
 - **C4H9+ ladder** — *tert*-butyl (tertiary) is most stable; sec-butyl +15.7 and
   isobutyl +16.1 kcal/mol; the primary **n-butyl cation will not hold a
   minimum** (it collapses by hydride shift) — the exact rearrangement chemistry
-  DeSnoo studies.
+  the experimental collaborator studies.
 - **Monoterpene** — protonating limonene's ring alkene to the **α-terpinyl
   cation** is downhill by ~43 kcal/mol (bare-proton reference), consistent with
   Markovnikov protonation to a tertiary cation opening the cyclization cascade.
@@ -92,7 +91,7 @@ identical pipeline with the actual UMA model for a direct comparison.
 
 With HF access granted for `facebook/UMA`, the real model now runs the same
 pipeline (all 7 systems relax and converge in seconds on CPU). Highlights from
-`uma_desnoo/results/REPORT.md`:
+`uma_core/results/REPORT.md`:
 
 - **C4H9+ ladder** — UMA reproduces the key result that the **tertiary
   *tert*-butyl cation is most stable** (ΔE = 0). It compresses the rest of the
@@ -108,15 +107,15 @@ pipeline (all 7 systems relax and converge in seconds on CPU). Highlights from
 ## Configuration-space exploration (UMA as an engine, not just a ruler)
 
 UMA is fast enough to *map* a potential-energy surface, not just score one
-geometry. `uma_desnoo/explore.py` embeds many starting conformers per system,
+geometry. `uma_core/explore.py` embeds many starting conformers per system,
 relaxes each with UMA, and clusters the results into distinct minima — and pools
 isomeric starting points into one surface to reveal the rearrangement network.
 
 ```bash
-python -m uma_desnoo.explore --confs 16
+python -m uma_core.explore --confs 16
 ```
 
-Key findings (`uma_desnoo/results/explore_results.json`, narrated in `DIARY.md`):
+Key findings (`uma_core/results/explore_results.json`, narrated in `DIARY.md`):
 
 - **α-terpinyl cation** — the multi-conformer search finds a global minimum
   **2.3 kcal/mol below** the single-ETKDG-guess energy the one-shot pipeline
@@ -131,7 +130,7 @@ Key findings (`uma_desnoo/results/explore_results.json`, narrated in `DIARY.md`)
 
 ### Calibrating the instrument
 
-Before trusting UMA's map, `uma_desnoo/stress_test.py` checks the invariants a
+Before trusting UMA's map, `uma_core/stress_test.py` checks the invariants a
 trustworthy potential must satisfy (**6/6 pass**): determinism, translation and
 rotation invariance, charge sensitivity (152 kcal/mol between q=0 and q=+1 on
 identical geometry — the `omol` task genuinely uses total charge), basin
@@ -139,19 +138,19 @@ stability under 0.15 Å noise, and cross-method agreement with GFN2-xTB on the
 isomeric tert–sec gap (Δ = 2.5 kcal/mol, both put tertiary lower).
 
 ```bash
-python -m uma_desnoo.stress_test
+python -m uma_core.stress_test
 ```
 
 ## Layout
 
 | File | Purpose |
 |---|---|
-| `uma_desnoo/systems.py` | The DeSnoo-relevant molecules (SMILES, charge, spin) |
-| `uma_desnoo/build_geometry.py` | SMILES → 3D (RDKit ETKDG + MMFF) → ASE Atoms |
-| `uma_desnoo/run_uma.py` | Load UMA, relax each system, compute relative energies |
-| `uma_desnoo/run_xtb.py` | GFN2-xTB (tblite) charge-aware reference |
-| `uma_desnoo/explore.py` | UMA-driven configuration-space search + minima clustering |
-| `uma_desnoo/stress_test.py` | Instrument calibration: invariants UMA must satisfy |
-| `uma_desnoo/report.py` | Render `REPORT.md` from the JSON results |
+| `uma_core/systems.py` | The collaborator-relevant molecules (SMILES, charge, spin) |
+| `uma_core/build_geometry.py` | SMILES → 3D (RDKit ETKDG + MMFF) → ASE Atoms |
+| `uma_core/run_uma.py` | Load UMA, relax each system, compute relative energies |
+| `uma_core/run_xtb.py` | GFN2-xTB (tblite) charge-aware reference |
+| `uma_core/explore.py` | UMA-driven configuration-space search + minima clustering |
+| `uma_core/stress_test.py` | Instrument calibration: invariants UMA must satisfy |
+| `uma_core/report.py` | Render `REPORT.md` from the JSON results |
 | `DIARY.md` | Scientist diary — hypotheses, tests, findings |
 | `DFT_REQUESTS.md` | Where UMA/xTB aren't enough and DFT is warranted |

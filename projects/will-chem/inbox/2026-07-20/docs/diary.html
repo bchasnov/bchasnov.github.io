@@ -92,7 +92,7 @@
 </div>
 <main>
 <article class="doc">
-<h1 id="scientist-diary-uma-for-desnoo-carbocationterpene-chemistry">Scientist diary — UMA for DeSnoo carbocation/terpene chemistry</h1>
+<h1 id="scientist-diary-uma-for-carbocationterpene-chemistry">Scientist diary — UMA for carbocation/terpene chemistry</h1>
 <p>A running lab notebook. Newest entries at the bottom. Feelings included, because
 they're part of how the reasoning actually went.</p>
 <p><em>Entry timestamps (UTC) are taken from the git commit that recorded each batch —
@@ -136,7 +136,7 @@ data started telling the truth instead of the input labels.</p>
 <h2 id="2026-07-20-0820-utc-the-non-classical-worry-h3">2026-07-20 08:20 UTC — The non-classical worry (H3)</h2>
 <p>My crude classifier called the 2-norbornyl cation "secondary," which briefly
 worried me: did UMA miss the famous non-classical σ-bridge? That would be a big
-deal for DeSnoo's Wagner–Meerwein chemistry.</p>
+deal for the experimental collaborator's Wagner–Meerwein chemistry.</p>
 <p><strong>Hypothesis H3:</strong> UMA gives a <em>classical</em> 2-norbornyl, missing the bridge.</p>
 <p><strong>Test:</strong> measured the C1–C2–C6 bridging geometry.</p>
 <p><strong>Result — H3 refuted (relief).</strong> The bridging carbon sits <em>symmetrically</em>
@@ -195,9 +195,9 @@ rather than firing off DFT unilaterally.</p>
 <h2 id="2026-07-20-0919-utc-new-goal-mechanism-one-hypothesis-at-a-time-toward-100">2026-07-20 09:19 UTC — New goal: mechanism, one hypothesis at a time, toward 100</h2>
 <p>Reframed again, and I like this framing better: stop grading UMA, start <em>using</em>
 it to do physical-organic mechanism work — the stuff I'd actually chase heading
-into Judy Wu's group. Her world is aromaticity and hyperconjugation /
+into the aromaticity group. Her world is aromaticity and hyperconjugation /
 σ-delocalization and the stabilization of reactive intermediates; mine
-(DeSnoo/Tantillo) is carbocation rearrangements in terpene cascades. The natural
+(the experimental group) is carbocation rearrangements in terpene cascades. The natural
 bridge is the <em>electronic origin</em> of carbocation stability. No DFT — I have no
 compute yet — so every energy is isodesmic/isomeric so the references cancel.</p>
 <h3 id="h4-hyperconjugation-has-a-geometric-fingerprint">H4 — hyperconjugation has a geometric fingerprint</h3>
@@ -232,7 +232,7 @@ H-bridged?</p>
   H-bridged). Suspicious. Held off on a verdict and built H9.</li>
 <li><strong>H7 (neopentyl):</strong> relaxed straight to a <em>tertiary</em> cation — the quaternary
   carbon is gone. UMA does the neopentyl→tert-amyl <strong>methyl shift with no
-  barrier</strong>. This is real Wagner–Meerwein, the DeSnoo bread-and-butter.</li>
+  barrier</strong>. This is real Wagner–Meerwein, the experimental collaborator bread-and-butter.</li>
 <li><strong>H8 (cyclopropylcarbinyl):</strong> ring C–C bonds blown out to 1.63/1.67 Å with the
   carbinyl C–Cα at 1.35 Å — strong ring-σ donation into the empty p. Textbook
   σ-participation, and UMA nails the geometry.</li>
@@ -252,12 +252,12 @@ H-bridged?</p>
 <p>Feeling: the through-line is now sharp — <strong>carbocations bridge whenever a donor
 can reach the empty orbital, and finding those bridged minima demands multiple
 starting geometries.</strong> That's both a chemistry statement and a method statement,
-and it's exactly the kind of thing worth carrying into Wu's group.</p>
+and it's exactly the kind of thing worth carrying into the aromaticity group.</p>
 <hr />
 <h2 id="2026-07-20-0934-utc-zooming-out-to-aromaticity-and-drawing-umas-blood">2026-07-20 09:34 UTC — Zooming out to aromaticity, and drawing UMA's blood</h2>
-<p>Two nudges from Will: don't tunnel on one seam, and <em>try to break the
+<p>Two nudges from the reviewer: don't tunnel on one seam, and <em>try to break the
 instrument</em>. Both land. I'd spent six hypotheses on the bridging continuum; time
-to jump to Wu's other pillar — aromaticity — and to go adversarial.</p>
+to jump to the aromaticity group's other pillar — aromaticity — and to go adversarial.</p>
 <ul>
 <li><strong>H11 (C4H7⁺ manifold, multi-start):</strong> homoallyl rearranges to an allyl cation
   that is the global minimum; cyclobutyl +5.2, cyclopropylcarbinyl +6.3. Sensible
@@ -281,13 +281,13 @@ a <em>failure</em>. UMA has learned "aromatic ⇒ symmetric &amp; stabilized" an
 it; it has no handle on antiaromatic destabilization, and its open-shell
 energetics fall apart for a degenerate ion. That's exactly the multireference
 regime a ground-state-DFT surrogate can't see. Logged in <code>UMA_FLAWS.md</code>.
-Lesson for using UMA in Wu-type work: trust it for closed-shell hyperconjugation
+Lesson for using UMA in aromaticity-type work: trust it for closed-shell hyperconjugation
 and π-aromatic stabilization; do <strong>not</strong> trust it for antiaromatic or open-shell
-species. Next: back to DeSnoo's home turf — terpene cyclization/rearrangement
+species. Next: back to the experimental collaborator's home turf — terpene cyclization/rearrangement
 energetics — which I've under-explored.</p>
 <hr />
 <h2 id="2026-07-20-0946-utc-home-turf-terpene-cyclization-energetics-and-a-smiles-humbling">2026-07-20 09:46 UTC — Home turf: terpene cyclization energetics (and a SMILES humbling)</h2>
-<p>Back to DeSnoo chemistry. First pass at H17/H18 tripped on my own hand-written
+<p>Back to the experimental collaborator chemistry. First pass at H17/H18 tripped on my own hand-written
 terpene SMILES — the anti-Markovnikov limonene cation quietly rearranged to a
 <em>different</em> tertiary and the "geranyl" cation had 11 carbons. The isomeric-check
 guards I'd built flagged both instead of letting me report nonsense — worth the
@@ -373,7 +373,7 @@ delocalize," which is usually right and occasionally very wrong.</p>
   no barrier in UMA's hands. Another real rearrangement captured.</li>
 <li><strong>H32 (cation–π):</strong> NH₄⁺ binds benzene by −19.5 kcal/mol at 2.9 Å — bang in the
   experimental range. Good to confirm UMA has non-covalent cation–π, since a lot
-  of aromatic-stabilization (Wu) chemistry rides on it, and it's a regime
+  of aromatic-stabilization (the aromaticity group) chemistry rides on it, and it's a regime
   (non-bonded, long-range) far from the covalent tests so far.</li>
 </ul>
 <p>Tally so far (32 hypotheses): UMA is reliable for closed-shell stabilization of
@@ -461,7 +461,7 @@ organic chemistry I care about — with the sharply-bounded exceptions logged.</
 </ul>
 <p>This ties a bow on a pattern: with the vinyl cation (H37) and halonium (H23),
 UMA over-rewards the smallest, most electron-deficient / non-classical cations —
-the sparsely-sampled extreme of chemical space. The lesson I'd carry into Wu's
+the sparsely-sampled extreme of chemical space. The lesson I'd carry into the aromaticity group's
 group: UMA is a superb, quantitative tool for ordinary physical-organic
 energetics, but for the exotic reactive-intermediate corners (bare CH₃⁺,
 antiaromatic Cp⁺, bridgehead) you must spot-check against real theory. Knowing
@@ -489,7 +489,7 @@ antiaromatic Cp⁺, bridgehead) you must spot-check against real theory. Knowing
 </ul>
 <p>Both are clean confirmations that UMA finds the thermodynamically correct
 rearrangement product barrierlessly, reinforcing its reliability for the
-Wagner-Meerwein / hydride-shift chemistry at the heart of DeSnoo's terpene work.</p>
+Wagner-Meerwein / hydride-shift chemistry at the heart of the experimental collaborator's terpene work.</p>
 <hr />
 <h2 id="2026-07-20-1052-utc-acidity-the-anion-side-50-hypotheses-in">2026-07-20 10:52 UTC — Acidity: the anion side (50 hypotheses in)</h2>
 <ul>
@@ -503,10 +503,10 @@ instrument for ground-state, closed-shell physical organic energetics — cation
 anions, acids, bases, conformers, stereoelectronics — repeatedly within a couple
 kcal/mol, with a small, well-mapped set of failure modes (Cp+ antiaromatic,
 bridgehead, bare CH3+/small exotic cations). Exactly the calibration I'd want
-before leaning on it in Wu's group.</p>
+before leaning on it in the aromaticity group.</p>
 <hr />
 <h2 id="2026-07-20-1055-utc-radicals-h-bond-tautomer-and-sharpening-the-methyl-flaw">2026-07-20 10:55 UTC — Radicals, H-bond, tautomer — and sharpening the methyl flaw</h2>
-<p>Staying skeptical (per Will's nudge), I used H51 as a targeted stress test of the
+<p>Staying skeptical (per the reviewer's nudge), I used H51 as a targeted stress test of the
 H43 methyl-cation flaw:</p>
 <ul>
 <li><strong>H51 (radical ladder):</strong> allyl &gt; benzyl &gt; 3° &gt; 2° &gt; 1° &gt; methyl — fully correct,
@@ -515,14 +515,14 @@ H43 methyl-cation flaw:</p>
   about the electron-deficient empty-p <strong>cation</strong>, not "small species" in general.
   That's a real narrowing, found by trying to break the earlier conclusion.</li>
 <li><strong>H52 (water dimer):</strong> −4.18 kcal/mol, O···O 2.97 Å — H-bond energy slightly weak
-  vs −5.0 but geometry dead-on. Good enough for the Wu H-bond chemistry.</li>
+  vs −5.0 but geometry dead-on. Good enough for the aromaticity group H-bond chemistry.</li>
 <li><strong>H53 (keto–enol):</strong> enol 9.9 kcal/mol above keto (exp ~11). Correct.</li>
 </ul>
 <p>The discipline that keeps paying off: don't just log a "pass" — poke it. H51 turned
 a confirmation into a sharper statement about exactly what UMA gets wrong.</p>
 <hr />
 <h2 id="2026-07-20-1058-utc-adversarial-batch-ozonestrain-pass-f2-breaks">2026-07-20 10:58 UTC — Adversarial batch: ozone/strain pass, F2 breaks</h2>
-<p>Explicitly hunting flaws (per Will) in hard/multireference regimes.</p>
+<p>Explicitly hunting flaws (per the reviewer) in hard/multireference regimes.</p>
 <ul>
 <li><strong>H54 (ozone):</strong> symmetric, 117.7°, singlet ground state, triplet +36 — UMA
   handles it despite O3's diradical character. Bond ~38 mÅ short, minor.</li>
@@ -554,7 +554,7 @@ instead of just accumulating green checks.</p>
   camphene lowest, terpinenes/terpinolene/limonene clustered a few kcal above,
   strained pinenes higher (12–15), acyclic myrcene highest (28). That tracks the
   experimental heats of formation (camphene ΔHf ~−18, limonene ~−12, myrcene ~+1).
-  A genuinely useful map — this is the kind of relative-stability call DeSnoo work
+  A genuinely useful map — this is the kind of relative-stability call the experimental collaborator work
   leans on constantly, and UMA delivers it in seconds.</li>
 <li><strong>H61 (conjugation):</strong> 6.3 kcal/mol (exp ~7). <strong>H62 (Zaitsev):</strong> trisub alkene
   3.6 below monosub. Both right.</li>
@@ -611,7 +611,7 @@ filling in more corners and continuing to poke for edges.</p>
   (relaxed exp ~18; vertical is an upper bound) — nN→π* amide resonance captured.</li>
 <li><strong>H74 (intramolecular H-bond):</strong> 2-fluoroethanol gauche 2.5 kcal/mol below anti.</li>
 </ul>
-<p>The Wu-flavored H-bond/resonance chemistry all checks out — once conformers are
+<p>The aromaticity-flavored H-bond/resonance chemistry all checks out — once conformers are
 sampled properly.</p>
 <hr />
 <h2 id="2026-07-20-1120-utc-super-base-hypervalent-sf6-and-a-carbene-spin-flaw">2026-07-20 11:20 UTC — Super-base, hypervalent SF6, and a carbene spin flaw</h2>
@@ -641,7 +641,7 @@ sampled properly.</p>
   both ways: I should be skeptical of my own too-crude test, not just of UMA.)</li>
 </ul>
 <hr />
-<h2 id="2026-07-20-1130-utc-bicyclic-terpene-cations-the-desnoo-core">2026-07-20 11:30 UTC — Bicyclic terpene cations (the DeSnoo core)</h2>
+<h2 id="2026-07-20-1130-utc-bicyclic-terpene-cations-the-experimental-collaborator-core">2026-07-20 11:30 UTC — Bicyclic terpene cations (the experimental collaborator core)</h2>
 <p>Finally the bicyclic terpene cations, carefully validated.</p>
 <ul>
 <li><strong>H81 (pinyl):</strong> the protonated-α-pinene (pinyl) cation ring-opens under UMA
