@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UMA Campaign — Feedback Inbox</title>
+<title>Feedback Inbox</title>
 
 <!--
-  UMA Campaign — Feedback Inbox
-  -----------------------------
+  Feedback Inbox
+  --------------
   A phone-friendly one-tap triage deck for the autonomous UMA chemistry
   campaign. Two lanes:
     · BLOCKER cards  — open questions needing a judgment / priority call
@@ -324,9 +324,9 @@
 
 <div class="wrap">
   <header>
-    <div class="kicker">UMA mechanism campaign · triage inbox</div>
+    <div class="kicker">mechanism study · triage inbox</div>
     <div class="headrow">
-      <h1>UMA Campaign — Feedback Inbox</h1>
+      <h1>Feedback Inbox</h1>
       <button class="abtn" id="aboutBtn" type="button" aria-haspopup="dialog">ⓘ About</button>
     </div>
     <div class="sub">100 hypotheses run DFT-free. Your reactions steer the next round.</div>
@@ -839,7 +839,7 @@ function buildExport() {
   });
   const answered = verdicts.filter(v => v.reaction).length;
   return {
-    campaign: "UMA mechanism campaign (H1–H100)",
+    campaign: "Mechanism study (H1–H100)",
     exported_at: new Date().toISOString(),
     summary: {
       total: CARDS.length,
