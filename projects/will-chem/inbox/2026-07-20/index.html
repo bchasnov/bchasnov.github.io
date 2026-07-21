@@ -314,6 +314,9 @@
   }
   .idtag { letter-spacing: .02em; }
   .kicker { font-family: var(--mono); }
+  .docslink { display:inline-block; margin:.15rem 0 .1rem; font-size:.9rem;
+    color:var(--accent); text-decoration:none; font-weight:500; }
+  .docslink:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -326,6 +329,7 @@
       <button class="abtn" id="aboutBtn" type="button" aria-haspopup="dialog">ⓘ About</button>
     </div>
     <div class="sub">100 hypotheses run DFT-free. Your reactions steer the next round.</div>
+    <a class="docslink" href="docs/">📄 Reference docs — diary, hypotheses, flaws &amp; more →</a>
     <div class="meter">
       <div class="bar"><i id="progFill"></i></div>
       <div class="count" id="progText">1 / 16</div>

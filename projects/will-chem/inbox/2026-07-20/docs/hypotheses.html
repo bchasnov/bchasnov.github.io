@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hypothesis ledger — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  em{color:inherit;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement;
+    var cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="hypothesis-ledger-uma-mechanism-campaign">Hypothesis ledger — UMA mechanism campaign</h1>
+<p>A wrinkle-driven, DFT-free investigation using UMA (<code>uma-s-1p1</code>) as the
+exploration engine. Chemistry framed around the DeSnoo (carbocation / terpene
+Wagner–Meerwein rearrangements, Tantillo) × <strong>Judy Wu</strong> (aromaticity,
+hyperconjugation, σ-delocalization, stabilization of reactive intermediates)
+intersection. Each hypothesis is developed one at a time, tested with UMA, and
+the <em>wrinkle</em> it exposes seeds the next one. Narrative + feelings live in
+<code>DIARY.md</code>; runnable experiments in <code>uma_desnoo/mechanisms.py</code>.</p>
+<p>Ground rules: no DFT (no compute yet — see <code>DFT_REQUESTS.md</code>); energies use
+isodesmic/isomeric comparisons so absolute references cancel; UMA validated as
+an instrument in <code>stress_test.py</code> (6/6).</p>
+<p>Status: ✅ confirmed · ❌ refuted · 🌀 mixed/nuanced · ⏳ in progress · 💤 backlog</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis (chemistry)</th>
+<th>Status</th>
+<th>Key UMA result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>UMA's "primary" C4H9⁺ minima actually rearranged during relaxation</td>
+<td>✅</td>
+<td>isobutyl &amp; n-butyl → 2-butyl (secondary)</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>The C4H9⁺ surface has only two real basins (tert + sec)</td>
+<td>✅</td>
+<td>pooled surface: 2 basins + funnels</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>UMA gives <em>classical</em> 2-norbornyl, missing the σ-bridge</td>
+<td>❌</td>
+<td>symmetric bridge 2.04/2.05 Å (non-classical)</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>Hyperconjugation leaves a geometric fingerprint UMA resolves</td>
+<td>✅</td>
+<td>aligned β C–H +18 mÅ; Cα–Cβ −66 mÅ</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>β-Si is a far stronger σ-donor than β-H (β-silicon effect)</td>
+<td>✅</td>
+<td>C–Si +403 mÅ, Si-<strong>bridged</strong>; +30.7 kcal/mol</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>The parent ethyl cation is H-bridged (non-classical)</td>
+<td>❌→H9</td>
+<td>single-start gave classical (C–C 1.456) — artifact</td>
+</tr>
+<tr>
+<td>H7</td>
+<td>Neopentyl cation C–C-bridges / methyl-shifts to tert-amyl</td>
+<td>✅</td>
+<td>barrierless shift; relaxed cation is tertiary</td>
+</tr>
+<tr>
+<td>H8</td>
+<td>Cyclopropylcarbinyl shows ring-σ participation</td>
+<td>✅</td>
+<td>ring C–C blown to 1.63/1.67 Å; carbinyl 1.35 Å</td>
+</tr>
+<tr>
+<td>H9</td>
+<td>H6's classical was a start artifact; bridged is the true min</td>
+<td>✅</td>
+<td>from bridged seed: kept bridge, −3.08 kcal/mol</td>
+</tr>
+<tr>
+<td>H10</td>
+<td>Cyclopropylcarbinyl goes to bicyclobutonium (transannular)</td>
+<td>🌀→H11</td>
+<td>bisected only (2.52 Å); needs multi-start</td>
+</tr>
+<tr>
+<td>H11</td>
+<td>Multi-start maps the C4H7⁺ manifold</td>
+<td>✅</td>
+<td>allyl (from homoallyl) lowest; c-propylcarbinyl +6.3, cyclobutyl +5.2</td>
+</tr>
+<tr>
+<td>H12</td>
+<td>Cyclopropenyl cation is aromatic (equalized ring)</td>
+<td>✅</td>
+<td>ring bonds 1.358 Å (1 mÅ spread)</td>
+</tr>
+<tr>
+<td>H13</td>
+<td>Aromatic ≪ open isomer (C3H3⁺)</td>
+<td>✅</td>
+<td>cyclopropenyl 30.3 kcal/mol below propargyl</td>
+</tr>
+<tr>
+<td>H14</td>
+<td>UMA captures antiaromatic destabilization (C5H5⁺)</td>
+<td>❌🚩</td>
+<td>symmetric pentagon; triplet −200 kcal/mol (anomaly)</td>
+</tr>
+<tr>
+<td>H15</td>
+<td>H14's symmetric singlet is a real minimum, not a saddle</td>
+<td>✅🚩</td>
+<td>symmetry-breaking returns to symmetric (flaw confirmed)</td>
+</tr>
+<tr>
+<td>H16</td>
+<td>Spin channel is trustworthy (calibration)</td>
+<td>✅</td>
+<td>O2 +26.2, CH2 +18.5 kcal/mol → sane; H15 anomaly is real</td>
+</tr>
+<tr>
+<td>H17</td>
+<td>Markovnikov: tertiary ≫ secondary on protonation</td>
+<td>✅</td>
+<td>tert-amyl 10.1 kcal/mol below 3-methyl-2-butyl (C5H11⁺)</td>
+</tr>
+<tr>
+<td>H18</td>
+<td>Monoterpene cyclization (geranyl→α-terpinyl) is downhill</td>
+<td>✅</td>
+<td>open-chain 13.3 kcal/mol above cyclic tertiary (C10H17⁺)</td>
+</tr>
+<tr>
+<td>H19</td>
+<td>α-Oxygen lone pair strongly stabilizes (oxocarbenium)</td>
+<td>✅</td>
+<td>C–O −174 mÅ (C=O⁺); +33.4 kcal/mol vs α-C</td>
+</tr>
+<tr>
+<td>H20</td>
+<td>α-Fluorine net stabilizes (π-donation &gt; induction)</td>
+<td>✅</td>
+<td>C–F −119 mÅ (fluoronium); +17.2 kcal/mol vs α-H</td>
+</tr>
+<tr>
+<td>H21</td>
+<td>β-Haloethyl cations bridge from RDKit starts</td>
+<td>❌→H23</td>
+<td>relax to open/near-dissociated, not bridged (start artifact)</td>
+</tr>
+<tr>
+<td>H22</td>
+<td>Tropylium (6π aromatic) below benzyl (C7H7⁺)</td>
+<td>✅</td>
+<td>ring spread 0 mÅ; benzyl +7.2 kcal/mol</td>
+</tr>
+<tr>
+<td>H23</td>
+<td>Bridged halonium are UMA minima</td>
+<td>🌀</td>
+<td>symmetric F/Cl/Br minima exist (Br OK) but +49–67 kcal/mol ABOVE open — ordering uncertain (→DFT)</td>
+</tr>
+<tr>
+<td>H24</td>
+<td>UMA bond-dissociation asymptote is physical</td>
+<td>✅</td>
+<td>ethane C–C: monotonic to ~98 kcal/mol plateau</td>
+</tr>
+<tr>
+<td>H25</td>
+<td>Allyl rotation barrier ≈ allylic resonance energy</td>
+<td>✅</td>
+<td>vertical barrier 38.2 kcal/mol (exp ≈ 35–38), sin²θ shape</td>
+</tr>
+<tr>
+<td>H26</td>
+<td>Cp anion (aromatic 6π) is symmetric; sharpens H14</td>
+<td>✅</td>
+<td>anion 1.408 Å equalized → UMA symmetrizes 5-ring regardless of count</td>
+</tr>
+<tr>
+<td>H27</td>
+<td>Cyclobutadiene (neutral antiaromatic) is rectangular</td>
+<td>✅</td>
+<td>1.328/1.569 Å (242 mÅ) → distortion captured; narrows H14 flaw</td>
+</tr>
+<tr>
+<td>H28</td>
+<td>Bridgehead (1-norbornyl) cation is Bredt-destabilized</td>
+<td>❌🚩</td>
+<td>UMA puts it 3.1 kcal/mol BELOW 2-norbornyl (cage intact) — flaw</td>
+</tr>
+<tr>
+<td>H29</td>
+<td>Cyclopropyl cation ring-opens to allyl (electrocyclic)</td>
+<td>✅</td>
+<td>relaxes to open allyl (2 C–C among 3 C)</td>
+</tr>
+<tr>
+<td>H30</td>
+<td>Cyclopropenyl anion (4π) is antiaromatic-destabilized</td>
+<td>✅</td>
+<td>cyclic +53.2 kcal/mol above open → flaw is Cp⁺-specific, not general</td>
+</tr>
+<tr>
+<td>H31</td>
+<td>Cyclobutylcarbinyl ring-expands to cyclopentyl</td>
+<td>✅</td>
+<td>relaxes to cyclopentyl (degree seq [2,2,2,2,2])</td>
+</tr>
+<tr>
+<td>H32</td>
+<td>UMA captures cation–π (NH4⁺···benzene)</td>
+<td>✅</td>
+<td>binding −19.5 kcal/mol at 2.92 Å (exp ≈ −15 to −20)</td>
+</tr>
+<tr>
+<td>H33</td>
+<td>Allyl radical (doublet) delocalized, weaker resonance</td>
+<td>✅</td>
+<td>C–C equal (0 mÅ); barrier 21 vs cation's 38 → doublets fine</td>
+</tr>
+<tr>
+<td>H34</td>
+<td>7-norbornenyl cation shows π-participation</td>
+<td>✅🌀</td>
+<td>C7 bonds alkene at 1.386 Å (cyclizes); asymmetric, not symmetric bridge</td>
+</tr>
+<tr>
+<td>H35</td>
+<td>Acylium (CH3C≡O⁺): O stabilizes via C≡O triple bond</td>
+<td>✅</td>
+<td>C–O 1.109 Å (−93 mÅ), C–C–O 179.9° (linear)</td>
+</tr>
+<tr>
+<td>H36</td>
+<td>Iminium (CH2=NH2⁺): N π-donor, C=N⁺ double bond</td>
+<td>✅</td>
+<td>C–N 1.270 Å (−191 mÅ vs amine)</td>
+</tr>
+<tr>
+<td>H37</td>
+<td>Vinyl cation is non-classical (H-bridged)</td>
+<td>🌀🚩</td>
+<td>bridged below classical but by 52.8 kcal/mol (exp ~4) — over-stabilized (cf H23)</td>
+</tr>
+<tr>
+<td>H38</td>
+<td>Benzenium (arenium/Wheland) is a delocalized σ-complex</td>
+<td>✅</td>
+<td>1 sp³ CH₂ + pentadienyl (bonds 1.36–1.41, 44 mÅ)</td>
+</tr>
+<tr>
+<td>H39</td>
+<td>UMA resolves sub-kcal conformational energy (butane)</td>
+<td>✅</td>
+<td>gauche−anti = +0.61 kcal/mol (exp 0.6–0.9)</td>
+</tr>
+<tr>
+<td>H40</td>
+<td>Gauche effect (1,2-difluoroethane): gauche below anti</td>
+<td>✅</td>
+<td>anti−gauche = +1.11 kcal/mol (counterintuitive sign right)</td>
+</tr>
+<tr>
+<td>H41</td>
+<td>2-butene E/Z energetics (steric baseline)</td>
+<td>✅</td>
+<td>cis−trans = +1.12 kcal/mol (exp ~1.0)</td>
+</tr>
+<tr>
+<td>H42</td>
+<td>cis effect (1,2-difluoroethene): cis below trans</td>
+<td>✅</td>
+<td>trans−cis = +0.96 kcal/mol (counterintuitive sign right)</td>
+</tr>
+<tr>
+<td>H43</td>
+<td>Carbocation stability ladder (hydride affinity)</td>
+<td>🌀🚩</td>
+<td>3°&gt;benzyl&gt;2°&gt;allyl&gt;1° CORRECT; but CH3⁺ over-stabilized (ranks above tBu) — flaw</td>
+</tr>
+<tr>
+<td>H44</td>
+<td>Basicity/proton-affinity ladder (gas phase)</td>
+<td>✅</td>
+<td>NMe3&gt;MeNH2&gt;NH3&gt;Me2O&gt;MeOH&gt;H2O; N&gt;O, gas-phase amine trend right</td>
+</tr>
+<tr>
+<td>H45</td>
+<td>Cyclobutadiene dication (2π) is aromatic square</td>
+<td>🌀</td>
+<td>distorted (1.29/1.29/1.40 + one &gt;1.75), not clean square — exotic dication, fits small-cation trouble</td>
+</tr>
+<tr>
+<td>H46</td>
+<td>Cyclooctatetraene tub-puckers (avoids 8π antiaromaticity)</td>
+<td>✅</td>
+<td>max out-of-plane 0.39 Å (non-planar tub)</td>
+</tr>
+<tr>
+<td>H47</td>
+<td>Pinacolyl 2° cation methyl-shifts to 3° (barrierless WM)</td>
+<td>✅</td>
+<td>3,3-diMe-2-butyl relaxes straight to 2,3-diMe-2-butyl (tertiary)</td>
+</tr>
+<tr>
+<td>H48</td>
+<td>Styrene protonation: benzylic (Markovnikov) is the sink</td>
+<td>✅</td>
+<td>primary 2-phenylethyl rearranges to benzylic 1-phenylethyl (identical structure)</td>
+</tr>
+<tr>
+<td>H49</td>
+<td>Gas-phase acidity ladder</td>
+<td>✅</td>
+<td>AcOH&gt;PhOH&gt;EtOH&gt;H2O&gt;CH4 (incl. EtOH&gt;H2O gas-phase reversal)</td>
+</tr>
+<tr>
+<td>H50</td>
+<td>Inductive effect on acidity (fluoroacetic series)</td>
+<td>✅</td>
+<td>monotonic; AcOH→CF3COOH = 24.2 kcal/mol (exp ~23)</td>
+</tr>
+<tr>
+<td>H51</td>
+<td>Radical stability ladder (H-atom transfer)</td>
+<td>✅</td>
+<td>allyl&gt;benzyl&gt;3°&gt;2°&gt;1°&gt;methyl — CORRECT incl. methyl least (unlike CH3⁺!)</td>
+</tr>
+<tr>
+<td>H52</td>
+<td>Water-dimer hydrogen bond</td>
+<td>✅</td>
+<td>−4.18 kcal/mol, O···O 2.97 Å (exp −5.0, 2.98)</td>
+</tr>
+<tr>
+<td>H53</td>
+<td>Keto–enol tautomerism (acetaldehyde/vinyl alcohol)</td>
+<td>✅</td>
+<td>enol +9.9 kcal/mol above keto (exp ~11)</td>
+</tr>
+<tr>
+<td>H54</td>
+<td>Ozone (multireference) geometry + spin</td>
+<td>✅</td>
+<td>symmetric, 1.24 Å, 117.7°, triplet +36 (singlet GS) — handled</td>
+</tr>
+<tr>
+<td>H55</td>
+<td>F2 dissociation (charge-shift bond)</td>
+<td>❌🚩</td>
+<td>non-monotonic curve, plateau ~149 vs BDE 38 — grossly wrong</td>
+</tr>
+<tr>
+<td>H56</td>
+<td>Cyclopropane ring strain (homodesmotic)</td>
+<td>✅</td>
+<td>29.5 kcal/mol (exp ~27)</td>
+</tr>
+<tr>
+<td>H57</td>
+<td>Diels–Alder reaction energy</td>
+<td>✅</td>
+<td>butadiene+ethylene→cyclohexene = −47 kcal/mol (exp ~−38)</td>
+</tr>
+<tr>
+<td>H58</td>
+<td>Naphthalene vs azulene (C10H8)</td>
+<td>✅</td>
+<td>azulene +39.7 kcal/mol above naphthalene (exp 30–38)</td>
+</tr>
+<tr>
+<td>H59</td>
+<td>Benzene vs benzvalene (C6H6, aromaticity)</td>
+<td>✅</td>
+<td>benzvalene +73.0 kcal/mol above benzene (exp ~74)</td>
+</tr>
+<tr>
+<td>H60</td>
+<td>Monoterpene C10H16 isomer stability ranking</td>
+<td>✅</td>
+<td>camphene&lt;terpinenes~limonene&lt;pinenes&lt;myrcene; matches known ΔHf</td>
+</tr>
+<tr>
+<td>H61</td>
+<td>Diene conjugation energy (1,3 vs 1,4-pentadiene)</td>
+<td>✅</td>
+<td>conjugated 6.3 kcal/mol lower (exp ~7)</td>
+</tr>
+<tr>
+<td>H62</td>
+<td>Zaitsev: more-substituted alkene more stable</td>
+<td>✅</td>
+<td>trisub 3.6 kcal/mol below monosub (C5H10)</td>
+</tr>
+<tr>
+<td>H63</td>
+<td>Hammett substituent effects on benzyl cation</td>
+<td>✅</td>
+<td>p-OMe +17.6 (stabilizes), p-CF3 −10.5 (destabilizes)</td>
+</tr>
+<tr>
+<td>H64</td>
+<td>Pyridine more basic than ammonia (gas phase)</td>
+<td>✅</td>
+<td>−18.9 kcal/mol (exp PA diff ~18)</td>
+</tr>
+<tr>
+<td>H65</td>
+<td>Benzene dimer π-stacking (dispersion)</td>
+<td>✅</td>
+<td>−3.07 kcal/mol (exp −1.6 to −2.8; dispersion present)</td>
+</tr>
+<tr>
+<td>H66</td>
+<td>Bifluoride [F–H–F]⁻ symmetric strong H-bond</td>
+<td>✅</td>
+<td>F–H 1.148/1.148 (centered), F···F 2.30 Å (exp 2.28)</td>
+</tr>
+<tr>
+<td>H67</td>
+<td>o-Benzyne strained triple bond (multireference)</td>
+<td>✅</td>
+<td>shortest C–C 1.236 Å (exp ~1.24–1.26)</td>
+</tr>
+<tr>
+<td>H68</td>
+<td>Allene perpendicular CH2 groups (D2d cumulene)</td>
+<td>✅</td>
+<td>CH2-plane twist 89.9°</td>
+</tr>
+<tr>
+<td>H69</td>
+<td>Ring strain trend C3–C6 (homodesmotic)</td>
+<td>✅</td>
+<td>29.5/27.9/8.3/2.0 kcal/mol (exp 27/26/6/0)</td>
+</tr>
+<tr>
+<td>H70</td>
+<td>Endocyclic &gt; exocyclic alkene stability</td>
+<td>✅</td>
+<td>endocyclic lower by 1.9 kcal/mol (exp ~2)</td>
+</tr>
+<tr>
+<td>H71</td>
+<td>s-trans &gt; s-cis butadiene</td>
+<td>✅</td>
+<td>s-trans lower by 2.7 kcal/mol (exp ~2.9)</td>
+</tr>
+<tr>
+<td>H72</td>
+<td>RAHB flips acetylacetone to enol (vs H53 keto)</td>
+<td>✅</td>
+<td>enol −4.2 kcal/mol below keto (multistart; chelated OH···O 1.60 Å)</td>
+</tr>
+<tr>
+<td>H73</td>
+<td>Amide resonance — formamide C–N rotation barrier</td>
+<td>✅</td>
+<td>24.7 kcal/mol vertical (exp relaxed ~16–19)</td>
+</tr>
+<tr>
+<td>H74</td>
+<td>2-fluoroethanol intramolecular OH···F H-bond</td>
+<td>✅</td>
+<td>gauche 2.5 kcal/mol below anti (exp 2–4)</td>
+</tr>
+<tr>
+<td>H75</td>
+<td>Guanidinium Y-delocalized super-base</td>
+<td>✅</td>
+<td>3 C–N equal (1.329 Å); basicity −33.2 vs NH3 (exp PA gap ~31)</td>
+</tr>
+<tr>
+<td>H76</td>
+<td>SF6 octahedral hypervalent sulfur</td>
+<td>✅</td>
+<td>S–F 1.569 Å (exp 1.56), all 12 angles ~90°</td>
+</tr>
+<tr>
+<td>H77</td>
+<td>Dichlorocarbene singlet ground state</td>
+<td>❌🚩</td>
+<td>UMA gives triplet 15.7 kcal/mol BELOW singlet (should be singlet GS)</td>
+</tr>
+<tr>
+<td>H78</td>
+<td>Water vibrational frequencies (Hessian)</td>
+<td>✅</td>
+<td>1623/3824/3921 cm⁻¹ (harmonic; exp 1595/3657/3756)</td>
+</tr>
+<tr>
+<td>H79</td>
+<td>Ammonia inversion barrier</td>
+<td>🌀</td>
+<td>vertical estimate 11.0 kcal/mol (exp 5.8) — unrelaxed planar overestimates</td>
+</tr>
+<tr>
+<td>H80</td>
+<td>Ethane rotation barrier (staggered→eclipsed)</td>
+<td>✅</td>
+<td>2.7 kcal/mol (exp 2.9)</td>
+</tr>
+<tr>
+<td>H81</td>
+<td>Pinyl cation ring-opens (pinene cascade)</td>
+<td>✅</td>
+<td>strained bicyclo[3.1.1] cation → monocyclic (2→1 rings)</td>
+</tr>
+<tr>
+<td>H82</td>
+<td>Bornyl-type cation is classical (not bridged)</td>
+<td>✅</td>
+<td>C–C 1.51–1.54, no σ-bridge (methyls favor classical vs 2-norbornyl H3)</td>
+</tr>
+<tr>
+<td>H83</td>
+<td>Pinyl vs bornyl cation (C10H17⁺ branch-point)</td>
+<td>🌀</td>
+<td>bornyl ~3 kcal/mol below ring-opened pinyl (exploratory)</td>
+</tr>
+<tr>
+<td>H84</td>
+<td>Benzene resonance energy (hydrogenation ASE)</td>
+<td>✅</td>
+<td>37.4 kcal/mol (exp ~36)</td>
+</tr>
+<tr>
+<td>H85</td>
+<td>C3H4 isomer stability</td>
+<td>🌀</td>
+<td>cyclopropene +21.9 correct; propyne/allene near-tie, order off ~2 kcal/mol</td>
+</tr>
+<tr>
+<td>H86</td>
+<td>Fulvene vs benzene (C6H6 aromaticity)</td>
+<td>✅</td>
+<td>fulvene +35.1 kcal/mol above benzene (exp 32–36)</td>
+</tr>
+<tr>
+<td>H87</td>
+<td>p-Nitrophenol ≫ phenol acidity (NO2 effect)</td>
+<td>✅</td>
+<td>−22.5 kcal/mol more acidic</td>
+</tr>
+<tr>
+<td>H88</td>
+<td>Pyridine ≫ pyrrole basicity</td>
+<td>✅</td>
+<td>−34.7 kcal/mol (pyrrole N lone pair is aromatic)</td>
+</tr>
+<tr>
+<td>H89</td>
+<td>Cyclopropane vs propene (C3H6 strain)</td>
+<td>✅</td>
+<td>cyclopropane +6.0 kcal/mol above propene (exp ~7.9)</td>
+</tr>
+<tr>
+<td>H90</td>
+<td>Allyl vs vinyl cation (C3H5⁺ resonance sink)</td>
+<td>✅</td>
+<td>allyl lower by 7.8 kcal/mol</td>
+</tr>
+<tr>
+<td>H91</td>
+<td>Formamide O- vs N-protonation (amide O-base)</td>
+<td>✅</td>
+<td>O-protonation lower by 19.7 kcal/mol (exp 10–14)</td>
+</tr>
+<tr>
+<td>H92</td>
+<td>Acetylene vs vinylidene (C2H2)</td>
+<td>✅</td>
+<td>acetylene 41.7 kcal/mol below vinylidene (exp ~44)</td>
+</tr>
+<tr>
+<td>H93</td>
+<td>1-propyl → 2-propyl hydride shift</td>
+<td>✅</td>
+<td>primary relaxes to secondary (not a minimum)</td>
+</tr>
+<tr>
+<td>H94</td>
+<td>Allyl anion delocalization</td>
+<td>✅</td>
+<td>terminal C–C equal (1.387 Å); completes cation/radical/anion trio</td>
+</tr>
+<tr>
+<td>H95</td>
+<td>Acetate carboxylate resonance</td>
+<td>✅</td>
+<td>C–O equal (1.2517/1.2523 Å)</td>
+</tr>
+<tr>
+<td>H96</td>
+<td>Nitro-group resonance (nitromethane)</td>
+<td>✅</td>
+<td>N–O equal (1.2122/1.2127 Å)</td>
+</tr>
+<tr>
+<td>H97</td>
+<td>Allyl anion rotation barrier (completes resonance trio)</td>
+<td>✅</td>
+<td>32.8 kcal/mol → cation(38)≈anion(33)&gt;radical(21)</td>
+</tr>
+<tr>
+<td>H98</td>
+<td>HF vs HCl gas-phase acidity</td>
+<td>✅</td>
+<td>HCl more acidic by 38.3 kcal/mol (exp ~43)</td>
+</tr>
+<tr>
+<td>H99</td>
+<td>Cubane strain energy (homodesmotic)</td>
+<td>✅</td>
+<td>166 kcal/mol (exp ~166, essentially exact)</td>
+</tr>
+<tr>
+<td>H100</td>
+<td>Neryl → α-terpinyl cyclization (capstone)</td>
+<td>✅</td>
+<td>open-chain 12.1 kcal/mol above cyclic (loop closed)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="uma-flaws-limitations-found-see-uma_flawsmd">⚑ UMA flaws / limitations found → see <code>UMA_FLAWS.md</code></h2>
+<ul>
+<li><strong>Antiaromatic distortion missed for the cyclopentadienyl cation</strong> (H14/H15) —
+  but NOT for neutral cyclobutadiene (H27), so it's the open-shell/degenerate
+  cation specifically, not antiaromatics in general.</li>
+<li><strong>Grossly wrong triplet energy</strong> for that cation (−200 kcal/mol; H15/H16).</li>
+<li><strong>Bridgehead (Bredt) cation under-destabilized</strong> — 1-norbornyl placed below
+  2-norbornyl (H28); sign qualitatively wrong.</li>
+<li><strong>Carbene/spin-state energetics unreliable</strong> — CCl2 predicted triplet GS (should be singlet, H77); CH2 gap 2x loose (H16); Cp⁺ triplet −200 (H15).</li>
+<li><strong>F2 (charge-shift) dissociation grossly wrong</strong> — non-monotonic curve, BDE ~149 vs 38 kcal/mol (H55); C–C homolysis is fine (H24), so it's F-specific.</li>
+<li><strong>Single-start relaxation misses non-classical minima</strong> (ethyl cation, H6/H9;
+  halonium H21/H23) — methodological trap, not a model error.</li>
+</ul>
+<h2 id="the-thread-so-far">The thread so far</h2>
+<p>H1/H2 (what minima exist) → H3 (norbornyl bridge real) → H4 (hyperconjugation is
+geometric) → H5 (β-Si bridges) → H6/H9 (<strong>even the ethyl cation is non-classical;
+single-start relaxation misses it by 3 kcal/mol</strong>) → H7 (barrierless Wagner–
+Meerwein) + H8/H10 (cyclopropylcarbinyl σ-participation, bisected). <strong>Live
+wrinkle:</strong> non-classical minima are easy to miss from one starting geometry —
+multi-start is mandatory. Next (H11): multi-start the C4H7⁺ surface
+(cyclopropylcarbinyl ⇌ cyclobutyl ⇌ bicyclobutonium) properly.</p>
+<h2 id="backlog-candidate-directions-will-be-reordered-by-wrinkles">Backlog / candidate directions (will be reordered by wrinkles)</h2>
+<ul>
+<li><strong>Continuum:</strong> ethyl cation H-bridge; β-C–C vs β-C–H vs β-C–Si bridging ladder;
+  cyclopropylcarbinyl σ-participation (bicyclobutonium); phenonium (aryl) bridge.</li>
+<li><strong>Rearrangement stereoelectronics (DeSnoo):</strong> antiperiplanar bond migrates;
+  1,2-H vs 1,2-CH3 shift preference; endo/exo migration in norbornyl; ring-size
+  selectivity; α-terpinyl → pinyl/bornyl/terpinen-4-yl partitioning energetics.</li>
+<li><strong>Aromaticity (Wu):</strong> cyclopropenyl (2π aromatic) vs allyl; tropylium;
+  antiaromatic cyclopentadienyl cation destabilization; homoaromaticity
+  (homotropylium); arenium (protonated benzene); norbornadienyl (π-participation).</li>
+<li><strong>Heteroatom/substituent (Wu):</strong> oxocarbenium &amp; anomeric effect; acylium;
+  fluorine hyperconjugation vs induction; H-bond stabilization of cations.</li>
+</ul>
+<hr />
+<h1 id="campaign-complete-100-hypotheses-h1h100">✅ Campaign complete — 100 hypotheses (H1–H100)</h1>
+<p><strong>Tally:</strong> 85 confirmed · ~7 genuine UMA flaws · rest mixed/refuted-but-informative.
+All DFT-free (isodesmic/isomeric comparisons + geometry); UMA <code>uma-s-1p1</code> on CPU.</p>
+<h2 id="where-uma-is-trustworthy-quantitatively-13-kcalmol">Where UMA is trustworthy (quantitatively, ~1–3 kcal/mol)</h2>
+<p>Hyperconjugation (β-C–H/C–Si), σ- and π-resonance (allyl/benzyl/aromatic),
+aromatic stabilization (cyclopropenyl, tropylium, benzene ASE 37 kcal/mol),
+lone-pair/π donation (oxocarbenium, acylium, iminium, fluoronium, guanidinium),
+Wagner–Meerwein rearrangements (methyl/hydride shifts, ring expansion, pinene
+ring-opening), Markovnikov &amp; cyclization energetics, conformational &amp;
+stereoelectronic effects (butane, gauche/cis effects, anomeric-type),
+acidity/basicity ladders, ring strain (incl. cubane 166 kcal/mol), cation–π,
+H-bonds (water dimer, bifluoride, RAHB), dispersion, and Hessian/frequencies.</p>
+<h2 id="where-uma-fails-or-needs-a-spot-check-see-uma_flawsmd">Where UMA fails or needs a spot-check (see <code>UMA_FLAWS.md</code>)</h2>
+<ol>
+<li><strong>Antiaromatic cyclopentadienyl cation</strong> — misses Jahn–Teller distortion
+   (triplet-ground-state/degenerate; H14/H15). Neutral cyclobutadiene &amp; the
+   cyclopropenyl anion are fine (H27/H30) — the blind spot is narrow.</li>
+<li><strong>Spin-state energetics</strong> — Cp⁺ triplet −200 kcal/mol; dichlorocarbene
+   predicted triplet (should be singlet); CH₂ gap 2× loose (H15/H16/H77).</li>
+<li><strong>Bridgehead (Bredt) cation</strong> under-destabilized (H28).</li>
+<li><strong>Bare methyl cation</strong> over-stabilized (~60–80 kcal/mol); the ordinary
+   cation ladder is otherwise textbook-correct (H43). Methyl <em>radical</em> is fine.</li>
+<li><strong>F₂ (charge-shift) dissociation</strong> — non-monotonic, BDE ~4× too high (H55);
+   C–C homolysis is fine (H24).</li>
+<li><strong>Suspected over-stabilization of small non-classical cations</strong> (vinyl,
+   halonium) — unverified without DFT (H23/H37; raised in <code>DFT_REQUESTS.md</code>).</li>
+</ol>
+<h2 id="cross-cutting-methodological-lesson">Cross-cutting methodological lesson</h2>
+<p>Single-start relaxation repeatedly missed the true minimum for non-classical /
+chelated / degenerate cases (ethyl cation H6→H9, halonium H21→H23, cyclopentadienyl
+H14→H15, acetylacetone RAHB H72). <strong>Multi-start / symmetry-broken seeding is
+mandatory</strong> — the core justification for <code>explore.py</code>.</p>
+<p><em>For Will, heading to Judy Wu's group: UMA is an excellent fast engine for
+closed-shell physical-organic mechanism work — map surfaces, rank isomers,
+quantify hyperconjugation/aromaticity/resonance — but spot-check open-shell,
+degenerate, and bare-electron-deficient-cation cases against real theory.</em></p>
+</article>
+<p class="src">Rendered from will-chem <code>hypotheses</code> @ <code>858fbe7</code> · snapshot 2026-07-20</p>
+</main>
+</body>
+</html>

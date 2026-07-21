@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DFT requests — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  em{color:inherit;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement;
+    var cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="dft-escalation-requests">DFT escalation requests</h1>
+<p>Places where UMA + GFN2-xTB are <strong>not sufficient</strong> to settle a scientific claim,
+and a DFT (or higher) reference is warranted. Per your instruction, I'm raising
+these here rather than running DFT unilaterally. Each item states the question,
+why the fast methods can't answer it, and exactly what I'd compute.</p>
+<p>Priority: <strong>P1</strong> = blocks a claim we'd want to publish/report; <strong>P2</strong> = would
+materially strengthen a number; <strong>P3</strong> = nice-to-have / known hard problem.</p>
+<hr />
+<h2 id="p1-confirm-the-relocated-terpinyl-cation-global-minimum">P1 — Confirm the relocated α-terpinyl cation global minimum</h2>
+<p><strong>Question.</strong> The UMA conformer search moved the α-terpinyl cation global
+minimum <strong>2.30 kcal/mol below</strong> the single-guess geometry the one-shot pipeline
+reported (3 basins within 3.2 kcal/mol). Is UMA's ordering of these conformers
+correct?</p>
+<p><strong>Why fast methods can't settle it.</strong> The basins are within ~2–3 kcal/mol — the
+regime where UMA and GFN2-xTB routinely reorder conformers. This cation is the
+central branch-point of monoterpene cyclization (DeSnoo/Tantillo territory), so
+its lowest conformer sets the reference for every downstream partitioning
+energy. A wrong reference conformer biases everything.</p>
+<p><strong>Proposed DFT.</strong> Single-point (or loose reopt) on the top ~3 UMA conformers
+(<code>uma_desnoo/results/alpha_terpinyl_cation.gmin.xyz</code> + the two runner-up basins)
+at, e.g., <strong>ωB97X-D/def2-TZVP</strong> with an implicit solvent or gas phase to match.
+Deliverable: DFT relative energies of the 3 basins → confirm/relabel the global
+minimum. ~3 single points; cheap.</p>
+<h2 id="p2-tertiary-vs-secondary-c4h9-gap-to-chemical-accuracy">P2 — Tertiary vs secondary C4H9+ gap to chemical accuracy</h2>
+<p><strong>Question.</strong> What is the tert-butyl → sec-butyl cation energy gap? UMA says
+<strong>13.2</strong>, GFN2-xTB says <strong>15.7</strong> kcal/mol (Δ = 2.5).</p>
+<p><strong>Why fast methods can't settle it.</strong> The <em>ordering</em> is robust (both put
+tertiary lower — no DFT needed for that). The <em>magnitude</em> is not: 2.5 kcal/mol
+is larger than chemical accuracy, and this gap is the thermodynamic driving
+force we cite for hydride/methyl shifts. Stating a number with ±1 kcal/mol
+confidence needs a wavefunction/DFT reference.</p>
+<p><strong>Proposed DFT.</strong> These are 13-atom isomers — trivial. Optimize tert-butyl and
+sec-butyl cations at <strong>ωB97X-D/def2-TZVP</strong> (ideally a <strong>DLPNO-CCSD(T)/def2-TZVP</strong>
+single-point on top) and report the gap. Isomeric, so the reference cancels —
+directly comparable to the UMA/xTB numbers.</p>
+<h2 id="p2-monoterpene-protonation-energy-limonene-terpinyl">P2 — Monoterpene protonation energy (limonene → α-terpinyl)</h2>
+<p><strong>Question.</strong> How favorable is protonating limonene's ring alkene to the
+α-terpinyl cation?</p>
+<p><strong>Why fast methods can't settle it.</strong> As documented in the report, this ΔE spans
+different formula <em>and</em> charge, so UMA vs xTB is not directly comparable (their
+absolute energy zeros differ — the ~160 kcal/mol apparent gap is a reference
+artifact, not chemistry). We currently have <strong>no trustworthy number</strong> for this.</p>
+<p><strong>Proposed DFT.</strong> A consistent scheme at one level of theory: either an explicit
+proton-affinity calculation, or an <strong>isodesmic</strong> reaction that cancels the
+proton reference (e.g. hydride/proton transfer against a reference pair).
+Deliverable: one defensible protonation/relative energy at DFT.</p>
+<h2 id="p3-2-norbornyl-cation-non-classical-vs-classical-energy">P3 — 2-norbornyl cation: non-classical vs classical energy</h2>
+<p><strong>Question.</strong> By how much does UMA/xTB favor the σ-bridged non-classical
+2-norbornyl cation over a (constrained) classical secondary form?</p>
+<p><strong>Why fast methods can't settle it.</strong> Both UMA and xTB give a <em>symmetric bridged</em>
+geometry (good — see diary H3), but the <strong>energetics</strong> of non-classical vs
+classical norbornyl is a textbook-hard case that historically needed
+<strong>CCSD(T)</strong> — DFT alone is borderline and functional-dependent. So this is
+really a "high-level theory" request, not just DFT.</p>
+<p><strong>Proposed calc.</strong> If we want to make a quantitative non-classical-stabilization
+claim: CCSD(T)/CBS-ish single points on the bridged minimum and a constrained
+classical structure. Otherwise, keep the claim qualitative ("both methods
+localize a symmetric bridge"), which is already well-supported and needs no
+escalation.</p>
+<h2 id="p2-halonium-bridged-vs-open-energetics-from-h21h23">P2 — β-halonium: bridged vs open energetics (from H21/H23)</h2>
+<p><strong>Question.</strong> UMA finds symmetric bridged halonium ions (F/Cl/Br) as genuine
+local minima, but places them <strong>49–67 kcal/mol above</strong> open/rearranged forms. For
+β-F that is chemically reasonable (F bridges poorly; the α-fluoro cation sink is
+lower, consistent with H20). For <strong>Cl and Br the ordering is surprising</strong> —
+anchimeric assistance normally makes the bridged bromonium/chloronium the
+minimum. UMA's neutral dissociation asymptote is fine (H24), so this is specific
+to the charged bridged-vs-open comparison.</p>
+<p><strong>Why fast methods can't settle it.</strong> It is a bridged-vs-open energy ordering for
+a charged species where UMA's behavior is anomalous and xTB is not a reliable
+arbiter for halonium bridging. Needs a DFT reference.</p>
+<p><strong>Proposed DFT.</strong> Optimize the bridged and open 2-chloroethyl / 2-bromoethyl
+cations at ωB97X-D/def2-TZVP; report which is lower. Tiny systems.</p>
+<hr />
+<p><em>None of the above has been run. Tell me which (if any) to pursue and on what
+compute, and I'll wire it into the pipeline as a <code>run_dft.py</code> reference stage
+alongside <code>run_xtb.py</code>.</em></p>
+<h2 id="p2-bridgehead-1-norbornyl-vs-2-norbornyl-cation-from-h28">P2 — bridgehead (1-norbornyl) vs 2-norbornyl cation (from H28)</h2>
+<p><strong>Question.</strong> UMA places the 1-norbornyl <strong>bridgehead</strong> cation 3.1 kcal/mol
+<em>below</em> the 2-norbornyl cation, contradicting Bredt's rule (bridgehead cations
+are strongly destabilized). By how much is UMA off?</p>
+<p><strong>Why fast methods can't settle it.</strong> UMA's sign is qualitatively wrong; xTB is
+not a trustworthy arbiter for non-classical/bridgehead cation energetics.</p>
+<p><strong>Proposed DFT.</strong> Optimize both C7H11⁺ isomers at ωB97X-D/def2-TZVP (bridgehead
+constrained to its cage minimum); report ΔE. Small, cheap. Expectation: bridgehead
+well above 2-norbornyl.</p>
+<h2 id="p2-over-stabilization-of-non-classical-small-cations-from-h23-h37">P2 — over-stabilization of non-classical small cations (from H23, H37)</h2>
+<p><strong>Question.</strong> UMA places the bridged vinyl cation 52.8 kcal/mol below classical
+(known gap ~4–5) and bridged halonium 49–67 kcal/mol from open forms. Are these
+gaps real or is UMA over-stabilizing multi-center-bonded small cations?</p>
+<p><strong>Proposed DFT.</strong> ωB97X-D/def2-TZVP on classical vs bridged C2H3⁺ (and the
+halonium pairs). Tiny. Expectation: vinyl gap ~4–5 kcal/mol, not ~50.</p>
+</article>
+<p class="src">Rendered from will-chem <code>dft-requests</code> @ <code>858fbe7</code> · snapshot 2026-07-20</p>
+</main>
+</body>
+</html>

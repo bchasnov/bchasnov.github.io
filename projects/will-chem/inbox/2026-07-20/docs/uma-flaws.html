@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UMA flaws &amp; limits — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  em{color:inherit;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement;
+    var cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="uma-flaws-limitations-found-uma-s-1p1-omol-task-cpu">UMA flaws &amp; limitations found (uma-s-1p1, omol task, CPU)</h1>
+<p>Adversarial calibration log. Each entry is a <em>reproducible</em> failure or limitation
+discovered while using UMA as a mechanism-exploration engine, with the exact
+experiment that exposes it. Rerun any with <code>python -m uma_desnoo.mechanisms &lt;id&gt;</code>.</p>
+<p>Context: UMA passed the basic instrument checks (<code>stress_test.py</code>, 6/6:
+determinism, translation/rotation invariance, charge sensitivity, basin
+stability, cross-method tert–sec gap). The failures below are all in regimes a
+ground-state-DFT-trained potential is <em>expected</em> to struggle with —
+antiaromatic / degenerate / open-shell electronic structure — which is why they
+matter for anyone using UMA on reactive intermediates.</p>
+<hr />
+<h2 id="flaw-1-misses-antiaromatic-jahnteller-distortion-h14-h15">FLAW 1 — misses antiaromatic Jahn–Teller distortion  (H14, H15)</h2>
+<p><strong>System.</strong> Cyclopentadienyl cation, C5H5⁺ (singlet, 4π antiaromatic).</p>
+<p><strong>Expected.</strong> A 4π antiaromatic singlet is Jahn–Teller unstable at D5h and must
+distort to a bond-alternated (C2v) structure — the geometric hallmark of
+antiaromaticity.</p>
+<p><strong>UMA.</strong> Relaxes to a <strong>perfectly symmetric pentagon</strong> (ring C–C = 1.419 Å,
+1 mÅ spread). Symmetry-breaking with four independent 0.20 Å random distortions
+re-relaxes straight back to the symmetric structure with <strong>zero energy gain</strong> —
+so this is a genuine symmetric minimum on UMA's surface, not a saddle artifact.</p>
+<p><strong>Contrast.</strong> UMA <em>does</em> correctly equalize the truly aromatic cyclopropenyl
+cation (H12/H13) and stabilizes it (30.3 kcal/mol below its open isomer).</p>
+<p><strong>Boundary of the flaw (H27).</strong> UMA correctly gives <em>neutral</em> cyclobutadiene its
+<strong>rectangular, bond-alternated</strong> antiaromatic structure (1.328/1.569 Å, 242 mÅ
+alternation). So UMA is NOT blind to antiaromatic distortion in general — it
+tracks ground-state DFT, which describes closed-shell cyclobutadiene fine. The
+failure is specific to the <strong>cyclopentadienyl cation</strong>, whose true ground state
+is an open-shell triplet and whose singlet is genuinely degenerate/multireference
+— exactly where a ground-state-DFT surrogate has no signal. Use as a rule: trust
+UMA on antiaromatics that are closed-shell singlets; distrust it on degenerate/
+open-shell ions.</p>
+<p><strong>Further narrowing (H30).</strong> UMA also correctly <em>destabilizes</em> the cyclopropenyl
+<strong>anion</strong> (4π antiaromatic): +53.2 kcal/mol above its open isomer, mirroring the
+aromatic cyclopropenyl cation's −30 kcal/mol. So both a neutral (cyclobutadiene)
+and an anionic (cyclopropenyl⁻) antiaromatic are handled correctly. The failure
+is confined to the <strong>cyclopentadienyl cation</strong> specifically — the one case here
+with a genuine triplet ground state and a doubly-degenerate singlet. Net: this is
+a pinpoint multireference/open-shell-degeneracy blind spot, not a general
+antiaromaticity failure.</p>
+<h2 id="flaw-2-grossly-wrong-triplet-energy-for-the-antiaromatic-cation-h15-h16">FLAW 2 — grossly wrong triplet energy for the antiaromatic cation  (H15, H16)</h2>
+<p><strong>System.</strong> Same C5H5⁺, singlet vs triplet.</p>
+<p><strong>UMA.</strong> E(triplet) − E(singlet) ≈ <strong>−200 kcal/mol</strong> (both vertically on the
+singlet geometry and after triplet relaxation). A spin-state gap of −200 kcal/mol
+is unphysical (real gaps are a few kcal/mol).</p>
+<p><strong>Not a usage error.</strong> The spin channel is calibrated and sane on knowns
+(H16): O2 gives +26.2 kcal/mol (exp ≈ +22.5, triplet ground state) and CH2 gives
++18.5 kcal/mol (exp ≈ +9). So spin works in general (though CH2 shows it is
+already ~2× loose), and the −200 kcal/mol on the antiaromatic cation is a real
+UMA pathology, not a mistake in how spin/charge are supplied.</p>
+<p><strong>Takeaway.</strong> Do not trust UMA spin-state energetics for antiaromatic /
+degenerate open-shell ions; treat even simple carbene/O2-type gaps as only
+qualitative (correct sign, loose magnitude).</p>
+<hr />
+<h2 id="flaw-3-bridgehead-bredt-cation-under-destabilized-h28">FLAW 3 — bridgehead (Bredt) cation under-destabilized  (H28)</h2>
+<p><strong>System.</strong> 1-norbornyl cation (bridgehead, C7H11⁺) vs 2-norbornyl cation
+(isomeric).</p>
+<p><strong>Expected.</strong> Bridgehead carbocations are hugely destabilized — they cannot
+attain the planar sp² geometry a cation wants (Bredt's rule); 1-norbornyl
+solvolyzes ~10¹³× slower than a normal tertiary substrate, so the 1-norbornyl
+cation should lie well <em>above</em> the (specially stabilized, non-classical)
+2-norbornyl cation.</p>
+<p><strong>UMA.</strong> Places 1-norbornyl <strong>3.1 kcal/mol below</strong> 2-norbornyl. The relaxed
+bridgehead structure is a genuine intact norbornane cage (8 C–C bonds, cation on
+a 3-coordinate bridgehead carbon, 0 H — verified, not a rearrangement), only
+mildly pyramidalized (angle-sum 348° vs 360° planar). UMA under-penalizes a
+cationic center that is prevented from planarizing/delocalizing.</p>
+<p><strong>Status.</strong> Sign qualitatively wrong vs Bredt's rule; exact magnitude wants a DFT
+reference (raised in <code>DFT_REQUESTS.md</code>).</p>
+<hr />
+<h2 id="limitation-4-single-start-relaxation-misses-non-classical-minima-h6-h9-h21">LIMITATION 4 — single-start relaxation misses non-classical minima  (H6, H9, H21)</h2>
+<p>Not a model error, but a usage trap. A single RDKit-seeded relaxation of the
+ethyl cation gave a <em>classical</em> structure (C–C 1.456 Å); seeding a bridged
+geometry gave the correct <strong>H-bridged non-classical</strong> minimum, <strong>3.08 kcal/mol
+lower</strong>. If one relaxation misses the global minimum of the smallest carbocation,
+it will elsewhere — non-classical ions require multi-start / symmetry-broken
+seeding (see <code>explore.py</code>).</p>
+<hr />
+<p><em>Method note: every energy here is an isomer or fixed-composition comparison, or
+a spin/charge gap on one system, so UMA's absolute-reference issues do not
+contaminate the conclusions. No DFT used.</em></p>
+<hr />
+<h2 id="suspected-pattern-over-stabilization-of-some-non-classical-small-cations-h23-h37-unverified">SUSPECTED PATTERN — over-stabilization of some non-classical small cations  (H23, H37; unverified)</h2>
+<p>Two independent cases where UMA makes a bridged/non-classical small cation
+implausibly <em>low</em> relative to the alternative:
+- <strong>β-halonium (H23):</strong> bridged halonium sit 49–67 kcal/mol from the open forms.
+- <strong>vinyl cation (H37):</strong> the bridged (non-classical) C2H3⁺ comes out <strong>52.8
+  kcal/mol below</strong> the classical vinyl cation; the known gap is only ~4–5 kcal/mol.</p>
+<p>Counter-example: the <strong>ethyl</strong> cation H-bridge (H9) is only −3.08 kcal/mol below
+classical — correct. So this is not universal; it seems to hit specific
+multi-center-bonded charged species. Neutral bond dissociation is fine (H24), so
+it is not a generic stretched-bond issue.</p>
+<p><strong>Status: UNVERIFIED.</strong> Magnitudes are implausible but I have no DFT reference to
+confirm the sign/size. Raised in <code>DFT_REQUESTS.md</code>. Do not treat these particular
+energy gaps as trustworthy.</p>
+<hr />
+<h2 id="flaw-5-methyl-cation-over-stabilized-small-electron-deficient-cations-over-rewarded-h43-h37-h23">FLAW 5 — methyl cation over-stabilized; small electron-deficient cations over-rewarded  (H43; H37, H23)</h2>
+<p><strong>System.</strong> Carbocation hydride-affinity ladder (isodesmic, cross-size).</p>
+<p><strong>Result.</strong> The ladder among ethyl/isopropyl/tert-butyl/allyl/benzyl is
+<em>textbook-correct</em> in both order and spacing (tBu &gt; benzyl &gt; 2° &gt; allyl &gt; 1°,
+matching experimental hydride affinities). But the <strong>methyl cation</strong> breaks it:
+UMA ranks CH3⁺ as the <em>most</em> stable of all (above tert-butyl), when it is in fact
+by far the <em>least</em> stable carbocation. So UMA over-stabilizes CH3⁺ by roughly
+60–80 kcal/mol relative to where the rest of its own (correct) ladder places it.</p>
+<p><strong>Why it's confirmable without DFT.</strong> The internal ladder is self-consistent and
+matches experiment for the five larger cations, so the methyl outlier is a real
+UMA error, not a reference artifact.</p>
+<p><strong>Connection.</strong> This joins the vinyl-cation (H37, +52.8 vs classical) and
+halonium (H23) anomalies: <strong>UMA tends to over-stabilize small, highly
+electron-deficient or non-classical cations</strong> — the extreme, sparsely-sampled
+corner of chemical space. The ethyl cation (H9) sits at the edge (its bridged
+form is only slightly favored, which is correct), so the effect grows as the
+cation gets smaller / more electron-deficient. Practical rule: trust UMA for
+<em>relative</em> stabilities of ordinary (secondary/tertiary/benzylic/allylic) cations
+and isomeric comparisons; distrust absolute or cross-size comparisons that
+involve CH3⁺ or other tiny/exotic cations.</p>
+<hr />
+<h2 id="flaw-6-f2-charge-shift-bond-dissociation-is-grossly-wrong-h55">FLAW 6 — F2 (charge-shift bond) dissociation is grossly wrong  (H55)</h2>
+<p><strong>System.</strong> F2 homolytic dissociation curve (rigid F–F scan).</p>
+<p><strong>Expected.</strong> Monotonic rise to a plateau ≈ the F–F bond dissociation energy,
+~38 kcal/mol.</p>
+<p><strong>UMA.</strong> The curve rises to +149 kcal/mol at 3.5 Å then <strong>drops to +127 at 4.5 Å</strong>
+— non-monotonic, with a spurious turnover — and the plateau (~4× the true BDE)
+grossly overestimates the bond strength. The equilibrium bond is also ~30 mÅ
+short (1.38 vs 1.41 Å).</p>
+<p><strong>Contrast.</strong> Ethane C–C homolysis (H24) is perfectly monotonic and lands near
+the true BDE (~98 kcal/mol vs ~90). So this is specific to F2 / the charge-shift
+F–F bond, not a generic dissociation failure — almost certainly a training-
+coverage gap (stretched F–F geometries are rare in the dataset).</p>
+<p><strong>Caveat.</strong> The scan fixes the singlet spin state; restricted-singlet dissociation
+is hard for any single-reference method. But the non-monotonic turnover is a real
+potential-energy-surface artifact regardless, and the near-equilibrium bond length
+error is independent of it.</p>
+<hr />
+<h2 id="narrowing-of-flaw-5-methyl-over-stabilization-is-cation-specific-h51">NARROWING of FLAW 5 (methyl over-stabilization is cation-specific)  (H51)</h2>
+<p>The radical stability ladder (H51) ranks correctly with the <strong>methyl radical
+least stable</strong> — so UMA does NOT over-stabilize CH3•. The over-stabilization is
+specific to the electron-deficient <strong>methyl cation</strong> (empty p orbital), not small
+species in general. This tightens FLAW 5.</p>
+<hr />
+<h2 id="flaw-7-carbene-singlettriplet-gaps-wrong-halocarbene-singlet-gs-missed-h77-h16">FLAW 7 — carbene singlet–triplet gaps wrong (halocarbene singlet GS missed)  (H77; H16)</h2>
+<p><strong>System.</strong> Dichlorocarbene CCl2 singlet vs triplet.</p>
+<p><strong>Expected.</strong> CCl2 has a <strong>singlet</strong> ground state (Cl lone-pair π-donation into
+the empty carbene p; ΔE_ST ≈ +20 kcal/mol favoring singlet), unlike CH2 (triplet
+GS).</p>
+<p><strong>UMA.</strong> Puts the <strong>triplet 15.7 kcal/mol below</strong> the singlet — a triplet ground
+state, wrong by ~35 kcal/mol and the wrong sign. UMA evidently treats CCl2 like
+CH2 (H16: CH2 triplet correctly favored but gap already 2× too large) and does not
+capture the singlet-stabilizing halogen π-donation.</p>
+<p><strong>Pattern.</strong> With the Cp⁺ triplet anomaly (FLAW 2) and the loose CH2 gap, this
+confirms UMA's <strong>spin-state / singlet–triplet energetics are unreliable</strong> —
+qualitatively wrong for cases where electronic structure (lone-pair donation,
+degeneracy) controls the multiplicity. Closed-shell ground-state energetics remain
+excellent; spin-state splittings should be checked against real theory.</p>
+</article>
+<p class="src">Rendered from will-chem <code>uma-flaws</code> @ <code>858fbe7</code> · snapshot 2026-07-20</p>
+</main>
+</body>
+</html>
