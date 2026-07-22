@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retraining prescription — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement, cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="retraining-prescription-making-an-mlip-transferable-to-carbocation-natural-product-mechanism">Retraining prescription — making an MLIP transferable to carbocation / natural-product mechanism</h1>
+<p>Constructive output of iteration 2 (see <code>DIARY_ITER2.md</code>, <code>HYPOTHESES_ITER2.md</code>,
+<code>UMA_FLAWS.md</code>). Reviewer T10: <em>"consider how it can be retrained or what
+molecules should be added to make it more transferable to carbocation and
+mechanistic natural product chemistry."</em></p>
+<h2 id="the-diagnosis-in-one-sentence">The diagnosis in one sentence</h2>
+<p>UMA (<code>uma-s-1p1</code>, OMol task) has a <strong>single, sharply-localized failure</strong>:
+it over-stabilizes an <strong>unquenched, localized empty p orbital</strong> — maximal for the
+bare methyl cation (<strong>+104.7 kcal/mol vs B3LYP/def2-TZVP, which itself matches
+experiment to 1.6 kcal/mol</strong>), and quenched by <em>any</em> real donation into that
+orbital (one alkyl σ-hyperconjugation removes 94%; N/O/Cl π-donation removes ~all;
+F only partial). Everything else about carbocation physics —
+2°/3°/allylic/benzylic/aromatic stabilization, hyperconjugation fingerprints,
+Wagner–Meerwein energetics, terpene cyclization — UMA already reproduces to
+~1–3 kcal/mol (ordinary 1°/2° rungs match DFT to <strong>&lt;1 kcal/mol</strong>).</p>
+<h2 id="ab-initio-confirmed-reference-labels-iteration-2-pyscf">Ab-initio-confirmed reference labels (iteration 2, PySCF)</h2>
+<p>The augmentation targets below now have real reference numbers, computed here:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>target motif</th>
+<th>UMA</th>
+<th>reference</th>
+<th>UMA error</th>
+<th>method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methyl cation (bare p)</td>
+<td>+22.1</td>
+<td><strong>−82.6</strong></td>
+<td><strong>+104.7</strong></td>
+<td>B3LYP/def2-TZVP (=exp)</td>
+</tr>
+<tr>
+<td>bridged vinyl vs classical</td>
+<td>−49.4</td>
+<td><strong>−3.3</strong></td>
+<td><strong>−46.1</strong></td>
+<td>CCSD(T)/def2-TZVP</td>
+</tr>
+<tr>
+<td>β-halonium open vs bridge</td>
+<td>+56–67</td>
+<td><strong>0 to +6</strong></td>
+<td><strong>+55–60</strong></td>
+<td>B3LYP/def2-TZVP</td>
+</tr>
+<tr>
+<td>ethyl/isopropyl (control)</td>
+<td>✓</td>
+<td>✓</td>
+<td><strong>&lt;1</strong></td>
+<td>B3LYP (UMA already correct)</td>
+</tr>
+<tr>
+<td>1- vs 2-norbornyl (bridgehead)</td>
+<td>−3.1</td>
+<td><strong>−2.9</strong></td>
+<td><strong>~0</strong></td>
+<td>B3LYP (UMA already correct — not a target)</td>
+</tr>
+</tbody>
+</table></div>
+<p>This means the fix is <strong>narrow and cheap</strong>: the training set does not need "more
+carbocations" broadly — it needs the <strong>sparsely-sampled bare-empty-p corner</strong>,
+with correct high-level reference energies.</p>
+<h2 id="what-to-add-molecule-classes-in-priority-order">What to add (molecule classes, in priority order)</h2>
+<p>Each class below is a set of species UMA currently gets wrong or unverified.
+Reference labels should be <strong>CCSD(T)/CBS or DLPNO-CCSD(T)/def2-TZVP</strong> energies
+(these are all small); geometries + isodesmic/isomeric framing so the labels are
+method-portable.</p>
+<ol>
+<li>
+<p><strong>Bare / minimally-substituted empty-p carbenium ions</strong> <em>(highest leverage)</em>
+   — CH₃⁺, CH₂F⁺, CHF₂⁺, CF₃⁺, CH₂=CH⁺ (classical vinyl), HC≡C–CH₂⁺ (propargyl),
+   and the primary cations that are unstable minima. Reference data: gas-phase
+   <strong>hydride affinities</strong> (already tabulated experimentally: CH₃⁺ 312, C₂H₅⁺ 273
+   kcal/mol …) plus CCSD(T) for the halomethyls. Evidence: H101 (methyl +104),
+   H104/H111 (fluoromethyl/CF₃⁺ residual), H110 (decay).</p>
+</li>
+<li>
+<p><strong>Non-classical / 3-center-2-electron bridged small cations</strong> <em>(both minima,
+   with correct ordering)</em> — bridged vs classical vinyl (protonated acetylene:
+   true gap ~4–5 kcal/mol, UMA over by ~45–54); H-bridged ethyl; <strong>β-halonium
+   ions</strong> (bridged chloronium/bromonium are the minima; UMA wrongly puts an open
+   β-halo cation 56–67 kcal/mol below). Reference: CCSD(T)/CBS bridged-vs-open
+   pairs. Evidence: H102, H105.</p>
+</li>
+<li>
+<p><strong>σ-bridged (non-classical) carbocation archetypes</strong> — 2-norbornyl
+   (classical-vs-bridged is CCSD(T)-hard), cyclopropylcarbinyl/bicyclobutonium,
+   7-norbornenyl. These are the <em>productive</em> motifs of terpene Wagner–Meerwein
+   chemistry; UMA localizes the bridge geometry correctly but its energetics are
+   unvalidated. Reference: CCSD(T) single points on UMA/xTB minima.</p>
+</li>
+<li>
+<p><strong>Bridgehead cations</strong> — 1-norbornyl, 1-adamantyl, and a small bicyclic
+   bridgehead series. Note: UMA and xTB <em>agree</em> here (both put 1-norbornyl ~3
+   kcal below 2-norbornyl, H103), so this is not confirmed as UMA-specific — but
+   because both fast methods may share the limitation, DFT/CCSD(T) reference data
+   for bridgehead ions is worth adding to be safe.</p>
+</li>
+<li>
+<p><strong>(Secondary, off the carbocation axis) open-shell / degenerate species</strong> —
+   cyclopentadienyl cation (antiaromatic singlet + triplet), halocarbene
+   singlet–triplet gaps (CCl₂, CF₂). UMA's spin-state energetics are
+   qualitatively wrong here (iteration 1 FLAW 1/2/7). Lower priority for
+   natural-product mechanism, but needed if the model is used on carbenes/
+   diradicals. Reference: multireference (CASPT2/MRCI) or experiment.</p>
+</li>
+</ol>
+<h2 id="what-not-to-bother-adding">What NOT to bother adding</h2>
+<p>Ordinary 2°/3°/allylic/benzylic/aromatic cations and terpene tertiary/allylic
+intermediates — UMA already handles these to chemical accuracy (H101, H107–H109,
+H112). Adding more of them wastes label budget on the part that already works.</p>
+<h2 id="how-much-validation-protocol">How much / validation protocol</h2>
+<ul>
+<li>The bare-empty-p corner (classes 1–2) is a few dozen small molecules — a
+  <strong>cheap CCSD(T) augmentation set</strong>, not a campaign.</li>
+<li>Validate any retrained model by re-running this repo's iteration-2 ladders
+  (<code>python -m uma_core.mechanisms2 all</code>): success = the methyl UMA−xTB gap and
+  the vinyl/halonium mis-orderings collapse toward the xTB/CCSD(T) values while
+  the ordinary-cation and terpene numbers stay put.</li>
+</ul>
+<h2 id="open-items-requiring-dft-from-dft_requestsmd-still-parked">Open items requiring DFT (from <code>DFT_REQUESTS.md</code>, still parked)</h2>
+<p>B1 (α-terpinyl conformer reference — reinforced by H107 linalyl conformer
+scatter), B2 (tert/sec gap to chemical accuracy), and CCSD(T) magnitudes for
+classes 2–4 above. Iteration 2 has firmed each up with multi-start + xTB +
+literature so the DFT, when available, is a single well-scoped set of runs.</p>
+</article>
+<p class="src">Rendered from will-chem <code>retrain-spec</code> @ <code>7a9b0d9</code> · snapshot 2026-07-21</p>
+</main>
+</body>
+</html>
