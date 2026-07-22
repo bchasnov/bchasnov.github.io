@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hypothesis ledger — iteration 2 — will-chem</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement, cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="hypothesis-ledger-iteration-2-h101">Hypothesis ledger — iteration 2 (H101+)</h1>
+<p>Continues <code>HYPOTHESES.md</code>. Every row is dual-method (UMA + GFN2-xTB) by
+construction (<code>iter2.py</code>); a "flaw" is only claimed when UMA disagrees with
+<strong>both</strong> xTB <strong>and</strong> literature. Rigor gates on each: (1) structure validated /
+multi-start, (2) xTB cross-check, (3) literature.</p>
+<p>Status: ✅ confirmed UMA flaw · ➖ demoted (not UMA-specific) · 🌀 nuanced · ⏳ open</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Key result (UMA vs xTB vs lit.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H101</td>
+<td>Cation stabilization ladder (isodesmic hydride transfer), measured under both methods vs experimental HIA</td>
+<td>✅🚩</td>
+<td><strong>methyl over-stabilized +104 kcal/mol vs exp</strong> (UMA puts CH₃⁺ <em>above</em> tBu⁺; xTB &amp; exp far below). Ordinary 1°/2°/benzylic/allylic within +1…+5 (UMA better than xTB).</td>
+</tr>
+<tr>
+<td>—</td>
+<td>↳ cyclopropyl rung</td>
+<td>➖</td>
+<td>disqualified: ring-opens to allyl (xTB fully, UMA partially) — structural artifact, not a flaw</td>
+</tr>
+<tr>
+<td>H102</td>
+<td>Vinyl cation classical vs bridged (chase B5), bridged seeded explicitly</td>
+<td>✅🚩</td>
+<td>UMA bridged −49.4 below classical; xTB +4.7; CCSD(T) −4 to −5 → <strong>UMA over-stabilizes bridge ~+45–54</strong></td>
+</tr>
+<tr>
+<td>H103</td>
+<td>Bridgehead 1-norbornyl vs 2-norbornyl (B4/T6)</td>
+<td>➖</td>
+<td>UMA −3.1, <strong>xTB −3.6</strong> (agree within 0.5) → <strong>NOT UMA-specific</strong>; demoted, needs DFT</td>
+</tr>
+<tr>
+<td>H104</td>
+<td>Donation gradient: does a π-donor quench the flaw?</td>
+<td>✅🚩</td>
+<td>UMA−xTB gap: methyl +128, fluoromethyl +117, <strong>but O +17 / N +14</strong> → flaw = <em>un-quenched bare empty p</em>; π-donor switches it off</td>
+</tr>
+<tr>
+<td>H105</td>
+<td>β-halonium bridged vs open (B6), dual-method</td>
+<td>✅🚩</td>
+<td>UMA puts open 56–67 <strong>below</strong> bridge; xTB: open collapses INTO bridge (ΔE=0) → <strong>confirmed mis-ordering flaw</strong></td>
+</tr>
+<tr>
+<td>H106</td>
+<td>C4H7⁺ manifold (cyclopropylcarbinyl/cyclobutyl/homoallyl/methylallyl)</td>
+<td>🌀</td>
+<td>UMA−xTB only ~5–12 kcal (delocalized cations) → no dramatic flaw; nuanced control</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Key result (UMA vs xTB vs lit.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H107</td>
+<td>Terpene C10H17+ manifold (α-terpinyl/terpinen-4-yl/geranyl/linalyl/pinyl)</td>
+<td>🌀✅</td>
+<td>cyclic cations agree UMA↔xTB (≤9 kcal); <strong>linalyl +16.5</strong> (floppy → conformer caution, cf B1)</td>
+</tr>
+<tr>
+<td>H108</td>
+<td>Limonene protonation via isodesmic proton transfer (<strong>B3</strong>)</td>
+<td>✅</td>
+<td>UMA −3.0, xTB −1.8 → limonene ~2–3 kcal more basic than isobutylene; <strong>B3 closed</strong></td>
+</tr>
+<tr>
+<td>H109</td>
+<td>Markovnikov tert vs sec (C5H11+)</td>
+<td>✅</td>
+<td>UMA +10.1, xTB +11.8 → UMA reliable for the tert/sec cyclization driver</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Terpene payoff (H107–H109):</strong> in the real domain — cyclic tertiary/allylic
+cations — UMA is reliable to ~1–3 kcal/mol (no bare empty p). Two named cautions:
+dense conformer search for floppy open-chain cations; watch non-classical/primary
+mid-cascade intermediates.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Key result (UMA vs xTB vs lit.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H110</td>
+<td>Hyperconjugation decay (methyl→ethyl→iPr→tBu)</td>
+<td>✅🚩</td>
+<td>UMA−xTB error 128→7.8→0.9→0: <strong>one alkyl group quenches 94%</strong>; disease is the bare p</td>
+</tr>
+<tr>
+<td>H111</td>
+<td>Trihalomethyl CX3+ (F bare vs Cl donated)</td>
+<td>✅</td>
+<td>UMA−xTB CF3+ +31, CCl3+ −1.3 → poor π-donor (F) leaves residual error, good (Cl) quenches</td>
+</tr>
+<tr>
+<td>H112</td>
+<td>Aromatic controls (cyclopropenyl, tropylium)</td>
+<td>✅</td>
+<td>correct sign both; tropylium clean (−2.1), cyclopropenyl UMA +15 more stabilization (small-ring residual)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Key result (UMA vs xTB vs lit.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H113</td>
+<td>CH₂ singlet–triplet (calibration)</td>
+<td>🌀</td>
+<td>UMA −34.5 (triplet GS, right sign, ~4× too large); xTB spin-blind</td>
+</tr>
+<tr>
+<td>H114</td>
+<td>CF₂ singlet–triplet</td>
+<td>✅🚩</td>
+<td>UMA −20.8 (triplet) vs exp singlet GS → <strong>wrong sign</strong></td>
+</tr>
+<tr>
+<td>H115</td>
+<td>CCl₂ singlet–triplet</td>
+<td>✅🚩</td>
+<td>UMA −15.7 (triplet) vs exp singlet → wrong sign (= iter1 H77)</td>
+</tr>
+<tr>
+<td>H116</td>
+<td>CBr₂ singlet–triplet</td>
+<td>✅🚩</td>
+<td>UMA −31.5 (triplet) vs exp singlet → wrong sign</td>
+</tr>
+<tr>
+<td>H117</td>
+<td>Cp⁺ singlet–triplet</td>
+<td>✅🚩</td>
+<td>UMA −200.6 (unphysical, = iter1); xTB +2.8</td>
+</tr>
+<tr>
+<td>H118</td>
+<td>Cp⁺ ring antiaromatic JT distortion</td>
+<td>✅🚩</td>
+<td>UMA symmetric (1 mÅ, misses JT); <strong>xTB distorts (206 mÅ)</strong> — clean cross-check</td>
+</tr>
+<tr>
+<td>—</td>
+<td>(method note)</td>
+<td>➖</td>
+<td>GFN2-xTB spin gaps structure-insensitive (~+1.7 for all carbenes) → not a spin arbiter; use experiment</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Secondary class (H113–H118):</strong> UMA favors triplets for small carbenes /
+antiaromatic Cp⁺ (wrong sign for halocarbene singlets; −200 for Cp⁺; misses JT).
+Candidate unifying root with the cation flaw: UMA mishandles donation into a
+localized empty p (over-stabilizes bare p in cations; under-stabilizes
+donor-quenched singlet carbenes).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Key result (UMA vs xTB vs lit.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H119</td>
+<td>Charge-shift/homolytic bond lengths (off-domain, T5)</td>
+<td>➖</td>
+<td>UMA ~15–19 mÅ short on ALL bonds (not F-specific); off-domain → demoted</td>
+</tr>
+<tr>
+<td>H120</td>
+<td>2-norbornyl σ-bridge geometry</td>
+<td>➖</td>
+<td>UMA≈xTB (near-identical) → not a UMA-specific geometry flaw</td>
+</tr>
+<tr>
+<td>H121</td>
+<td>β-silicon vs β-H hyperconjugation (T10)</td>
+<td>✅</td>
+<td>UMA +25.0, xTB +31.7 → β-Si effect confirmed (expected success)</td>
+</tr>
+<tr>
+<td>H122</td>
+<td>Acylium/oxocarbenium donor controls</td>
+<td>🌀</td>
+<td>UMA−xTB +6.2/+17.3 → π-donation leaves a small residual (not 0)</td>
+</tr>
+<tr>
+<td>H123</td>
+<td>Styrene benzylic vs primary (C8H9+)</td>
+<td>✅</td>
+<td>UMA −0.39 ≈ xTB +0.42 → agree (primary → benzylic sink)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="error-class-after-h101h106">Error class after H101–H106</h2>
+<p>One disease — <strong>over-stabilization of a localized/bare empty-p carbenium</strong> —
+confirmed cross-checked at four points: methyl (+104 vs exp), bridged vinyl
+(+45–54), halonium open-form (56–67 too low), fluoromethyl (+117 vs xTB). It
+<strong>switches off under genuine π-donation</strong> (H104: N/O donor → UMA−xTB gap ~15).
+Demoted / not UMA-specific: bridgehead (H103, xTB agrees), C4H7⁺ manifold (H106).</p>
+<h2 id="dft-ccsdt-confirmation-compute-enabled-h166h169">DFT / CCSD(T) confirmation (compute enabled) — H166–H169</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Hypothesis</th>
+<th>Status</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H166</td>
+<td>DFT stabilization ladder (B3LYP/def2-TZVP)</td>
+<td>✅🚩</td>
+<td>reproduces exp HIA (methyl −82.6 vs −81.0); <strong>UMA methyl error +104.7 vs DFT</strong>; ordinary rungs match DFT &lt;1 kcal</td>
+</tr>
+<tr>
+<td>H167</td>
+<td>Vinyl bridged vs classical, CCSD(T)/def2-TZVP (B5)</td>
+<td>✅🚩</td>
+<td>CCSD(T) −3.3 (=lit); <strong>UMA over-stabilizes bridge ~46 kcal vs CCSD(T)</strong></td>
+</tr>
+<tr>
+<td>H168</td>
+<td>Halonium bridged vs open, DFT (B6)</td>
+<td>✅🚩</td>
+<td>DFT within ~6 kcal; <strong>UMA over-stabilizes open form ~55–60 kcal vs DFT</strong></td>
+</tr>
+<tr>
+<td>H171</td>
+<td>2-propenyl vinyl cation vs allyl at DFT</td>
+<td>✅</td>
+<td>DFT +8.71 = UMA +7.9; xTB −17.5 WRONG → UMA beats xTB</td>
+</tr>
+<tr>
+<td>H172</td>
+<td>cubane strain (C8H8) at DFT</td>
+<td>✅</td>
+<td>DFT +126.5; UMA +104 close, xTB +37 far off → UMA beats xTB</td>
+</tr>
+<tr>
+<td>H173</td>
+<td>phenyl cation stabilization at DFT</td>
+<td>✅</td>
+<td>DFT −51.2 = UMA −50.4 → aryl cation accurate; H101 exp anchor was bad</td>
+</tr>
+<tr>
+<td>H169</td>
+<td>Bridgehead 1- vs 2-norbornyl, DFT (settle H103)</td>
+<td>➖✅</td>
+<td>DFT −2.9 = UMA −3.1 = xTB −3.6 → UMA is RIGHT; not a flaw (overturns T6/B4)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>All headline flaws now confirmed against a real ab-initio reference.</strong> The
+parked DFT_REQUESTS (T4 methyl, B5 vinyl, B6 halonium) are closed; the
+ordinary-cation control shows UMA matches DFT to &lt;1 kcal/mol, isolating the error
+to the bare-empty-p corner.</p>
+<h2 id="systematic-xtb-cross-check-registry-h124h165-42-isomeric-dual-method-comparisons">Systematic xTB cross-check registry — H124–H165 (42 isomeric dual-method comparisons)</h2>
+<p><strong>32/42 cross-confirm</strong> UMA≈xTB (&lt;10 kcal); UMA validated for ordinary
+carbocation ladders, Wagner–Meerwein driving forces, terpene C10H17+ isomers,
+and most aromaticity/conjugation controls. Divergences: <strong>H130</strong> (2-propenyl
+vinyl-type cation, +25 → the disease); <strong>H139/H140</strong> (noise — pathological
+"open"-isomer choices); <strong>H151/H162/H148/H150/H154</strong> (strained neutral
+hydrocarbons — cubane/Dewar/etc., off carbocation axis; likely xTB strain error
+since UMA's cubane strain matches experiment). Full data:
+<code>uma_core/results/iter2_results.json</code>. H174: terpene cascade map.</p>
+<h2 id="reg4-breadth-cross-check-h175h200-26-comparisons">REG4 breadth cross-check — H175–H200 (26 comparisons)</h2>
+<p><strong>23/26 cross-confirm</strong> UMA≈xTB. Higher carbocation homologs (C7/C8 tertiary vs
+secondary), aromatic isomers (anthracene/phenanthrene, imidazole/pyrrole
+tautomers), alkene-substitution ladders, and alcohol/ether/carbonyl
+constitutional isomers all track. Divergences: H178 (cyclopentylmethyl primary
+rearranges), H190 (propylene oxide epoxide strain), H195 (amine proton affinity)
+— modest/off-axis. Completes the <strong>100-hypothesis iteration-2 campaign (H101–H200)</strong>.</p>
+<h2 id="campaign-tally-h101h200">Campaign tally (H101–H200)</h2>
+<ul>
+<li>Confirmed UMA-specific flaws (the one disease, DFT/CCSD(T)-anchored): methyl,
+  bridged vinyl, β-halonium open form, fluoromethyl/CF₃⁺.</li>
+<li>Mechanism mapped: bare empty p; quenched by σ-hyperconjugation or π-donation.</li>
+<li>Demoted (cross-check/DFT cleared UMA): bridgehead, aryl cation, F₂/charge-shift,
+  and several registry divergences reassigned to xTB (2-propenyl, cubane).</li>
+<li>Domain payoff: UMA reliable for terpene cations (~1–3 kcal vs DFT); B1 &amp; B3 solved.</li>
+<li>Secondary spin/open-shell class documented; retraining spec + research-use guide.</li>
+<li>~90/110 dual-method comparisons cross-confirm — UMA's reliable envelope is broad.</li>
+</ul>
+</article>
+<p class="src">Rendered from will-chem <code>hypotheses-iter2</code> @ <code>7a9b0d9</code> · snapshot 2026-07-21</p>
+</main>
+</body>
+</html>

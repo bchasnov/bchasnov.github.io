@@ -18,9 +18,15 @@ Unlisted project pages. Nothing here is linked from the homepage — share URLs 
 
 | Project | Page | Latest snapshot |
 |---|---|---|
-| [will-chem](https://github.com/bchasnov/will-chem) | `will-chem/inbox/` — will-chem feedback inbox (bundles rendered reference docs under `.../<date>/docs/`) | 2026-07-20 |
+| [will-chem](https://github.com/bchasnov/will-chem) | `will-chem/inbox/` — will-chem feedback inbox (bundles rendered reference docs under `.../<date>/docs/`) | 2026-07-21 |
+
+Snapshots: `2026-07-20` (round 1) and `2026-07-21` (round 2 — receipts + aim
+deck, with an expanded reference-docs set grouped into "Iteration 2" and
+"Round 1 reference"). The `will-chem/inbox/` URL redirects to the newest.
 
 Reference docs are rendered from the will-chem repo's markdown to styled HTML at
 import time: export the `.md` sources, run them through python-markdown with the
 `extra` extension, and wrap the output in the inbox theme. Raw `.md` sources are
-kept alongside under `docs/src/`.
+kept alongside under `docs/src/`. Imported content is anonymized (individuals'
+names → role labels, locations and biographical/career framing removed) before
+committing.

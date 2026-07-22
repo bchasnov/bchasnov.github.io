@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>will-chem — reference docs (round 2)</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+    --shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06); --radius:16px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+      --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+      --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+      --shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#1a1f26; --ink:#e9edf2; --ink-soft:#b0b8c1; --ink-faint:#7c848e;
+    --line:#2a313a; --line-2:#363f4a; --accent:#6b93ff; --accent-ink:#0b0e12;
+    --code-bg:#11161c; --quote:#7fc99a; --quote-bg:#18241d;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#52585f; --ink-faint:#868d95;
+    --line:#e2e5e9; --line-2:#d3d7dd; --accent:#3563e0; --accent-ink:#fff;
+    --code-bg:#f2f3f5; --quote:#3f7a52; --quote-bg:#eef5f0;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;}
+  .bar a:hover{text-decoration:underline;}
+  .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;}
+  h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;}
+  a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+  li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);
+    padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+    padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);
+    background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){
+  var KEY='will-docs-theme';
+  try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  window.__toggleTheme=function(){
+    var el=document.documentElement, cur=el.getAttribute('data-theme');
+    if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    el.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  };
+})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1>will-chem — reference docs (round 2)</h1>
+<p style="color:var(--ink-soft)">Source documents for the terpene / carbocation mechanism study,
+rendered from the will-chem repo. Companion to the <a href="../">round-2 feedback inbox</a>.
+The earlier snapshot is at <a href="../../2026-07-20/">2026-07-20</a>.</p>
+<div class="grouphead">Iteration 2</div>
+<ul style="list-style:none;padding-left:0">
+  <li><a href="summary-iter2.html"><strong>Iteration 2 — summary</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">One-page summary of round 2: the single DFT/CCSD(T)-confirmed UMA failure and what holds.</div></li>
+  <li><a href="iteration-1-review.html"><strong>Iteration 1 — review</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Independent review of round 1 that set up round 2.</div></li>
+  <li><a href="iteration-2-plan.html"><strong>Iteration 2 — plan</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">The plan round 2 executed.</div></li>
+  <li><a href="diary-iter2.html"><strong>Diary — iteration 2</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Round-2 lab notebook (H101+): building the quantified UMA failure taxonomy.</div></li>
+  <li><a href="hypotheses-iter2.html"><strong>Hypothesis ledger — iteration 2</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Round-2 hypotheses (H101+), each dual-method (UMA + GFN2-xTB).</div></li>
+  <li><a href="where-uma-helps.html"><strong>Where UMA helps</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Where UMA is a force multiplier vs. where to hand off to DFT.</div></li>
+  <li><a href="retrain-spec.html"><strong>Retraining prescription</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">How to make an MLIP transferable to carbocation / natural-product mechanism.</div></li>
+  <li><a href="next-directions.html"><strong>Next directions</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Iteration-3 seed directions grounded in round-2 evidence.</div></li>
+  <li><a href="next-round.html"><strong>Next round</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">How reviewer feedback drives the next round.</div></li>
+</ul>
+<div class="grouphead">Round 1 reference</div>
+<ul style="list-style:none;padding-left:0">
+  <li><a href="readme.html"><strong>README</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Project overview — what the study is and how it&#x27;s organized.</div></li>
+  <li><a href="diary.html"><strong>Scientist diary</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Round-1 lab notebook (H1–H100) — the reasoning trail.</div></li>
+  <li><a href="hypotheses.html"><strong>Hypothesis ledger</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Round-1 hypotheses and the key UMA result that settled each.</div></li>
+  <li><a href="uma-flaws.html"><strong>UMA flaws &amp; limits</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Adversarial calibration log — reproducible failures found while using UMA.</div></li>
+  <li><a href="dft-requests.html"><strong>DFT requests</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Queued DFT checks the study wants compute for.</div></li>
+  <li><a href="report.html"><strong>Results report</strong></a><div style="color:var(--ink-soft);font-size:.9rem;margin-top:.15rem">Summary report generated from the UMA/xTB results.</div></li>
+</ul>
+<p class="src">Snapshot 2026-07-21 · rendered from will-chem @ <code>7a9b0d9</code></p>
+</article>
+</main>
+</body>
+</html>
