@@ -9,7 +9,7 @@ must fix. Written on `claude/iter1-review-iter2-plan-4wkrqn`.
 
 A single autonomous agent ran a **100-hypothesis, DFT-free campaign** (H1–H100)
 using UMA (`uma-s-1p1`, `omol` task, CPU) as a mechanism-exploration engine for
-carbocation / terpene physical-organic chemistry (the experimental collaborator–the experimental collaborator × the aromaticity group
+carbocation / terpene physical-organic chemistry (the experimental group × the aromaticity group
 framing). Self-reported tally (`HYPOTHESES.md`): **85 confirmed, ~7 genuine UMA
 flaws, rest mixed/refuted-but-informative.** All comparisons are
 isodesmic/isomeric or geometric so UMA's absolute-energy reference cancels.

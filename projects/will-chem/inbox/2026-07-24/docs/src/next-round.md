@@ -109,9 +109,10 @@ and a retraining spec; the two "verify" numbers (B1, B2) stay open until DFT is
 available — parked, not pretended-closed.
 
 ## Open questions for the reviewer
+
 - Target venue/audience — comp-chem/MLIP methods, or physical-organic/natural
   product? (Changes what counts as a headline.)
-- the reviewer DFT be available for the verify items (B1, B2, T4)? If so, spec exactly what
+- Will DFT be available for the verify items (B1, B2, T4)? If so, spec exactly what
   to run; if not, stay DFT-free + literature.
 - Confirm priority: carbocation-stabilization errors (primary) → open-shell/spin
   (secondary) → off-domain F₂ (demote).

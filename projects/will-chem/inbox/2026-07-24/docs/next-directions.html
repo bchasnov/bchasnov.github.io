@@ -72,33 +72,41 @@ ordered by leverage.</p>
 barriers</strong> — Wagner–Meerwein shifts, cyclizations, hydride shifts. Warning sign:
 the one clean dissociation failure (F₂) was at <strong>stretched bonds</strong>, and a TS is a
 region of partial/stretched bonding with a locally electron-deficient center —
-exactly the "bare-p-like" regime UMA over-stabilizes.
-- <strong>Do:</strong> build a barrier benchmark (1,2-H / 1,2-Me shifts, ring expansions,
-  cyclizations) via NEB/string with UMA, DFT-refine the TSs, compare barriers.
-- <strong>Why it matters:</strong> if UMA barriers are trustworthy, the UMA-explore/DFT-refine
+exactly the "bare-p-like" regime UMA over-stabilizes.</p>
+<ul>
+<li><strong>Do:</strong> build a barrier benchmark (1,2-H / 1,2-Me shifts, ring expansions,
+  cyclizations) via NEB/string with UMA, DFT-refine the TSs, compare barriers.</li>
+<li><strong>Why it matters:</strong> if UMA barriers are trustworthy, the UMA-explore/DFT-refine
   cascade workflow is fully general for the experimental collaborator's mechanism work; if not, that is a
-  critical, unmapped MLIP limitation.</p>
+  critical, unmapped MLIP limitation.</li>
+</ul>
 <h2 id="2-close-the-retraining-loop-diagnosis-cure-re-test">2. Close the retraining loop (diagnosis → cure → re-test)</h2>
-<p><code>RETRAIN_SPEC.md</code> names the gap and now carries real DFT/CCSD(T) labels.
-- <strong>Do:</strong> generate the small bare-empty-p augmentation set (methyl / halomethyl /
+<p><code>RETRAIN_SPEC.md</code> names the gap and now carries real DFT/CCSD(T) labels.</p>
+<ul>
+<li><strong>Do:</strong> generate the small bare-empty-p augmentation set (methyl / halomethyl /
   parent vinyl / non-classical bridges / β-halonium, CCSD(T) labels), fit a cheap
   <strong>Δ-learning residual correction</strong> on top of UMA, and re-run the iteration-2
   ladders (<code>mechanisms2.py</code>) to verify the methyl/vinyl/halonium errors collapse
-  while terpene/ordinary numbers stay put.</p>
+  while terpene/ordinary numbers stay put.</li>
+</ul>
 <h2 id="3-predictive-error-estimator-active-learning">3. Predictive error estimator + active learning</h2>
 <p>The error scales cleanly with how <em>bare</em> the empty p is (quenched by
-σ-hyperconjugation / π-donation — measured in H104/H110/H111).
-- <strong>Do:</strong> build a cheap descriptor (empty-orbital occupancy proxy or learned
+σ-hyperconjugation / π-donation — measured in H104/H110/H111).</p>
+<ul>
+<li><strong>Do:</strong> build a cheap descriptor (empty-orbital occupancy proxy or learned
   fingerprint) that predicts UMA's error <em>a priori</em>, so a workflow auto-decides
   UMA-vs-DFT. Combine with #2 into an active-learning loop: UMA proposes →
-  estimator flags → DFT labels the flagged → correction refits → envelope grows.</p>
+  estimator flags → DFT labels the flagged → correction refits → envelope grows.</li>
+</ul>
 <h2 id="4-scale-to-sesqui-diterpenes-where-speed-wins-decisively">4. Scale to sesqui-/diterpenes (where speed wins decisively)</h2>
 <p>Monoterpenes (C₁₀) are small enough for DFT to keep up; the synergy payoff
 explodes for sesqui-(C₁₅)/di-(C₂₀)terpene cascades with combinatorial
-conformer/intermediate spaces.
-- <strong>Do:</strong> confirm UMA's reliability holds at that scale (same tertiary/allylic
-  chemistry) and demonstrate the full explore→refine workflow on a real the experimental collaborator
-  diterpene cascade.</p>
+conformer/intermediate spaces.</p>
+<ul>
+<li><strong>Do:</strong> confirm UMA's reliability holds at that scale (same tertiary/allylic
+  chemistry) and demonstrate the full explore→refine workflow on a real collaborator-relevant
+  diterpene cascade.</li>
+</ul>
 <h2 id="5-is-the-disease-uma-specific-or-universal-to-equilibrium-trained-mlips">5. Is the disease UMA-specific or universal to equilibrium-trained MLIPs?</h2>
 <ul>
 <li><strong>Do:</strong> re-run the bare-empty-p benchmark on MACE-OFF / ANI / other MLIPs. If
@@ -108,11 +116,13 @@ conformer/intermediate spaces.
 </ul>
 <h2 id="6-open-shell-antiaromatic-class">6. Open-shell / antiaromatic class</h2>
 <p>UMA fails on carbenes (halocarbene singlet–triplet sign) and antiaromatic Cp⁺
-(misses Jahn–Teller, −200 kcal/mol triplet) — the secondary class.
-- <strong>Do:</strong> systematically map UMA's spin-state and antiaromatic/aromaticity
+(misses Jahn–Teller, −200 kcal/mol triplet) — the secondary class.</p>
+<ul>
+<li><strong>Do:</strong> systematically map UMA's spin-state and antiaromatic/aromaticity
   failures against multireference references; test whether a spin-aware or
   multireference-labeled correction helps. Directly on-target for the aromaticity group's
-  reactive-intermediate / aromaticity research.</p>
+  reactive-intermediate / aromaticity research.</li>
+</ul>
 <h2 id="traceability-to-the-reviewers-last-round-verdicts-feedbackverdicts_2026-07-21json">Traceability to the reviewer's last-round verdicts (<code>feedback/verdicts_2026-07-21.json</code>)</h2>
 <ul>
 <li><strong>Dir 2 (retraining)</strong> ← T10 (the reviewer's explicit "how can it be retrained / what

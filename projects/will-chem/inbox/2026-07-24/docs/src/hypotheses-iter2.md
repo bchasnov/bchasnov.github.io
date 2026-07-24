@@ -101,6 +101,7 @@ rearranges), H190 (propylene oxide epoxide strain), H195 (amine proton affinity)
 — modest/off-axis. Completes the **100-hypothesis iteration-2 campaign (H101–H200)**.
 
 ## Campaign tally (H101–H200)
+
 - Confirmed UMA-specific flaws (the one disease, DFT/CCSD(T)-anchored): methyl,
   bridged vinyl, β-halonium open form, fluoromethyl/CF₃⁺.
 - Mechanism mapped: bare empty p; quenched by σ-hyperconjugation or π-donation.

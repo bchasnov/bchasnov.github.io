@@ -64,14 +64,14 @@ try{localStorage.setItem(KEY,next);}catch(e){}};})();
 <article class="doc">
 <h1 id="iteration-3-summary-h201h261">Iteration 3 — summary (H201–H261)</h1>
 <p><strong>One sentence:</strong> driven by the reviewer's round-2 "chase" verdicts, iteration 3
-benchmarks UMA <em>as a tool</em> against the reviewer's own level of theory (mPW1PW91/6-31G(d))
+benchmarks UMA <em>as a tool</em> against the study's level of theory (mPW1PW91/6-31G(d))
 and finds it is <strong>strongly preferred over xTB for non-planar/bridgehead cations
 and for ranking conformers of stable species, usable-with-care for low reaction
 barriers, and — importantly — not fixable in its one failure regime by a cheap
 correction</strong>; the paper is therefore <em>both</em> a failure/fix taxonomy <em>and</em> a
 demonstration that UMA is a real conformational-search / mechanism engine (the reviewer's A5
 "both").</p>
-<p>All round-3 DFT is <strong>mPW1PW91/6-31G(d)</strong> (the experimental collaborator/the experimental collaborator level), so numbers
+<p>All round-3 DFT is <strong>mPW1PW91/6-31G(d)</strong> (the study's level), so numbers
 compare directly to their papers. Modules: <code>w1_conformers.py</code>, <code>w2_bridgehead.py</code>,
 <code>w3_scaleup.py</code>, <code>w4_barriers.py</code>, <code>w5_deltalearn.py</code>, <code>round3.py</code>.</p>
 <hr />
@@ -80,23 +80,25 @@ compare directly to their papers. Modules: <code>w1_conformers.py</code>, <code>
 <p><em>"Is a conf search at UMA superior? For which systems? Compare efficiencies. Is
 there a clear rule set? Energy range for minima?"</em></p>
 <p>Matrix across size (C8→C15), bonding, and heteroatoms; UMA vs xTB vs
-DFT-refined ranking. <strong>Rule set:</strong>
-1. <strong>Accuracy —</strong> for any species that stays one constitutional isomer (neutral
+DFT-refined ranking. <strong>Rule set:</strong></p>
+<ol>
+<li><strong>Accuracy —</strong> for any species that stays one constitutional isomer (neutral
    chains/alcohols, cyclic cations, N/O-bearing), <strong>UMA-relaxed conformers rank
    better than xTB</strong>: UMA's global basin is the DFT global in <strong>4/4</strong> such systems
    (n-octane, α-terpinyl⁺, geranyl⁺, amino-decalin); xTB's global sits <strong>0.5–3.1
-   kcal above</strong> the DFT best every time. Use UMA when the <em>ranking</em> matters.
-2. <strong>Efficiency —</strong> xTB is <strong>10–40× faster per conformer on CPU</strong>. UMA buys its
+   kcal above</strong> the DFT best every time. Use UMA when the <em>ranking</em> matters.</li>
+<li><strong>Efficiency —</strong> xTB is <strong>10–40× faster per conformer on CPU</strong>. UMA buys its
    accuracy at wall-clock cost (GPU narrows this). Protocol: xTB for a wide first
-   sweep, UMA to rank the shortlist, DFT to confirm the top few.
-3. <strong>Reactive acyclic cations are the caveat —</strong> relaxation-based search blurs
+   sweep, UMA to rank the shortlist, DFT to confirm the top few.</li>
+<li><strong>Reactive acyclic cations are the caveat —</strong> relaxation-based search blurs
    into <em>reaction</em>: linalyl⁺ "conformers" cyclized under xTB (a 12-kcal-lower
    ring-closed isomer DFT confirms) while UMA kept them open; both rearranged the
-   primary geranyl⁺. <strong>Always connectivity-filter basins for reactive ions.</strong>
-4. <strong>Energy window (your explicit ask) —</strong> stable systems keep their relevant low
+   primary geranyl⁺. <strong>Always connectivity-filter basins for reactive ions.</strong></li>
+<li><strong>Energy window (your explicit ask) —</strong> stable systems keep their relevant low
    conformers within <strong>~1–4 kcal</strong> (α-terpinyl 1.0, n-octane 3.1, farnesol 3.9),
    so a ~4-kcal window suffices; the 10–30-kcal "windows" of reactive cations are
-   rearrangement products, not conformers.</p>
+   rearrangement products, not conformers.</li>
+</ol>
 <h3 id="w2-non-planar-bridgehead-carbocations-your-a3-the-headline">W2 — Non-planar / bridgehead carbocations (your A3) — the headline</h3>
 <p><em>"Consider the non-planar carbocations; they seem central to mechanistic
 rearrangements."</em></p>
@@ -139,7 +141,7 @@ iteration-1's bridgehead worry in UMA's favor</strong> and is the clearest "UMA 
 for this system class" result — exactly the mechanistically central
 (Wagner–Meerwein, Bredt-constrained) class.</p>
 <h3 id="w3-scale-up-to-documented-systems-your-a4">W3 — Scale-up to documented systems (your A4)</h3>
-<p><em>"Test for well-documented systems (taxadiene, the experimental collaborator), their level of theory
+<p><em>"Test for well-documented systems (taxadiene, the collaborator's own systems), their level of theory
 (mpw1pw91/6-31gd)."</em></p>
 <p>UMA conformer search runs at diterpene scale: <strong>taxa-4,11-diene (C20H32, verified
 PubChem structure)</strong> and the geranylgeranyl (GGPP-derived) C20 cation. UMA sweeps
@@ -201,7 +203,7 @@ and gated.</p>
 <h2 id="extended-wrinkle-driven-loop-h244h256-inferred-from-the-reviewers-verdicts">Extended wrinkle-driven loop (H244–H256) — inferred from the reviewer's verdicts</h2>
 <p>Beyond the five commissioned workstreams, one hypothesis at a time (each wrinkle
 generating the next), toward the broader program the reviewer's responses imply. The result
-is a <strong>unified UMA error map</strong> at the reviewer's level of theory:</p>
+is a <strong>unified UMA error map</strong> at the study's level of theory:</p>
 <div class="tablewrap"><table>
 <thead>
 <tr>
@@ -349,8 +351,8 @@ open-shell / antiaromatic / spin-state energetics (and there, beyond single-ref
 DFT too); reactive-acyclic-cation conformer search (connectivity-filter);
 quantitative branch ratios (enhanced sampling). <strong>Everything in the ordinary /
 terpene / non-classical / bridgehead carbocation domain — statics, conformer
-ranking, low mechanistic barriers, and MD stability — is UMA-reliable at the
-the experimental collaborator level, now at natural-product scale.</strong></p>
+ranking, low mechanistic barriers, and MD stability — is UMA-reliable at the study's
+level, now at natural-product scale.</strong></p>
 </article>
 <p class="src">Rendered from will-chem <code>summary-iter3</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
 </main>

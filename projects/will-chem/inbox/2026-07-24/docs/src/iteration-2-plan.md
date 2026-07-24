@@ -30,6 +30,7 @@ anchored failure map — and prescribes the data that would fix UMA.
 > (UMA + xTB + literature).**
 
 Every candidate flaw must pass three **rigor gates** before it is reported:
+
 1. **Multi-start / symmetry-break** — prove it is not a sampling artifact
    (broaden beyond iteration 1's 4 fixed seeds).
 2. **xTB cross-check** — GFN2-xTB on the same isodesmic/isomeric comparison;
@@ -119,6 +120,7 @@ headline) and the agent's own correctness judgment (what is true / an artifact) 
 do the boring correctness work because it licenses the exciting claims.
 
 ## Defaults chosen (open questions from `NEXT_ROUND.md`)
+
 - **DFT-free by design.** Assume no DFT this iteration; B1/B2/T4 stay parked +
   literature-anchored, ready to spec if DFT appears.
 - **Priority:** carbocation-stabilization errors (primary) → open-shell/spin
@@ -128,6 +130,7 @@ do the boring correctness work because it licenses the exciting claims.
   reviewer's implied venue.
 
 ## Verification (how to check iteration 2 end-to-end)
+
 1. `python -m uma_core.stress_test` — instrument still 6/6.
 2. Run the new registry both methods:
    `python -m uma_core.run_compare <cation-series>` — confirm each comparison

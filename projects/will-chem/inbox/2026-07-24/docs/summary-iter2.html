@@ -69,16 +69,18 @@ failure — it over-stabilizes an <em>unquenched, localized empty p orbital</em>
 carbocation/terpene mechanism, best used as a front-end that DFT refines.</p>
 <h2 id="what-iteration-2-added-over-iteration-1">What iteration 2 added over iteration 1</h2>
 <p>Iteration 1 (H1–H100) built a UMA-only failure map and raised DFT requests it
-was told not to run. Iteration 2:
-1. <strong>Dual-method by construction</strong> — every comparison runs under UMA <strong>and</strong>
-   GFN2-xTB (<code>iter2.py</code>), closing iteration 1's biggest gap.
-2. <strong>Quantified the headline</strong> — the methyl over-stabilization went from an
+was told not to run. Iteration 2:</p>
+<ol>
+<li><strong>Dual-method by construction</strong> — every comparison runs under UMA <strong>and</strong>
+   GFN2-xTB (<code>iter2.py</code>), closing iteration 1's biggest gap.</li>
+<li><strong>Quantified the headline</strong> — the methyl over-stabilization went from an
    <em>estimate</em> ("60–80") to a <em>measurement</em>: <strong>+104.7 kcal/mol vs B3LYP/def2-TZVP</strong>
-   (which matches experiment to 1.6 kcal/mol).
-3. <strong>Ran real ab-initio</strong> (<code>run_dft.py</code>, PySCF) — confirmed every headline flaw
-   at DFT/CCSD(T), closing the parked DFT_REQUESTS.
-4. <strong>Demonstrated the MLIP+DFT synergy</strong> (<code>synergy.py</code>) — UMA explores conformer
-   space, DFT arbitrates the survivors.</p>
+   (which matches experiment to 1.6 kcal/mol).</li>
+<li><strong>Ran real ab-initio</strong> (<code>run_dft.py</code>, PySCF) — confirmed every headline flaw
+   at DFT/CCSD(T), closing the parked DFT_REQUESTS.</li>
+<li><strong>Demonstrated the MLIP+DFT synergy</strong> (<code>synergy.py</code>) — UMA explores conformer
+   space, DFT arbitrates the survivors.</li>
+</ol>
 <h2 id="the-confirmed-error-class-one-disease">The confirmed error class (one disease)</h2>
 <p>UMA over-stabilizes a <strong>bare / weakly-donated localized empty p orbital</strong>:</p>
 <div class="tablewrap"><table>

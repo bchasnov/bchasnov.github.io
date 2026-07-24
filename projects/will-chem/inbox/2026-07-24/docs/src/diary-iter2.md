@@ -125,6 +125,7 @@ it isn't proven as UMA's.
 
 ### Where the error class stands after H101–H103
 The **confirmed, cross-checked, UMA-specific over-stabilizations**:
+
 - **methyl cation:** +104 kcal/mol vs experiment (xTB agrees methyl ≪ tert-butyl).
 - **bridged vinyl cation:** ~+45–54 kcal/mol vs xTB and CCSD(T).
 
@@ -196,6 +197,7 @@ control, not a flaw.
 ### Error class after H101–H106
 Confirmed UMA-specific errors (each cross-checked vs xTB, most vs literature),
 all one disease — **over-stabilization of a localized/bare empty-p carbenium**:
+
 1. **methyl** +104 vs exp; 2. **bridged vinyl** +45–54; 3. **halonium**
 mis-ordering (open 56–67 too low); 4. **fluoromethyl** +117 vs xTB. The disease
 **switches off** under genuine π-donation (H104: N/O → gap ~15). Demoted / not
@@ -208,7 +210,7 @@ modest scatter).
 
 The flaws are the paper, but the reviewer also wants "expected successes"
 documented. The sharpest success question: **does the over-stabilization disease
-bite in the actual the experimental collaborator terpene chemistry?** It shouldn't — real monoterpene
+bite in the experimental collaborator's actual terpene chemistry?** It shouldn't — real monoterpene
 cyclization funnels through *tertiary/allylic* cations, which have no bare empty
 p. Tested, dual-method:
 
@@ -477,6 +479,7 @@ iteration 1's broad "UMA reproduces physical-organic energetics" holds up under 
 second method.
 
 The 10 divergences sort cleanly:
+
 - **The disease (carbocation):** H130 allyl vs **2-propenyl** (a vinyl-type
   localized-empty-orbital C₃H₅⁺) diverges 25 kcal — the empty-p over-stabilization
   reappearing, as expected.

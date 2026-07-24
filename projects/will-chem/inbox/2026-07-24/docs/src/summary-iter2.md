@@ -8,6 +8,7 @@ carbocation/terpene mechanism, best used as a front-end that DFT refines.
 ## What iteration 2 added over iteration 1
 Iteration 1 (H1–H100) built a UMA-only failure map and raised DFT requests it
 was told not to run. Iteration 2:
+
 1. **Dual-method by construction** — every comparison runs under UMA **and**
    GFN2-xTB (`iter2.py`), closing iteration 1's biggest gap.
 2. **Quantified the headline** — the methyl over-stabilization went from an
@@ -35,6 +36,7 @@ the disease bites methyl, parent vinyl, non-classical 3-center bridges, and the
 open β-halo primary cation — and *nothing else*.
 
 ## Corrections to iteration 1 (the cross-check + DFT caught false positives)
+
 - **Bridgehead (T6/B4) is NOT a flaw:** UMA (−3.1), xTB (−3.6), DFT (−2.9) all
   agree the 1-norbornyl bridgehead sits ~3 kcal below 2-norbornyl. Real chemistry.
 - **Aryl cations are fine:** phenyl DFT −51.2 = UMA −50.4; H101's "phenyl error"
@@ -53,6 +55,7 @@ Markovnikov, ring-expansion, and Wagner–Meerwein driving forces. Solved **B3**
 the UMA-sweep/DFT-confirm synergy). UMA is a reliable terpene-mechanism engine.
 
 ## Deliverables on this branch
+
 - `ITERATION_1_REVIEW.md`, `ITERATION_2_PLAN.md` — review + plan
 - `DIARY_ITER2.md`, `HYPOTHESES_ITER2.md` — dated narrative + ledger (H101–H174)
 - `UMA_FLAWS.md` (iteration-2 addendum) — the flaws catalog, cross-checked

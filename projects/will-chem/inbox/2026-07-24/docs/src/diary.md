@@ -31,6 +31,7 @@ rearranged during relaxation.
 carbon, planarity of the electron-deficient carbon.
 
 **Result — H1 confirmed, and it was satisfying to watch it fall out cleanly:**
+
 - tert-butyl → stays branched/tertiary (both UMA and xTB). ✓
 - sec-butyl → stays linear/secondary. ✓
 - isobutyl → built *branched/primary*, relaxed to *linear/secondary* in **both**
@@ -79,6 +80,7 @@ cluster into distinct minima; and pool isomeric starting points into one surface
 to see the rearrangement network.
 
 **Findings:**
+
 - **α-terpinyl cation** (the monoterpene branch-point, the one that matters
   most): the multi-conformer search found a global minimum **2.30 kcal/mol
   below** the single-guess energy the one-shot pipeline had been reporting. The
@@ -98,6 +100,7 @@ should have front-loaded it. Wrote `stress_test.py`: the invariants any
 trustworthy potential must satisfy.
 
 **Result — 6/6 passed:**
+
 - determinism: ΔE = 0 exactly
 - translation invariance: 5e-6 kcal/mol
 - rotation invariance: 1e-5 kcal/mol
@@ -117,6 +120,7 @@ stop agreeing and DFT should arbitrate. Logged those cases in `DFT_REQUESTS.md`
 rather than firing off DFT unilaterally.
 
 ### Open threads
+
 - Confirm the relocated α-terpinyl global minimum with DFT (raised).
 - The α-terpinyl basins are all "delocalized (3 sp2 C)" per my classifier —
   worth checking whether these are genuinely distinct cations (allylic
@@ -130,7 +134,7 @@ rather than firing off DFT unilaterally.
 
 Reframed again, and I like this framing better: stop grading UMA, start *using*
 it to do physical-organic mechanism work — the stuff I'd actually chase heading
-into the aromaticity group. Its world is aromaticity and hyperconjugation /
+into the aromaticity group. Its focus is aromaticity and hyperconjugation /
 σ-delocalization and the stabilization of reactive intermediates; mine
 (the experimental group) is carbocation rearrangements in terpene cascades. The natural
 bridge is the *electronic origin* of carbocation stability. No DFT — I have no
@@ -165,12 +169,13 @@ with the parent that has *only* C–H to offer: is the ethyl cation itself
 H-bridged?
 
 ### H6–H10 — walking the continuum, and a lesson in humility
+
 - **H6 (ethyl cation):** relaxed from an RDKit start → *classical* (C–C 1.456 Å,
   no bridge). That contradicts textbook high-level theory (ethyl cation is
   H-bridged). Suspicious. Held off on a verdict and built H9.
 - **H7 (neopentyl):** relaxed straight to a *tertiary* cation — the quaternary
   carbon is gone. UMA does the neopentyl→tert-amyl **methyl shift with no
-  barrier**. This is real Wagner–Meerwein, the experimental collaborator bread-and-butter.
+  barrier**. This is real Wagner–Meerwein, the experimental collaborator's bread-and-butter.
 - **H8 (cyclopropylcarbinyl):** ring C–C bonds blown out to 1.63/1.67 Å with the
   carbinyl C–Cα at 1.35 Å — strong ring-σ donation into the empty p. Textbook
   σ-participation, and UMA nails the geometry.
@@ -231,7 +236,7 @@ energetics — which I've under-explored.
 
 ## 2026-07-20 09:46 UTC — Home turf: terpene cyclization energetics (and a SMILES humbling)
 
-Back to the experimental collaborator chemistry. First pass at H17/H18 tripped on my own hand-written
+Back to the experimental collaborator's chemistry. First pass at H17/H18 tripped on my own hand-written
 terpene SMILES — the anti-Markovnikov limonene cation quietly rearranged to a
 *different* tertiary and the "geranyl" cation had 11 carbons. The isomeric-check
 guards I'd built flagged both instead of letting me report nonsense — worth the
@@ -425,8 +430,7 @@ organic chemistry I care about — with the sharply-bounded exceptions logged.
 
 This ties a bow on a pattern: with the vinyl cation (H37) and halonium (H23),
 UMA over-rewards the smallest, most electron-deficient / non-classical cations —
-the sparsely-sampled extreme of chemical space. The lesson I'd carry into the aromaticity group's
-group: UMA is a superb, quantitative tool for ordinary physical-organic
+the sparsely-sampled extreme of chemical space. The lesson I'd carry into the aromaticity group: UMA is a superb, quantitative tool for ordinary physical-organic
 energetics, but for the exotic reactive-intermediate corners (bare CH₃⁺,
 antiaromatic Cp⁺, bridgehead) you must spot-check against real theory. Knowing
 *exactly* where the edges are is what makes it usable.
@@ -490,7 +494,7 @@ H43 methyl-cation flaw:
   about the electron-deficient empty-p **cation**, not "small species" in general.
   That's a real narrowing, found by trying to break the earlier conclusion.
 - **H52 (water dimer):** −4.18 kcal/mol, O···O 2.97 Å — H-bond energy slightly weak
-  vs −5.0 but geometry dead-on. Good enough for the aromaticity group H-bond chemistry.
+  vs −5.0 but geometry dead-on. Good enough for the aromaticity group's H-bond chemistry.
 - **H53 (keto–enol):** enol 9.9 kcal/mol above keto (exp ~11). Correct.
 
 The discipline that keeps paying off: don't just log a "pass" — poke it. H51 turned
@@ -539,7 +543,7 @@ Larger conjugated/aromatic thermochemistry is as reliable as the small stuff.
   camphene lowest, terpinenes/terpinolene/limonene clustered a few kcal above,
   strained pinenes higher (12–15), acyclic myrcene highest (28). That tracks the
   experimental heats of formation (camphene ΔHf ~−18, limonene ~−12, myrcene ~+1).
-  A genuinely useful map — this is the kind of relative-stability call the experimental collaborator work
+  A genuinely useful map — this is the kind of relative-stability call the experimental collaborator's work
   leans on constantly, and UMA delivers it in seconds.
 - **H61 (conjugation):** 6.3 kcal/mol (exp ~7). **H62 (Zaitsev):** trisub alkene
   3.6 below monosub. Both right.
@@ -644,7 +648,7 @@ sampled properly.
 
 ---
 
-## 2026-07-20 11:30 UTC — Bicyclic terpene cations (the experimental collaborator core)
+## 2026-07-20 11:30 UTC — Bicyclic terpene cations (the experimental collaborator's core)
 
 Finally the bicyclic terpene cations, carefully validated.
 

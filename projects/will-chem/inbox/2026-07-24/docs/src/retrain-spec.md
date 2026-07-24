@@ -77,6 +77,7 @@ intermediates — UMA already handles these to chemical accuracy (H101, H107–H
 H112). Adding more of them wastes label budget on the part that already works.
 
 ## How much / validation protocol
+
 - The bare-empty-p corner (classes 1–2) is a few dozen small molecules — a
   **cheap CCSD(T) augmentation set**, not a campaign.
 - Validate any retrained model by re-running this repo's iteration-2 ladders
