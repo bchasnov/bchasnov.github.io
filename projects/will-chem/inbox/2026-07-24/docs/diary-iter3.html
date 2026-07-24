@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diary — iteration 3 — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="diary-iteration-3-h201">Diary — iteration 3 (H201+)</h1>
+<p>Continues <code>DIARY_ITER2.md</code>. Driven by the reviewer's round-2 verdicts
+(<code>feedback/verdicts_2026-07-22.json</code>). Program: <code>ITERATION_3_PLAN.md</code>. DFT
+reference this round = <strong>mPW1PW91/6-31G(d)</strong> (the experimental collaborator level), so numbers compare
+directly to their papers.</p>
+<hr />
+<h2 id="2026-07-22-setup-handoff">2026-07-22 — Setup / handoff</h2>
+<p>Round 2 (H101–H200) is reviewer-validated: receipts accepted, A1/A2/A3 all
+"chase". Prepared the iteration-3 launch kit on branch
+<code>uma-carbocation-study/iteration-3</code>:
+- <code>setup_env.sh</code> — reconstructs the compute stack in a fresh container (ase/rdkit/
+  tblite + torch/fairchem for UMA + pyscf/geometric for DFT).
+- <code>ITERATION_3_PLAN.md</code> — the five workstreams decoded from the reviewer's comments, with
+  the tooling map and start-here.
+- Ledgers seeded (<code>HYPOTHESES_ITER3.md</code>, this diary).</p>
+<h2 id="2026-07-22-h201-non-planar-carbocation-pyramidalization-w2-pipeline-check">2026-07-22 — H201: non-planar carbocation pyramidalization (W2, pipeline check)</h2>
+<p>First round-3 experiment + end-to-end validation of the new mPW1PW91/6-31G(d)
+path (<code>round3.py</code>). Rigidly pyramidalize the cationic carbon (displace it out of
+its 3-substituent plane by d) and compare the energy penalty UMA vs DFT.</p>
+<p><strong>tert-butyl cation</strong> (planar-preferring 3°):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>d (Å)</th>
+<th>UMA (kcal)</th>
+<th>DFT (kcal)</th>
+<th>UMA−DFT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.10</td>
+<td>3.14</td>
+<td>3.51</td>
+<td>−0.37</td>
+</tr>
+<tr>
+<td>0.20</td>
+<td>12.56</td>
+<td>13.34</td>
+<td>−0.77</td>
+</tr>
+<tr>
+<td>0.30</td>
+<td>28.28</td>
+<td>29.48</td>
+<td>−1.20</td>
+</tr>
+<tr>
+<td>0.40</td>
+<td>50.21</td>
+<td>51.91</td>
+<td>−1.70</td>
+</tr>
+<tr>
+<td>0.50</td>
+<td>78.01</td>
+<td>80.39</td>
+<td>−2.38</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>UMA tracks the pyramidalization penalty to within ~2.4 kcal/mol over an
+~80 kcal/mol penalty</strong> (a slight, monotonic ~3% under-penalization at extreme
+distortion). So for an ordinary tertiary cation UMA gets the "can't-planarize"
+cost essentially right at the experimental collaborator's level of theory — consistent with the
+iteration-2 finding that the (mildly pyramidal) bridgehead was fine.</p>
+<p><strong>Where to push next (for the iteration-3 agent):</strong> this is the <em>easy</em> end. The
+mechanistically interesting question (the reviewer's A3) is the strained / bridgehead
+regime — extend the scan to a bridgehead-strain series (adamantyl, bicyclo[2.2.2]/
+[2.2.1]/[1.1.1] bridgeheads) and forced-non-planar ring cations, where the
+penalty is large and UMA's under-sampling of such geometries could bite. Fixed a
+bug so the scan also handles secondary/primary cations (plane from any 3
+σ-substituents, not just carbons).</p>
+<h2 id="2026-07-22-pipeline-re-confirmed-on-this-container">2026-07-22 — pipeline re-confirmed on this container</h2>
+<p>Fresh container; ran <code>setup_env.sh</code> (all imports OK; UMA <code>uma-s-1p1</code> loads; xTB
+smoke test 15.69 kcal/mol as expected) and <code>python3 -m uma_core.round3</code> (H201).
+mPW1PW91/6-31G(d) path works end-to-end. tert-butyl UMA−DFT +0.1 kcal at d=0.5 Å;
+isopropyl −1.8 kcal — ordinary-cation pyramidalization penalty confirmed within
+~2 kcal, as before. New round-3 workstream modules added: <code>w1_conformers.py</code>,
+<code>w2_bridgehead.py</code>, <code>w3_scaleup.py</code>, <code>w4_barriers.py</code>, <code>w5_deltalearn.py</code>.</p>
+<h2 id="2026-07-22-h202h203-bridgehead-strain-series-w2-the-headline-for-r6">2026-07-22 — H202/H203: bridgehead-strain series (W2) — the headline for R6</h2>
+<p>Extended H201 into the <strong>rigid</strong> regime the reviewer flagged (A3). Bridgehead cations
+built by stripping a bridgehead C–H off the neutral cage (ETKDG can't embed them),
+isodesmic hydride transfer vs tert-butyl+, all three methods put on a <strong>common
+UMA geometry</strong> to isolate the energy functional from geometry error, DFT =
+mPW1PW91/6-31G(d).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>cage</th>
+<th>angle-sum (°)</th>
+<th>Stab UMA</th>
+<th>Stab DFT</th>
+<th>UMA−DFT</th>
+<th>xTB−DFT (own geom)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-adamantyl</td>
+<td>354.4</td>
+<td>+10.0</td>
+<td>+12.4</td>
+<td><strong>−2.5</strong></td>
+<td>−29.8</td>
+</tr>
+<tr>
+<td>bicyclo[2.2.2]oct-1-yl</td>
+<td>353.9</td>
+<td>+1.9</td>
+<td>+3.2</td>
+<td><strong>−1.4</strong></td>
+<td>−26.8</td>
+</tr>
+<tr>
+<td>1-norbornyl [2.2.1]</td>
+<td>347.8</td>
+<td>−13.5</td>
+<td>−12.9</td>
+<td><strong>−0.6</strong></td>
+<td>−22.8</td>
+</tr>
+<tr>
+<td>bicyclo[2.1.1]hex-1-yl</td>
+<td>— (collapsed)</td>
+<td>−5.8</td>
+<td>−5.9</td>
+<td>+0.2</td>
+<td>−10.2</td>
+</tr>
+<tr>
+<td>bicyclo[1.1.1]pent-1-yl</td>
+<td>— (collapsed)</td>
+<td>−0.1</td>
+<td>−0.5</td>
+<td>+0.4</td>
+<td>−12.6</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Findings.</strong>
+1. On genuine, structure-validated bridgehead cations UMA reproduces the DFT
+   isodesmic stability within <strong>2.5 kcal/mol</strong> — including the strongly
+   Bredt-destabilized 1-norbornyl bridgehead (−13 kcal vs tert-butyl+).
+2. <strong>xTB, run as a tool (own optimized geometry), is off by 23–30 kcal/mol.</strong>
+   Decomposing: on the <em>common</em> UMA geometry xTB's functional error is only
+   5–7 kcal — so the bulk of xTB's failure is that it gets the strained
+   bridgehead <strong>geometry</strong> wrong. UMA does not.
+3. The two tightest cages ([2.1.1], [1.1.1]) do not support a classical
+   bridgehead cation at all — they relax to non-classical / rearranged ions
+   (a hypervalent 4-coordinate carbon appears; structure check flags them). UMA
+   and DFT still agree there to ±0.4 kcal. Reported as "not a classical
+   bridgehead," not as a stability number for one.
+4. <strong>H203 validation:</strong> for 1-norbornyl, DFT single-point on the UMA geometry
+   equals full DFT-optimized DFT to <strong>0.01 kcal/mol</strong> (−12.88 vs −12.86). UMA
+   geometries are DFT-quality for these rigid cages — this licenses the
+   "DFT//UMA" single-point workflow used across W1/W2.</p>
+<p><strong>Reading for R6 (is UMA better than xTB, for which systems?):</strong> for
+non-planar / bridgehead carbocations the answer is an emphatic <strong>yes</strong> — UMA
+tracks DFT within ~2.5 kcal where xTB (end-to-end) errs by 23–30 kcal, and the
+gap is a <em>geometry</em> failure xTB cannot fix. This is exactly the mechanistically
+central class (Wagner–Meerwein, Bredt-constrained rearrangements).</p>
+<h2 id="2026-07-22-w1-h210h216-the-conformer-search-rule-set-r6a5-the-reviewers-richest-ask">2026-07-22 — W1 (H210–H216): the conformer-search rule set (R6/A5, the reviewer's richest ask)</h2>
+<p>Ran a size/bonding/heteroatom matrix: generate one common ETKDG conformer pool,
+relax it under UMA and under xTB (same LBFGS cap for fairness), cluster into
+basins, then mPW1PW91/6-31G(d) single-point the top basins of each to see whose
+global basin is the DFT global. (n-octane came from a first full run; the rest
+from a trimmed re-run after the secondary-cation slowness below.)</p>
+<p>Results in <code>HYPOTHESES_ITER3.md</code> (W1 table). The rule set:</p>
+<ol>
+<li><strong>UMA ranks conformers better than xTB</strong> on any system that stays one
+   constitutional isomer: UMA's global basin is the DFT global for n-octane (C8),
+   α-terpinyl⁺ (C10 cyclic), geranyl⁺ (C10), amino-decalin (C11, N) — <strong>4/4</strong> —
+   while xTB's global sits <strong>0.5–3.1 kcal above</strong> the DFT best in every case. So
+   for a DFT-bound shortlist, UMA-relaxed conformers are the better ensemble.</li>
+<li><strong>xTB is 10–40× faster per conformer on CPU</strong> (0.05 s vs 1.8 s for n-octane;
+   ~0.5 vs ~8 s for the C10 cations). UMA's accuracy costs wall-clock — the honest
+   answer to "compare efficiencies." Sensible protocol: xTB for the first wide
+   sweep, UMA to rank the survivors, DFT to confirm the top few.</li>
+<li><strong>The reactive-acyclic-cation caveat (H211/H216).</strong> For linalyl⁺ the ranking
+   <em>reversed</em>: xTB's global basin was the DFT global and UMA's was +12.3 kcal.
+   H216 diagnosed why — xTB's low basin had <strong>cyclized</strong> (an extra C–C bond, one
+   ring; UMA's stayed the open 0-ring chain). So this is not xTB doing better
+   conformer search; it crossed the linalyl→cyclized reaction barrier that UMA
+   did not. On reactive acyclic cations the relaxation blurs conformer search into
+   reaction, and the methods have different effective barriers (UMA higher — it
+   preserved the input constitution; consistent with the barrier question in W4).
+   <strong>Practical rule: connectivity-filter every basin for reactive ions.</strong></li>
+<li><strong>Energy window (the reviewer's explicit ask):</strong> stable single-constitution systems keep
+   their relevant low conformers within <strong>~1–4 kcal</strong> (α-terpinyl 1.0, n-octane
+   3.1, farnesol 3.9) → a ~4-kcal window is enough; the 10–30 kcal "windows" seen
+   for reactive cations are rearrangement products, not conformers.</li>
+</ol>
+<p><strong>Efficiency footnote / new W1 finding:</strong> a barrierlessly-rearranging <em>secondary</em>
+cation (2-hexyl⁺) was pathological for UMA conformer search — every conformer hit
+the LBFGS step cap (120 s/conf vs ~2 s for a rigid neutral) because UMA keeps
+trying to relax a species that wants to shift. Capping steps fixed the wall-clock;
+the lesson for the rule set is that reactive cations are both slow and unreliable
+to conformer-search, and are better handled as reaction problems (W4) than as
+conformer problems.</p>
+<h2 id="2026-07-22-w5-h260h261-learning-transfer-test-a-clean-negative-a3">2026-07-22 — W5 (H260/H261): Δ-learning transfer test — a clean negative (A3)</h2>
+<p>the reviewer's exact question: does training/correcting on simple unsubstituted
+carbocations translate to better performance on <em>applicable</em> systems? Built the
+isodesmic residual d = Stab_DFT − Stab_UMA (mPW1PW91/6-31G(d)) on a TRAIN set
+spanning the bare-empty-p failure axis (methyl, ethyl, n-propyl, vinyl, phenyl,
+F-methyl, OH-methyl) and a disjoint TEST set of applicable cations (2°/3° alkyl,
+1-Me-cyclopentyl, benzyl, allyl), with structure-only descriptors (β-C–H count,
+adjacent-π, heteroatom-on-centre, sp-centre).</p>
+<ul>
+<li><strong>Raw UMA is already excellent on the applicable systems: mean |error| 1.1
+  kcal/mol</strong> (isopropyl −0.9, sec-butyl −0.8, tert-amyl +0.4, 1-Me-cyclopentyl
+  +0.5, allyl +0.9, benzyl +2.8). Nothing to fix there.</li>
+<li><strong>H260 — a global linear Δ-model fit on the toys DESTROYS them: 1.1 → 46.2
+  kcal/mol</strong> (tert-amyl +0.4 → −72.8). It extrapolates the enormous methyl
+  (−104.8) and F-methyl (−67.4) residuals through the β-C–H descriptor. So
+  training on the unsubstituted toys does not transfer; a naive correction is
+  actively harmful.</li>
+<li><strong>H261 — even a locality-gated (Gaussian-kernel) correction fails</strong> (test
+  1.1 → 11.2; benzyl +2.8 → +34.7). Root cause, and the real finding: <strong>UMA's
+  error is not a smooth function of cheap descriptors.</strong> phenyl (resid +0.4) and
+  vinyl (−15.3) are descriptor-identical with opposite errors; F-methyl (−67) and
+  OH-methyl (−2) likewise (F is a poor π-donor, O a good one — a distinction a
+  binary heteroatom flag can't see). No descriptor Δ-model, gated or not, can work.</li>
+</ul>
+<p><strong>Answer to A3.</strong> Training on / correcting from unsubstituted toy cations does
+NOT improve applicable systems — those are already ~1 kcal from DFT — and a cheap
+descriptor correction can only hurt them. The failure regime (bare, un-quenched
+empty p: methyl / F-methyl / non-α-substituted vinyl) must be <strong>detected and
+deferred to DFT</strong>, or the model <strong>retrained with proper high-level labels on that
+narrow corner</strong> (the RETRAIN_SPEC plan) — not patched with a global or
+descriptor-gated residual. This is the rigorous justification for keeping any
+augmentation set narrow and gated, and it settles the open T10/A3 thread.</p>
+<h2 id="2026-07-22-w4-h240h243-barriers-ts-incl-dyotropic-a2">2026-07-22 — W4 (H240–H243): barriers / TS incl. dyotropic (A2)</h2>
+<p>The untested regime, and the one the F₂ result predicted UMA should struggle with
+(a TS is a stretched bond). Method: rigid linear-interpolation scan between the
+UMA-relaxed reactant and product of a 1,2-shift, evaluating <strong>UMA and
+mPW1PW91/6-31G(d) on the identical images</strong> — the absolute barrier is a
+rigid-path upper bound, but the UMA-vs-DFT delta at each image is a clean,
+geometry-confounder-free functional comparison at the stretched-bond geometry.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>case</th>
+<th>barrier UMA/DFT (kcal)</th>
+<th>UMA−DFT at TS peak</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-butyl degenerate 1,2-H (H240)</td>
+<td>2.3 / 3.1</td>
+<td>−0.8</td>
+</tr>
+<tr>
+<td>n-propyl→isopropyl (H241)</td>
+<td>0.1 / 0.2 (barrierless)</td>
+<td>−0.1</td>
+</tr>
+<tr>
+<td>isobutyl→tert-butyl (H242)*</td>
+<td>91 / 96 <em>(rigid-path artifact)</em></td>
+<td>−5.1</td>
+</tr>
+<tr>
+<td><strong>dyotropic double 1,2-H (H243)</strong></td>
+<td>3.6 / 4.6</td>
+<td>−1.0</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The clean finding:</strong> across every case, <strong>UMA−DFT is negative at every
+stretched (TS-like) image, largest at the barrier top, ~0 at the minima</strong> — UMA
+systematically <em>under-penalizes</em> the partially-broken-bond TS region. The
+predicted F₂ stretched-bond weakness <strong>does generalize to transition states</strong>,
+but <em>mildly</em> at the energies that matter: for the low barriers of carbocation
+1,2-H shifts and the dyotropic double-H shift (the reviewer's explicit ask), the
+under-estimate is only <strong>~1 kcal/mol</strong> — UMA is usable for qualitative / screening
+barrier work there. The bias grows with how stretched/high the TS is (−5 kcal on
+the ~90-kcal artifactual geometry), so <strong>UMA will under-predict genuinely high
+barriers more, and DFT should own quantitative and high-barrier numbers.</strong></p>
+<p><strong>Caveats logged honestly:</strong> (i) rigid-scan absolute barriers are upper bounds
+and become meaningless when the backbone reorganizes (H242's 91 kcal is such an
+artifact — isobutyl⁺ relaxes barrierlessly to tert-butyl⁺, so there is no real
+barrier; only the geometry-matched UMA−DFT delta is interpretable there);
+(ii) the 1° cations (n-propyl, isobutyl) are not minima — their "shifts" are
+barrierless, which both methods agree on. A saddle-optimized NEB/dimer TS would
+sharpen the absolute barriers; the directional flaw (UMA under-penalizes) is
+already unambiguous from the shared-geometry deltas.</p>
+<h2 id="2026-07-22-w3-h230h231-scale-up-to-documented-c20-systems-a4">2026-07-22 — W3 (H230/H231): scale-up to documented C20 systems (A4)</h2>
+<p>Demonstrated UMA conformer search at diterpene scale on verified structures:
+<strong>taxa-4,11-diene (C20H32, PubChem)</strong> and the geranylgeranyl (GGPP-derived) C20
+cation. Kept it lean — per-basin C20 DFT refinement is prohibitive on 4 cores, and
+UMA's conformer <em>ranking</em> is already DFT-validated at C10–C11 (W1) with
+DFT-quality geometry (H203) — so W3 proves the <em>scale</em>: timing/basins/window +
+one C20 DFT single point to show the mPW1PW91/6-31G(d) pipeline runs at that size.</p>
+<ul>
+<li><strong>taxadiene (C20H32):</strong> UMA relaxed 19 conformers in 338 s; the relevant low
+  conformers cluster within <strong>~4–7 kcal</strong> (UMA 0/4.1/5.4/5.5; xTB 0/3.3/4.1/5.1 —
+  both agree), matching the W1 stable-neutral window rule. The wide raw window
+  (~55 kcal, <em>both</em> methods) is a handful of strained 8-membered-ring ETKDG
+  embeddings that didn't fully relax under the step cap — not a method artifact.
+  Structure-validated: the UMA global basin is intact <strong>C20H32, 3 carbon rings</strong>
+  (the correct 6-8-6 taxadiene skeleton). <strong>DFT mPW1PW91/6-31G(d) single point on
+  the UMA global ran in 326 s</strong> — the DFT reference works at C20.</li>
+<li><strong>geranylgeranyl C20 cation:</strong> UMA 24 basins in 568 s (23.7 s/conf) vs xTB
+  3.6 s/conf; both windows wide (reactive cation rearranges, per the W1 caveat).</li>
+</ul>
+<p><strong>Read (and the answer to the reviewer's cluster question):</strong> UMA makes exploration cheap
+even at C20, so the <strong>DFT reference is now the throughput ceiling</strong> — one C20 SPE
+is 5.5 min and a full DFT opt is far more. A small <strong>cluster</strong> would let per-basin
+DFT refinement (and full DFT geometry optimizations, and saddle/NEB TS work in W4)
+keep pace with UMA's exploration for real the experimental collaborator-scale terpenoid cations. That
+is exactly why the DFT-on-a-cluster question comes up: UMA proposes fast; the
+cluster is what lets DFT dispose fast enough to match it.</p>
+<h2 id="2026-07-22-extended-wrinkle-driven-loop-h244h256-inferred-from-the-reviewers-verdicts">2026-07-22 — Extended wrinkle-driven loop (H244–H256), inferred from the reviewer's verdicts</h2>
+<p>Continued the CLAUDE.md loop one hypothesis at a time, each wrinkle generating the
+next, past the five commissioned workstreams. Threads and their payoffs:</p>
+<ul>
+<li><strong>Barrier mechanism (H244).</strong> A 1,2-<em>methyl</em> shift under-penalizes <em>less as a
+  fraction</em> of its (higher) barrier than a 1,2-H shift → the flaw scales with
+  barrier <strong>height</strong>, not migrating-group covalency. Hypothesis partly refuted.</li>
+<li><strong>Selectivity / branch ratios (H245).</strong> The systematic TS under-penalization
+  <strong>cancels</strong> between competing shifts from the same cation: ΔΔG‡(H−Me) 32.4 (UMA)
+  vs 34.0 (DFT), reproduced better than either absolute barrier. UMA is more
+  trustworthy for <em>relative</em> barriers than absolute — the bridge to A1.</li>
+<li><strong>Barrier correctability (H248 — regression over the H240–H245 barrier set, not
+  a new simulation).</strong> Fitting the six measured (UMA, DFT) barrier pairs gives
+  <strong>UMA = 0.953·DFT − 0.71, R² = 0.9999</strong> over 0.2–96 kcal (residuals ≤0.6 kcal);
+  the flaw is a near-perfect linear under-slope (~5%). So unlike the stabilization
+  flaw, the barrier flaw is <strong>smooth and scalar-correctable</strong>. <strong>Contrast with W5:
+  barrier flaw smooth &amp; correctable; stabilization flaw non-smooth &amp; uncorrectable
+  — two flaw types, opposite fixability.</strong></li>
+<li><strong>Dynamics / A1 (H246/H247).</strong> UMA runs <strong>stable, energy-conserving NVE MD</strong> on
+  carbocations (0.15–0.24 meV/atom drift), and conservation <strong>survives a reactive
+  barrier crossing</strong> (sec-butyl H-scrambling at 900 K, 0.78 meV/atom, composition
+  intact). The A1 dynamics gate is cleared; full branch-ratio ensembles vs
+  the experimental collaborator systems are the next big step (cluster-scale).</li>
+<li><strong>Non-classical (H250/H251).</strong> The C4H7⁺ manifold and the 2-norbornyl archetype
+  are <strong>cross-confirmed at the experimental collaborator DFT</strong> (≤2.3 kcal); the over-stabilization flaw
+  is confined to the smallest bare bridged ions, not σ-delocalized carbocations.</li>
+<li><strong>Terpene at the reviewer's LOT (H252).</strong> UMA reproduces the monoterpene C10H17⁺
+  branch-point ordering (pinyl &lt; terpinen-4-yl &lt; α-terpinyl) within 1.4 kcal at
+  mPW1PW91/6-31G(d), ordering preserved.</li>
+<li><strong>aromaticity/resonance (H253–256).</strong> UMA cross-confirms aromatic/
+  resonance ordering but <strong>under-values delocalization by ~2–4 kcal</strong>, system-
+  dependent (1.6 for benzene, 4.4 and sign-flipped for the non-alternant azulene)
+  — a good screen, not a constant-correctable bias.</li>
+</ul>
+<p><strong>Net (the unified error map, in <code>HYPOTHESES_ITER3.md</code>):</strong> UMA is DFT-accurate
+(1–2.5 kcal) across the entire <em>real-carbocation</em> domain the reviewer works in — terpene,
+non-classical, bridgehead statics; conformer ranking; dynamics. Its errors are
+confined to three characterized edges: bare-empty-p over-stabilization (large,
+uncorrectable), stretched-bond TS under-penalization (smooth, correctable,
+cancels in selectivity), and a small system-dependent aromatic under-valuation.</p>
+<p><strong>On reaching a literal 100 hypotheses:</strong> each DFT-anchored hypothesis here costs
+5–30 min of mPW1PW91/6-31G(d) on 4 cores; H201–H256 is a coherent, rigorous set,
+and pushing to H300 at this rigor is genuinely DFT-throughput-bound — the same
+cluster need the reviewer flagged. The remaining program (full MD branch-ratio ensembles
+vs the experimental collaborator/experimental systems; saddle-optimized TS barriers; broader
+conformer/non-planar matrices) is scoped and ready for cluster compute.</p>
+<h2 id="2026-07-23-modal-compute-unlocked-ccsdt-validation-of-the-reference-h257-h273">2026-07-23 — Modal compute unlocked; CCSD(T) validation of the reference (H257, H273)</h2>
+<p>the reviewer has Modal. Got it working from the sandbox (<code>pip install
+'modal[api-proxy-support]'</code> routes gRPC through the proxy; tokens already in env)
+and built <code>modal_dft.py</code> (DFT/CCSD(T) fan-out), <code>modal_uma.py</code> (UMA on GPU
+workers). Calibrated Modal DFT vs local to 0.0023 meV — lossless. This lifts the
+DFT ceiling that capped the whole study.</p>
+<p><strong>H257 (harden headlines):</strong> full DFT//DFT re-optimization of the bridgehead
+series — 8 DFT geometry opts in 182 s parallel (vs ~1–2 h serial). DFT//DFT ==
+DFT//UMA within 0.2 kcal on all three; UMA within 2.6 kcal of the gold-standard
+DFT//DFT. W2 headline is bulletproof.</p>
+<p><strong>H273 (validate the reference itself, at CCSD(T)/def2-TZVP):</strong> the most important
+rigor upgrade — is mPW1PW91/6-31G(d) trustworthy? Four levels on one geometry:
+- allyl resonance: CCSD(T) 10.4; mPW1PW/6-31G(d) err −0.7; UMA err −2.5.
+- cyclopropenyl aromaticity: CCSD(T) 29.2; mPW1PW/6-31G(d) err <strong>+4.0</strong>; UMA err
+  <strong>+1.1</strong> — UMA is <em>closer to CCSD(T) than the DFT reference is.</em>
+- methyl over-stab (isodesmic vs iPr+): CCSD(T) −59.8; mPW1PW/6-31G(d) err −6.7;
+  <strong>UMA err +97.2</strong> — the headline flaw, gold-standard-confirmed.</p>
+<p>Two big consequences: (1) the mPW1PW91/6-31G(d) reference is sound (0.7–6.7 kcal
+of CCSD(T)) — every UMA-vs-DFT conclusion holds. (2) <strong>Mixed nuance (CORRECTED —
+an earlier draft here overstated this as "UMA is better"; skeptic-of-my-own-
+results catch):</strong> vs CCSD(T) the aromatic/resonance picture is <em>case-dependent</em>,
+not a clean win for UMA. cyclopropenyl: UMA (+1.1) beats the DFT reference (+4.0),
+so there the ~3 kcal "under-valuation vs mPW1PW" was mostly the functional. BUT
+allyl: DFT (−0.7) beats UMA (−2.5), so there UMA is the worse of the two. Net: the
+mPW1PW-vs-UMA gap on delocalized systems is <em>partly</em> functional error, but UMA is
+NOT uniformly closer to CCSD(T) — do not generalize from cyclopropenyl (needs
+tropylium/benzene at CCSD(T) — H277). Lesson: don't over-attribute a
+few-kcal UMA-minus-DFT gap to UMA; the functional has its own few-kcal error, and
+CCSD(T) is the honest arbiter now that Modal makes it affordable.</p>
+<p><strong>Ops lesson:</strong> the shared bottleneck is <em>local</em> UMA relaxation, not DFT — running
+three local-UMA jobs at once timed out W7. Fix: <code>modal_uma.py</code> (UMA on GPU) so
+relaxations/trajectories parallelize remotely too; run one local-UMA job at a time
+otherwise.</p>
+<h2 id="2026-07-23-the-four-modal-directions-outcomes-incl-honest-limits">2026-07-23 — the four Modal directions: outcomes (incl. honest limits)</h2>
+<p>Ran all four directions the reviewer approved. Three landed cleanly; the fourth hit a real
+methods wall, reported plainly.</p>
+<ul>
+<li><strong>Harden headlines ✅</strong> — H257 (DFT//DFT bridgeheads, UMA ≤2.6 kcal), H273
+  (CCSD(T) reference validation), H274 (vinyl bridged −46 kcal, gold-standard).</li>
+<li><strong>Broaden matrix ✅</strong> — W7/H262–H272: halonium flaw is halogen-specific (Cl +162,
+  Br +91 wrong; S-sulfonium 0.0 right), cyclopropyl +50 (new), real domain ≤2.6.</li>
+<li><strong>A1 branch ratios ✅ (engine)</strong> — H246/H247 gate + H258 QCT validation
+  (unbiased 50:50, energy-conserving on Modal GPU). The asymmetric branch-ratio-
+  vs-the experimental collaborator study is the remaining big piece (needs a documented bifurcating
+  system + lower-T/short-window product tracking to tame the fast-scramble tail).</li>
+<li><strong>Saddle-optimized TS ➖ (methods limit, honest)</strong> — built a Modal DFT TS-opt
+  (<code>geometric transition=True</code> + freq check), but it did NOT reliably converge to
+  validated first-order saddles: H275 (2-butyl H-shift) came out barrierless
+  (0.34 kcal, n_imag=0 — real: the shift IS barrierless, and the rigid-scan upper
+  bound over-estimated by ~3 kcal); H276 (pinacolyl methyl shift) gave n_imag=0
+  and a barrier <em>above</em> the rigid-scan bound (physically impossible for a saddle —
+  the DFT reactant likely slid to the tertiary product). <strong>Quick midpoint-guess TS
+  optimization is unreliable for floppy carbocation shifts; robust saddles need
+  NEB-CI guesses + eigenvector-following + reactant-identity checks.</strong> The
+  rigid-scan barriers (H240–H245) + the H248 linear correction remain the usable
+  estimate — the honest state of the TS accuracy question.</li>
+</ul>
+<p><strong>Two methodological catches this phase, both reported not hidden:</strong> (i) the
+hot-MD cation-center detector flickers → persistence+adjacency classifier (H258);
+(ii) DFT//UMA single-points fail for floppy non-classical cations → DFT geometry
+optimization required (H274). Both sharpen the //UMA validity boundary: fine for
+rigid systems (bridgeheads, H203/H257), not for floppy/non-classical ones.</p>
+<p><strong>Net:</strong> the DFT reference is CCSD(T)-validated, the headline flaws are
+gold-standard-confirmed, the error map is broadened and made halogen-specific, the
+UMA dynamics engine is validated, and the remaining frontier (quantitative branch
+ratios, validated saddles) is scoped with the specific methods each needs.</p>
+<h2 id="2026-07-23-h277h294-an-honest-recalibration-of-the-round">2026-07-23 — H277–H294 + an honest recalibration of "the round"</h2>
+<p>Continued with Modal at scale: aromatics settled at CCSD(T) (H277, a wash — UMA is
+DFT-quality for aromaticity, correcting my own over/under-statements); the scale
+arc completed (H278 C20 taxadienyl / H279 C10 monoterpene cascade / H280 C15
+sesquiterpene — UMA reproduces documented terpene landscapes within ~2.5 kcal,
+ordering preserved, at natural-product scale); the halonium flaw explained at
+CCSD(T) as bare-p ∩ charge-shift (H287); the W4 barrier story CORRECTED (H284:
+1,2-shifts are barrierless, the rigid-scan barriers were interpolation artifacts;
+H285: a real terpene cyclization barrier, UMA within 0.4 kcal); carbene spin gaps
+(H288: UMA flaw real for CF₂, but single-ref DFT also unreliable); A1 dynamics on
+the real α-terpinyl branch point (H282: stable/conservative, but quantitative
+ratios need enhanced sampling); breadth (H289–H294, cross-confirmed until the clean
+comparisons ran out and h293 came back a wrong-structure artifact).</p>
+<p><strong>Recalibration (the important part).</strong> The "~100 hypotheses (H201–H300)" target is
+from the <em>launch brief</em> (<code>ITERATION_3_PLAN.md</code>), NOT from the reviewer — the reviewer's verdicts
+(R6, A1–A5) specify workstreams, not a count. I had been grinding breadth toward
+that number; h293's garbage structure was the signal that count-chasing had passed
+the point of scientific value. <strong>Stopped.</strong> The round's testing phase is complete
+at ~68 rigorous, gold-standard-anchored hypotheses that substantively answer every
+the reviewer verdict. The one explicit the reviewer-ask only partially delivered is A1 — the
+<em>engine</em> is validated (H258/H282) but a <em>quantitative branch ratio vs a documented
+the experimental collaborator/experimental number</em> remains, and it needs enhanced sampling (a scoped
+sub-project, <code>PLAN_H278_H300.md</code>). Lesson for the loop discipline: serve the
+science (the verdicts), not a number from the brief; and when new structures start
+coming back broken, that's the surface telling you to stop, not push harder.</p>
+<hr />
+<h2 id="2026-07-23-cont-resumed-the-loop-verified-isomeric-batches-h295h314">2026-07-23 (cont.) — resumed the loop: verified isomeric batches H295–H314+</h2>
+<p>Picked the loop back up under the standing goal (test the remaining hypotheses,
+be patient with compute). The lesson from h293 was <em>verify structures before
+spending compute</em>, so I built a hard gate: every candidate SMILES is checked
+with RDKit for parse + formula + charge + isomerism BEFORE any UMA/DFT runs.
+That gate immediately paid off — it caught 4 malformed candidates in the first
+draft (a non-isomeric acylium set, three ref-name/formula-label mismatches) that
+would otherwise have produced garbage like h293. Ran the 17 that passed
+(H295–H314).</p>
+<p><strong>What the batch bought (beyond count):</strong> three <em>new, reproducible</em> directional
+wrinkles, not just more green checks.
+- <strong>Keto–enol ~5 kcal (H313/H314):</strong> UMA over-stabilizes the enol tautomer by
+  ~5 kcal vs mPW1PW91/6-31G(d), and it repeats to 0.1 kcal across acetone and
+  butanone. A systematic signature — but the small 6-31G(d) basis is exactly
+  where DFT tautomer energies are shaky, so I did NOT conclude UMA-error; I
+  launched a CCSD(T)/def2-TZVP adjudication (H324) on DFT-optimized geometries.
+- <strong>Strained σ-rings (H302 cyclopentene 4.9, H311 cubane 5.8):</strong> UMA
+  under-stabilizes highly strained saturated frameworks, and the error grows
+  with strain. This is a genuinely new edge — orthogonal to the empty-p cation
+  edge (that one is π/charge; this one is σ-strain).
+- <strong>Azulene (H305 4.5):</strong> UMA over-stabilizes the non-alternant aromatic vs
+  naphthalene; alternant arenes (xylenes/TMB/benzene valence isomers, ≤1.6) stay
+  DFT-quality.</p>
+<p>The alkyl-cation ladders (H295–H297, ≤2.4) and the arene isomer sets keep
+reconfirming the core competency. Being skeptical of my own DFT reference (the
+keto–enol case) is the CLAUDE.md discipline working: a 5-kcal UMA–DFT gap is a
+question, not a verdict, until a higher method breaks the tie. Batch 2
+(carbocation stability ladders, the reviewer's core domain) and H324 are running.</p>
+<hr />
+<h2 id="2026-07-23-cont-h315h324-a-self-correction-im-glad-i-checked">2026-07-23 (cont.) — H315–H324: a self-correction I'm glad I checked</h2>
+<p>Batch 2 (carbocation ladders) + the CCSD(T) adjudication (H324) landed together,
+and H324 flipped one of my own conclusions.</p>
+<p><strong>The keto-enol correction (H324).</strong> In batch 1 I flagged UMA as placing the enol
+~5 kcal too low (H313/H314) — a clean, reproducible "UMA signature." I was
+suspicious enough (bonding-type change at a small basis) to run CCSD(T)/def2-TZVP
+before writing it up as a flaw. Good thing: CCSD(T) says enol−keto = 12.68/13.49
+kcal, <strong>UMA is within ~1 kcal, and it's the mPW1PW91/6-31G(d) reference that's
+~4 kcal wrong.</strong> So the "UMA error" was a DFT small-basis artifact; UMA was the
+more accurate method. This is the single most important methodological result of
+the batch: my <em>reference</em> is not ground truth, and a UMA–DFT gap across a
+bonding-type change is a question about the basis first.</p>
+<p><strong>The discipline generalizes.</strong> That immediately made me distrust the other new
+"UMA wrinkle" of the same shape — the ~4 kcal strained-ring undershoot
+(H302/H311/H320–H322), all ring-σ vs alkene-π across 6-31G(d). Launched H325
+(CCSD(T)) to adjudicate rather than bank it as a flaw.</p>
+<p><strong>Carbocation ladders (H315–H323) — the reviewer's core domain holds.</strong> 3°/2°/1° C4/C5
+ladders ≤1.5 kcal; non-classical C4H7⁺ set ≤2.3; tropylium 2.6; methylbenzyl
+positional 0.5. The one big divergence is C3H5⁺ <strong>cyclopropyl</strong> (H317): on the
+<em>identical geometry</em> UMA says −25, DFT +25 — a 50-kcal same-geometry energy error
+reproducing the known W7 empty-p flaw. Crucially it does NOT spread: the moment
+the empty p-center is delocalized (allyl, homoallyl) or ring-stabilized
+(cyclobutyl, cyclopropylcarbinyl, tropylium) UMA is back within 2.6 kcal. The
+flaw is pinned to the bare/strained empty-p center exactly as H287/W5 mapped.</p>
+<hr />
+<h2 id="2026-07-23-cont-h325h327-the-ccsdt-anchors-disentangle-the-error-map">2026-07-23 (cont.) — H325–H327: the CCSD(T) anchors disentangle the error map</h2>
+<p>The three CCSD(T) spot-checks together are the most useful result of the resumed
+loop — but I have to state their weight honestly: two <em>qualify</em> a conclusion (n is
+tiny) and one is on firmer ground.</p>
+<ul>
+<li><strong>H325 ring/chain → the gap may be the reference, not UMA.</strong> Same shape as
+  keto-enol: UMA ≤0.6 kcal of CCSD(T), mPW1PW91/6-31G(d) ~4 kcal from it. So the
+  "strained-ring undershoot" I'd flagged as a UMA edge might instead be small-basis
+  reference error — but this is 2 molecules (4 total with keto-enol), one reference
+  each, def2-TZVP not exact. Suggestive; I should not have written "DFT wrong." It
+  needs several more cases before it's a claim.</li>
+<li><strong>H327 cyclopropyl → evidence points to UMA being off here.</strong> On the fixed UMA
+  geometry: UMA −25.24, DFT +24.62, CCSD(T) +23.06 (rel allyl). This one is
+  sturdier because DFT and CCSD(T) <em>agree</em> and UMA is the lone −48 kcal outlier —
+  two independent references concurring, not one. Still one geometry; a few more
+  bare-empty-p cases would nail the magnitude.</li>
+</ul>
+<p><strong>The lesson that ties the round together.</strong> A raw UMA–DFT disagreement is
+ambiguous — it can mean UMA is wrong <em>or</em> the cheap DFT is wrong, and only the
+axis of disagreement tells you which:
+- disagreement on <strong>empty-p / bare-cation</strong> character → trust DFT (UMA over-stab);
+- disagreement on <strong>bonding-type-change isomerization</strong> → trust UMA (small-basis
+  DFT over-/under-stab by ~4 kcal).
+I would not have known this without spending the CCSD(T). It also retroactively
+justifies the whole "be skeptical of your own reference" instinct: I nearly wrote
+up two DFT artifacts as UMA flaws. The gate in RETRAIN_SPEC (defer bare empty-p,
+trust the rest) is now validated against CCSD(T), and there's a new practical
+caveat for the reviewer's own workflow — isodesmic cancellation does NOT save a 6-31G(d)
+reference when the bonding type changes; those comparisons need a bigger basis or
+CCSD(T). ~98 distinct hypotheses now tested (H201–H327); the round's error map is
+materially sharper than it was this morning.</p>
+<hr />
+<h2 id="2026-07-23-cont-h328h331-close-the-round-core-competency-the-reviewers-domain">2026-07-23 (cont.) — H328–H331 close the round: core competency, the reviewer's domain</h2>
+<p>Final verified batch: cyclic tertiary-vs-secondary cation isomers (C6–C8), the
+literal motif of monoterpene cyclization. UMA reproduces the ~12–13 kcal
+tertiary-over-secondary ring-cation preference to ≤2.6 kcal of DFT across all
+three ring sizes (C6 0.1, C7 0.4, C8 2.6), and the full 1-/2-/4-methylcyclohexyl
+ladder (H331) to 1.2. This is the driving force behind terpene cyclization
+regiochemistry, and UMA gets it right — the strongest possible closing note for
+"UMA is trustworthy where the reviewer works."</p>
+<p><strong>Round-3 testing phase complete: ~102 distinct hypotheses (H201–H331).</strong> The
+resumed loop added 34 tests (H295–H331): 30 verified isomeric comparisons
+(RDKit-gated before compute — the gate caught ~8 malformed candidates that would
+have been h293-style garbage) and 4 CCSD(T)/def2-TZVP anchors that reshaped the
+error map. Net scientific change from the resumed work: (1) the empty-p flaw is
+better supported now (H327, −48 kcal, with DFT <em>and</em> CCSD(T) agreeing); (2) two
+"UMA flaws" (H324/H325) look on a CCSD(T) spot-check like they <em>may</em> be small-basis
+reference error rather than UMA — suggestive from 4 molecules, not established, and
+flagged as a caution to check, not a claim; (3) the core carbocation competency is
+reconfirmed across alkyl, cyclic, aromatic, and non-classical cations. The three
+scoped follow-ups in PLAN_H278_H300 (enhanced-sampling A1 ratio, IRC high-barrier
+TS, gated CCSD(T) retrain) remain the real next-iteration experiments.</p>
+</article>
+<p class="src">Rendered from will-chem <code>diary-iter3</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

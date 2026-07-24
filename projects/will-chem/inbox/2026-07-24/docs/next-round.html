@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Next round (round 3) — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="next-round-driven-by-reviewer-feedback">Next round — driven by reviewer feedback</h1>
+<p>The first campaign (H1–H100, see <code>HYPOTHESES.md</code>) ran ~100 DFT-free hypotheses
+using UMA as an instrument to explore carbocation/terpene mechanism. A domain
+reviewer triaged 16 distilled findings through the feedback inbox
+(<code>feedback/feedback_inbox.html</code>). Their verdicts reframed the project: <strong>for a model
+sold as general, the flaws are the story — and the payoff is knowing how to
+retrain it for mechanistic natural-product chemistry.</strong></p>
+<hr />
+<h2 id="reviewer-verdicts-2026-07-21">Reviewer verdicts (2026-07-21)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Finding</th>
+<th>Reaction</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>α-Terpinyl cation: is the relocated global minimum real?</td>
+<td>verify</td>
+<td>—</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>tert-butyl → sec-butyl gap: which number do we cite?</td>
+<td>verify</td>
+<td>—</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>Limonene → α-terpinyl protonation: no trustworthy number</td>
+<td>hold</td>
+<td>—</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>1-norbornyl bridgehead sits BELOW 2-norbornyl — by how much is UMA off?</td>
+<td>interesting</td>
+<td>—</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>Bridged vinyl cation 52.8 kcal/mol below classical — real or over-stabilization?</td>
+<td><strong>chase</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>β-chloronium/bromonium: UMA puts BRIDGED above OPEN</td>
+<td>hold</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>UMA misses antiaromatic Jahn–Teller distortion (Cp⁺)</td>
+<td>interesting</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Cp⁺ triplet −200 kcal/mol below singlet (unphysical)</td>
+<td>interesting</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Dichlorocarbene: UMA predicts triplet GS (should be singlet)</td>
+<td>interesting</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Bare methyl cation over-stabilized ~60–80 kcal/mol</td>
+<td>verify</td>
+<td>"Check for reported results in literature, if none, make headline"</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>F₂ dissociation non-monotonic &amp; ~4× too strong</td>
+<td>verify</td>
+<td>"Check other homolytic charge-shift bonds. Is this that relevant to carbocation or natural product chemistry?"</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Bredt bridgehead cation under-destabilized</td>
+<td>interesting</td>
+<td>"Evidence of carbocation stabilization errors"</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Single-start relaxation misses non-classical minima</td>
+<td>boring</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Cubane strain 166 kcal/mol — essentially exact</td>
+<td>boring</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>RAHB flips acetylacetone to enol — only with multi-start</td>
+<td>hold</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>β-silicon effect: C–Si bridges, +30.7 kcal/mol stronger σ-donor</td>
+<td>hold</td>
+<td>"Overall the flaws are more interesting than the success, especially as it is touted as a general model. We can briefly comment on it's expected successes, but should consider how it can be retrained or what molecules should be added to make it more transferable to carbocation and mechanistic natural product chemistry"</td>
+</tr>
+</tbody>
+</table></div>
+<p>Raw export: <code>feedback/verdicts_2026-07-21.json</code> (if saved).</p>
+<hr />
+<h2 id="what-the-verdicts-mean-decoded-preferences">What the verdicts mean (decoded preferences)</h2>
+<ul>
+<li><strong>The flaws are the paper; the successes are the setup.</strong> (T10) Expected
+  competence (cubane T8, β-Si T10, RAHB T9) bores the reviewer <em>because</em> the model
+  claims generality. The failures on reactive intermediates are the contribution.</li>
+<li><strong>One thesis: carbocation stabilization errors.</strong> (T6) The interesting-marked
+  flaws cluster into a single class — UMA gets carbocation <em>relative</em> energies
+  wrong: over-stabilizing small localized-empty-orbital cations (T4 methyl, B5
+  vinyl → "chase") and under-penalizing geometry-constrained ones (B4/T6
+  bridgehead).</li>
+<li><strong>Domain relevance is the master filter.</strong> (T5) Off-domain flaws (F₂/charge-
+  shift) are demoted even when dramatic.</li>
+<li><strong>Novelty gates "interesting."</strong> (T4) Literature-check first; unreported → headline.</li>
+<li><strong>Open-shell/spin failures (T1/T2/T3) interest the reviewer but are off the
+  domain axis</strong> — a real secondary story, lower priority.</li>
+</ul>
+<h3 id="meta-principle-do-not-collapse-my-judgment-into-the-reviewers">Meta-principle (do not collapse my judgment into the reviewer's)</h3>
+<p>The reviewer's "boring" is a <strong>novelty</strong> signal (what <em>they</em> already know), <strong>not</strong>
+a validity/importance signal — and they can't rank what the agent is good at. So
+their taste <strong>prunes what's a headline; it must not suppress what gets explored or
+verified.</strong> Keep two judgments running: theirs (novel? domain-relevant? → the
+paper) and mine (true? load-bearing? artifact? → the science). The single-start
+example proves it: they shrugged (known), but that same "boring" fact is what
+caught halonium/vinyl/RAHB being single-start artifacts before they were falsely
+reported as flaws. <strong>Do the boring correctness work — it licenses the exciting
+claims.</strong></p>
+<hr />
+<h2 id="the-goal-next-running-loop">THE GOAL (next running loop)</h2>
+<blockquote>
+<p><strong>Build the rigorous failure taxonomy of UMA on carbocation stabilization, and
+prescribe the data that would fix it.</strong></p>
+<p><strong>Primary thread — the carbocation stabilization error class.</strong> With a <em>designed</em>
+cation series (methyl → 1°/2°/3° → allyl/benzyl → vinyl → cyclopropylcarbinyl →
+non-classical/bridged → bridgehead → terpene C₁₀H₁₇⁺), systematically map
+<strong>where and by how much UMA over- vs under-stabilizes cations</strong>, using
+isodesmic/isomeric UMA comparisons plus xTB cross-checks. Test the working
+hypothesis: <em>UMA over-stabilizes small/localized empty-orbital cations (methyl,
+vinyl) and under-penalizes cations that can't planarize/delocalize (bridgehead).</em>
+Chase B5 (vinyl), unify with T4 (methyl) and B4/T6 (bridgehead) into one
+coherent, quantified error class with a mechanism story.</p>
+<p><strong>Rigor gate on every candidate flaw (the boring work that licenses the exciting
+claims):</strong> (1) multi-start / symmetry-break to prove it isn't a sampling
+artifact; (2) xTB cross-check; (3) literature/novelty check via web search —
+unreported → headline, known → cite. Do this even when a finding feels obvious.</p>
+<p><strong>Constructive output:</strong> name the specific molecule classes and reference data
+(non-classical/bridged carbocations, bridgehead ions, terpene rearrangement
+intermediates) whose addition would make an MLIP transferable to
+carbocation/natural-product mechanism.</p>
+<p><strong>Secondary thread:</strong> document the open-shell/degenerate failures (Cp⁺
+antiaromatic, spin-state/carbene) tightly as a distinct, lower-priority class.
+<strong>Demote off-domain flaws</strong> (F₂/charge-shift): check whether they generalize,
+judge relevance to carbocation/terpene chemistry, shelve if tangential.</p>
+<p><strong>Keep my curiosity independent of the reviewer's taste:</strong> their "boring" marks
+what they already know, not what's unimportant or unverified — keep surfacing and
+verifying things like the single-start trap and let literature sort
+novel-from-known downstream. Park the DFT-dependent numbers (B1 α-terpinyl
+minimum, B2 tert/sec gap) as clearly-scoped requests, firmed up with multi-start
++ xTB + literature.</p>
+<p><strong>Loop discipline:</strong> one hypothesis at a time, wrinkle-driven; validate every
+structure; multi-start always; dated diary + hypothesis ledger + flaws log;
+commit each batch.</p>
+</blockquote>
+<p><strong>DFT-free by design</strong> (UMA + xTB + literature). Produces a defensible failure map
+and a retraining spec; the two "verify" numbers (B1, B2) stay open until DFT is
+available — parked, not pretended-closed.</p>
+<h2 id="open-questions-for-the-reviewer">Open questions for the reviewer</h2>
+<ul>
+<li>Target venue/audience — comp-chem/MLIP methods, or physical-organic/natural
+  product? (Changes what counts as a headline.)</li>
+<li>the reviewer DFT be available for the verify items (B1, B2, T4)? If so, spec exactly what
+  to run; if not, stay DFT-free + literature.</li>
+<li>Confirm priority: carbocation-stabilization errors (primary) → open-shell/spin
+  (secondary) → off-domain F₂ (demote).</li>
+<li>How far into the retraining prescription — name the gaps, or curate/spec a
+  candidate augmentation set?</li>
+</ul>
+</article>
+<p class="src">Rendered from will-chem <code>next-round</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

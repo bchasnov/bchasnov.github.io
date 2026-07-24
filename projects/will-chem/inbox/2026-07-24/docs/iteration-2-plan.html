@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iteration 2 — plan — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="iteration-2-plan">Iteration 2 — plan</h1>
+<p>Builds on <code>ITERATION_1_REVIEW.md</code> (this branch) and the reviewer triage in
+<code>uma-carbocation-study/iteration-1:NEXT_ROUND.md</code>. Execute on a fresh branch
+<code>uma-carbocation-study/iteration-2</code> cut from <code>uma-carbocation-study/iteration-1</code>
+(inherits the iteration-1 codebase, ledgers, and results).</p>
+<h2 id="context-why-iteration-2">Context — why iteration 2</h2>
+<p>Iteration 1 established that UMA is a strong, fast engine for closed-shell
+physical-organic chemistry but has real, narrow failures on reactive
+intermediates. The domain reviewer's verdict reframed the project: <strong>for a model
+sold as general, the flaws are the contribution.</strong> The interesting-marked flaws
+cluster into one thesis — <em>UMA gets carbocation relative energies wrong: it
+over-stabilizes small localized-empty-orbital cations (methyl T4, vinyl B5
+"chase") and under-penalizes cations that cannot planarize/delocalize
+(bridgehead B4/T6).</em></p>
+<p>But iteration 1's evidence for that thesis is <strong>not yet rigorous enough to
+publish</strong>: the 100 hypotheses were UMA-only (no systematic second-method
+cross-check), key magnitudes are estimates rather than measurements, and the
+experiment code is a monolith that cannot cleanly host a <em>designed</em> series.
+Iteration 2 turns the anecdote into a quantified, cross-checked, literature-
+anchored failure map — and prescribes the data that would fix UMA.</p>
+<h2 id="goal">Goal</h2>
+<blockquote>
+<p><strong>Build the rigorous, quantified failure taxonomy of UMA on carbocation
+stabilization, and prescribe the training data that would fix it — DFT-free
+(UMA + xTB + literature).</strong></p>
+</blockquote>
+<p>Every candidate flaw must pass three <strong>rigor gates</strong> before it is reported:
+1. <strong>Multi-start / symmetry-break</strong> — prove it is not a sampling artifact
+   (broaden beyond iteration 1's 4 fixed seeds).
+2. <strong>xTB cross-check</strong> — GFN2-xTB on the same isodesmic/isomeric comparison;
+   agreement strengthens, disagreement is itself a finding.
+3. <strong>Literature / novelty check</strong> (web search) — unreported → headline; known →
+   cite. Log every check.</p>
+<h2 id="workstreams">Workstreams</h2>
+<h3 id="a-infrastructure-refactor-prerequisite-do-first">A. Infrastructure refactor (prerequisite, do first)</h3>
+<p>The monolith blocks a <em>designed</em> series. Refactor the experiment layer into a
+declarative format, reusing the clean patterns already in the repo.</p>
+<ul>
+<li>Introduce a <code>Hypothesis</code> dataclass + registry mirroring the frozen <code>System</code>
+  dataclass in <code>uma_core/systems.py</code> (which the 100 hypotheses currently
+  bypass). Each hypothesis = data: id, SMILES set, comparison type
+  (isomeric / isodesmic / geometric / spin-gap), expected value + source,
+  tolerance, tags, rigor-gate flags.</li>
+<li><strong>Unify duplicated helpers.</strong> Single <code>build()</code> and <code>relax()</code> with one
+  consistent <code>fmax</code> (pick 0.03 eV/Å; iteration 1 diverged 0.03 vs 0.05 across
+  <code>mechanisms.py</code> / <code>run_uma.py</code> / <code>explore.py</code>). Deduplicate <code>rotation_matrix</code>
+  (<code>mechanisms.py</code> vs <code>stress_test.py</code>).</li>
+<li>Add a reusable <strong>dual-method runner</strong> that evaluates every comparison under
+  both UMA and GFN2-xTB and emits one shared result schema (extend
+  <code>run_xtb.py</code> / <code>report.py</code> rather than re-inventing). This is what makes the
+  gate-2 cross-check uniform instead of per-hypothesis ad hoc.</li>
+<li>Keep iteration-1 <code>mechanisms.py</code> results intact for provenance; port the
+  carbocation-relevant hypotheses into the new registry rather than deleting.</li>
+</ul>
+<p>Critical files: <code>uma_core/systems.py</code> (pattern to reuse), new
+<code>uma_core/hypotheses.py</code> (registry) + <code>uma_core/run_compare.py</code> (dual-method
+runner), <code>uma_core/report.py</code>, <code>uma_core/explore.py</code> (multi-start).</p>
+<h3 id="b-primary-science-the-carbocation-stabilization-error-class">B. Primary science — the carbocation-stabilization error class</h3>
+<p>Design and run a <strong>cation series</strong> spanning the stabilization axis, all as
+isodesmic/isomeric comparisons so references cancel:</p>
+<pre><code>methyl → 1°/2°/3° → allyl/benzyl → vinyl → cyclopropylcarbinyl →
+non-classical/bridged (2-norbornyl) → bridgehead (1-norbornyl) →
+terpene C₁₀H₁₇⁺ (α-terpinyl and friends)
+</code></pre>
+<p>For each, quantify <strong>where and by how much UMA over- vs under-stabilizes</strong>
+relative to xTB and to literature/experimental hydride-affinity data. Anchor to
+a common reference (e.g. isodesmic hydride-transfer against a fixed reference
+cation) so numbers are comparable across the whole series — this fixes
+iteration 1's "estimate, not measurement" weakness for the methyl gap.</p>
+<ul>
+<li><strong>Chase B5 (vinyl):</strong> is the 52.8 kcal/mol bridged-below-classical gap real or
+  over-stabilization? Multi-start both isomers, xTB cross-check, literature the
+  known ~4–5 kcal/mol gap.</li>
+<li><strong>Unify</strong> T4 (methyl), B5 (vinyl), B4/T6 (bridgehead) into one coherent,
+  quantified error class with a mechanism story (empty-p localization vs
+  geometry-forced non-planarity).</li>
+</ul>
+<p>Test the working hypothesis explicitly and report the quantified map (a table of
+UMA vs xTB vs reference, with the signed error per cation).</p>
+<h3 id="c-secondary-open-shell-degenerate-failures-lower-priority">C. Secondary — open-shell / degenerate failures (lower priority)</h3>
+<p>Document tightly as a distinct class: Cp⁺ antiaromatic Jahn–Teller miss +
+triplet anomaly, dichlorocarbene singlet–triplet sign error, loose CH₂ gap.
+Same rigor gates. Keep separate from the carbocation thesis (it is off the
+domain axis but a real secondary story).</p>
+<h3 id="d-demote-off-domain-f2-charge-shift">D. Demote off-domain (F₂ / charge-shift)</h3>
+<p>Quick generalization check only (per reviewer T5): do other homolytic
+charge-shift bonds show the same non-monotonic turnover? Judge relevance to
+carbocation/terpene chemistry; shelve if tangential. Do not expand.</p>
+<h3 id="e-constructive-output-retraining-prescription">E. Constructive output — retraining prescription</h3>
+<p>Name the specific molecule classes and reference data whose addition would make
+an MLIP transferable to carbocation / natural-product mechanism: non-classical /
+bridged carbocations, bridgehead ions, terpene rearrangement intermediates,
+small electron-deficient cations (CH₃⁺-like). Deliverable: a <code>RETRAIN_SPEC.md</code>
+listing gap classes + candidate reference systems + what to compute for each.</p>
+<h3 id="f-park-the-dft-dependent-numbers">F. Park the DFT-dependent numbers</h3>
+<p>Keep B1 (α-terpinyl global-min conformer) and B2 (tert→sec gap) as clearly
+scoped <code>DFT_REQUESTS.md</code> items, firmed up with multi-start + xTB + literature so
+they are ready to hand off the moment DFT is available. Do not pretend-close
+them.</p>
+<h2 id="loop-discipline-unchanged-from-claudemd">Loop discipline (unchanged from <code>CLAUDE.md</code>)</h2>
+<p>One hypothesis at a time, wrinkle-driven; validate every structure; multi-start
+always; dated <code>DIARY.md</code> + <code>HYPOTHESES.md</code> ledger + <code>UMA_FLAWS.md</code>; commit each
+batch. Keep two judgments running: the reviewer's novelty taste (what is a
+headline) and the agent's own correctness judgment (what is true / an artifact) —
+do the boring correctness work because it licenses the exciting claims.</p>
+<h2 id="defaults-chosen-open-questions-from-next_roundmd">Defaults chosen (open questions from <code>NEXT_ROUND.md</code>)</h2>
+<ul>
+<li><strong>DFT-free by design.</strong> Assume no DFT this iteration; B1/B2/T4 stay parked +
+  literature-anchored, ready to spec if DFT appears.</li>
+<li><strong>Priority:</strong> carbocation-stabilization errors (primary) → open-shell/spin
+  (secondary) → off-domain F₂ (demote). Matches the reviewer verdicts.</li>
+<li><strong>Audience:</strong> write for the MLIP-methods × physical-organic overlap (the "sold
+  as general, here is where it breaks on mechanism" framing); this is the
+  reviewer's implied venue.</li>
+</ul>
+<h2 id="verification-how-to-check-iteration-2-end-to-end">Verification (how to check iteration 2 end-to-end)</h2>
+<ol>
+<li><code>python -m uma_core.stress_test</code> — instrument still 6/6.</li>
+<li>Run the new registry both methods:
+   <code>python -m uma_core.run_compare &lt;cation-series&gt;</code> — confirm each comparison
+   emits UMA + xTB numbers into the shared schema.</li>
+<li>Reproduce each reported flaw via its hypothesis id
+   (<code>python -m uma_core.mechanisms &lt;id&gt;</code> or the new runner) and confirm the
+   multi-start + xTB + literature gate fields are populated.</li>
+<li>Confirm the primary deliverable: a UMA-vs-xTB-vs-reference table for the
+   cation series with signed per-cation errors, plus <code>RETRAIN_SPEC.md</code>.</li>
+<li>Ledgers updated (<code>HYPOTHESES.md</code>, <code>UMA_FLAWS.md</code>, <code>DIARY.md</code>) and each batch
+   committed.</li>
+</ol>
+</article>
+<p class="src">Rendered from will-chem <code>iteration-2-plan</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

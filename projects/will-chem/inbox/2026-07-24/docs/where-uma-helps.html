@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where UMA helps — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="what-research-excels-with-uma">What research excels with UMA</h1>
+<p>Grounded in the iteration-2 evidence (<code>DIARY_ITER2.md</code>, <code>UMA_FLAWS.md</code>,
+<code>RETRAIN_SPEC.md</code>, <code>synergy.py</code>). Framed around two research areas: <strong>terpene/terpenoid carbocation cascade
+mechanisms</strong>, and <strong>aromaticity, hyperconjugation, σ-delocalization, and
+reactive-intermediate stabilization</strong>.</p>
+<h2 id="the-one-line-answer">The one-line answer</h2>
+<p>UMA excels wherever the science is <strong>exploration-limited</strong> — too many structures,
+conformers, or pathways for DFT to enumerate — <strong>and</strong> the chemistry stays in
+UMA's validated regime (closed-shell, delocalized/hyperconjugated cations; no
+bare empty p; no open-shell/antiaromatic centers). It is a <strong>fast front-end that
+proposes; DFT disposes.</strong> Iteration 2 measured exactly where that regime is.</p>
+<h2 id="where-uma-is-a-force-multiplier">Where UMA is a force multiplier</h2>
+<h3 id="1-terpene-cyclization-cascade-mapping">1. Terpene cyclization cascade mapping</h3>
+<p>A monoterpene/diterpene cascade is a <em>network</em>: dozens of carbocation
+intermediates, each with many conformers, connected by competing
+Wagner–Meerwein/hydride-shift/cyclization steps. This is precisely the
+combinatorial space DFT cannot afford to enumerate — and precisely where UMA is
+both <strong>fast and validated</strong>:
+- <strong>Fast:</strong> UMA relaxed 20–34 conformers of a C₁₀H₁₇⁺ terpene cation into
+  6–11 basins in <strong>2–4 minutes</strong>; the same DFT sweep is ~0.6–0.8 h (<code>synergy.py</code>).
+- <strong>Reliable here:</strong> cyclic tertiary/allylic terpene cations match DFT to
+  <strong>~1–3 kcal/mol</strong>; Markovnikov tert/sec (H109), ring-expansion (H127),
+  Wagner–Meerwein driving forces (neopentyl→tert-amyl, pinacolyl; H128/H129), and
+  the C₁₀H₁₇⁺ isomer manifold (H107/H142) all cross-confirm against xTB <strong>and</strong>
+  DFT. No bare empty p appears in these intermediates, so the one UMA disease
+  never bites.
+- <strong>Workflow:</strong> UMA enumerates conformers → basins → candidate rearrangement
+  pathways; DFT refines the handful of stationary points and barriers that
+  decide selectivity. UMA finds the <em>rare</em> global-minimum conformer a single
+  relaxation misses (settled B1: the α-terpinyl reference conformer sits ~1.3
+  kcal below the naive one). This is the highest-leverage use here.</p>
+<h3 id="2-reaction-network-pes-pre-screening">2. Reaction-network / PES pre-screening</h3>
+<p>Before spending DFT, use UMA to map which minima exist and which shifts/cyclizations
+are barrierless vs real (iteration 1 already saw many barrierless WM shifts). UMA
+screens the topology; DFT quantifies the survivors.</p>
+<h3 id="3-conformer-ensembles-for-large-terpenoids-natural-products">3. Conformer ensembles for large terpenoids / natural products</h3>
+<p>Dense conformational sampling of floppy substrates where DFT is prohibitive —
+UMA ranks, DFT confirms the top few (the <code>synergy.py</code> pattern, which also caught
+that the H107 linalyl "divergence" was just sampling).</p>
+<h3 id="4-substituent-analog-screening">4. Substituent / analog screening</h3>
+<p>Scanning substituent or substrate series for stability trends — the isodesmic
+ladders cross-confirmed broadly (H101, H124–H132), so UMA is a trustworthy fast
+screen for <em>relative</em> trends in ordinary cations.</p>
+<h2 id="where-uma-helps-for-aromaticity-hyperconjugation-work">Where UMA helps for aromaticity / hyperconjugation work</h2>
+<p>Closed-shell aromaticity/hyperconjugation/σ-delocalization is a UMA <strong>strength</strong>,
+now validated:
+- Hyperconjugation geometric fingerprints (β-C–H +18 mÅ, β-Si bridging +30.7,
+  cross-confirmed at xTB H121), aromatic stabilization energies (benzene ASE ~37,
+  tropylium, cyclopropenyl), resonance delocalization (allyl/benzyl/carboxylate/
+  nitro symmetrization), cation–π, H-bonds/RAHB — all reproduced.
+- So for <strong>quantifying stabilization of closed-shell reactive intermediates</strong>,
+  UMA is a fast, reliable screen — and, notably, sometimes <strong>more accurate than
+  xTB</strong>: for the 2-propenyl (α-methyl vinyl) cation, DFT (+8.7) confirms UMA
+  (+7.9) and refutes xTB (−17.5) (H171); UMA also tracks the experiment-validated
+  cubane strain where xTB underestimates it (H172).</p>
+<h3 id="5-non-planar-bridgehead-carbocations-uma-xtb-iteration-3-w2">5. Non-planar / bridgehead carbocations — UMA ≫ xTB (iteration 3, W2)</h3>
+<p>The mechanistically central "can't-planarize" ions (Bredt-constrained bridgeheads,
+Wagner–Meerwein intermediates) are a UMA <strong>strength</strong>, and the place its advantage
+over xTB is largest. Against mPW1PW91/6-31G(d) (the experimental collaborator level), on a
+structure-validated bridgehead series (1-adamantyl, bicyclo[2.2.2]oct-1-yl,
+1-norbornyl):
+- <strong>UMA isodesmic stability error ≤ 2.5 kcal/mol</strong>, even for the strongly
+  Bredt-destabilized 1-norbornyl bridgehead cation (−13 kcal vs tert-butyl⁺).
+- <strong>GFN2-xTB, run end-to-end (its own optimized geometry), errs by 23–30
+  kcal/mol.</strong> Decomposition shows the bulk is a <em>geometry</em> error: on the common
+  UMA geometry xTB's functional error is only 5–7 kcal — xTB simply gets the
+  strained cage geometry wrong, and UMA does not.
+- The UMA geometry is DFT-quality here: DFT//UMA == DFT//DFT to <strong>0.01 kcal/mol</strong>
+  for 1-norbornyl (H203), so "optimize with UMA, single-point with DFT" is a
+  sound, cheap protocol for strained cations.
+- This <strong>overturns the iteration-1 FLAW 3 worry</strong> (UMA under-destabilizes the
+  bridgehead). At DFT it is UMA that is right and xTB that is badly wrong; the
+  iteration-2 "shared with xTB, not UMA-specific" demotion is now resolved in
+  UMA's favor. (Modules: <code>w2_bridgehead.py</code>, <code>round3.py</code>.)</p>
+<h2 id="the-guardrails-hand-these-to-dft-higher-theory">The guardrails (hand these to DFT / higher theory)</h2>
+<p>The reactive-intermediate edge cases the aromaticity group cares about are exactly
+UMA's failures — so the map matters most there:
+- <strong>Bare-empty-p cations</strong> — methyl, non-α-substituted vinyl, primary /
+  non-classical small bridged cations, β-halonium open forms. Over-stabilized by
+  up to +100 kcal/mol (DFT/CCSD(T)-confirmed). Never let UMA rank these.
+- <strong>Open-shell / antiaromatic / degenerate</strong> — carbenes (halocarbene singlet–
+  triplet wrong sign), cyclopentadienyl cation (misses antiaromatic Jahn–Teller,
+  −200 kcal/mol triplet). Use DFT or multireference.</p>
+<h2 id="bottom-line">Bottom line</h2>
+<p>In practice: <strong>use UMA as the exploration engine for terpene carbocation
+landscapes</strong> and as a <strong>fast screen for closed-shell
+aromaticity/hyperconjugation stabilization</strong>, always paired with DFT on the
+few structures that matter and with the iteration-2 failure map telling you which
+regime you're in. The combination is strictly more capable than DFT alone: UMA
+gives near-DFT answers over a search space DFT could never traverse; DFT keeps
+UMA honest exactly where it breaks.</p>
+</article>
+<p class="src">Rendered from will-chem <code>where-uma-helps</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

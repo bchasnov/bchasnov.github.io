@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diary — iteration 2 — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="diary-iteration-2-h101">Diary — iteration 2 (H101+)</h1>
+<p>Continues <code>DIARY.md</code>. Goal (from <code>ITERATION_2_PLAN.md</code> / reviewer <code>NEXT_ROUND.md</code>):
+build the <strong>rigorous, quantified failure taxonomy of UMA on carbocation
+stabilization</strong>, DFT-free, every candidate flaw passing three gates —
+(1) multi-start / structure validation, (2) GFN2-xTB cross-check, (3) literature.
+New this round: <strong>every comparison is dual-method (UMA + xTB) by construction</strong>
+(<code>iter2.py</code>), closing iteration 1's biggest gap (UMA-only verdicts).</p>
+<hr />
+<h2 id="2026-07-21-h101-the-stabilization-ladder-measured-under-two-methods">2026-07-21 — H101: the stabilization ladder, measured under two methods</h2>
+<p>Reworked the iteration-1 hydride-affinity ladder (H43, UMA-only, which only
+<em>estimated</em> the methyl error at 60–80 kcal/mol) into a proper isodesmic
+hydride-transfer ladder run under <strong>both UMA and xTB</strong> and anchored to
+<strong>experimental gas-phase hydride affinities</strong>:</p>
+<pre><code>R+ + isobutane -&gt; RH + tert-butyl+ ;  ΔE = HIA(tBu+) - HIA(R+) = Stab(R)
+</code></pre>
+<p>Positive Stab = more stable than tert-butyl+. Experimental anchors (kcal/mol):
+tBu 231, iPr 246, Et 273, Me 312 (one consistent published series); vinyl/phenyl/
+allyl/benzyl are lower-confidence literature estimates.</p>
+<p>Result (Stab relative to tert-butyl, kcal/mol):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>cation</th>
+<th>UMA</th>
+<th>xTB</th>
+<th>exp</th>
+<th>UMA−exp</th>
+<th>xTB−exp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tert-butyl (3°)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>isopropyl (2°)</td>
+<td>−15.3</td>
+<td>−16.1</td>
+<td>−18.0</td>
+<td><strong>+2.7</strong></td>
+<td>+1.9</td>
+</tr>
+<tr>
+<td>ethyl (1°)</td>
+<td>−37.8</td>
+<td>−45.7</td>
+<td>−39.0</td>
+<td><strong>+1.2</strong></td>
+<td>−6.7</td>
+</tr>
+<tr>
+<td>benzyl</td>
+<td>−3.3</td>
+<td>−15.3</td>
+<td>−8.0</td>
+<td>+4.7</td>
+<td>−7.3</td>
+</tr>
+<tr>
+<td>allyl</td>
+<td>−19.9</td>
+<td>−36.7</td>
+<td>−25.0</td>
+<td>+5.1</td>
+<td>−11.7</td>
+</tr>
+<tr>
+<td>vinyl</td>
+<td>−44.5</td>
+<td>−52.4</td>
+<td>−56.0</td>
+<td>+11.5</td>
+<td>+3.6</td>
+</tr>
+<tr>
+<td><strong>methyl</strong></td>
+<td><strong>+22.1</strong></td>
+<td>−105.7</td>
+<td>−82.0</td>
+<td><strong>+104.1</strong></td>
+<td>−23.7</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>HEADLINE — the methyl cation, now a measured number.</strong> UMA places CH₃⁺
+<strong>+22 kcal/mol <em>above</em> tert-butyl</strong> — i.e. it calls the methyl cation <em>more
+stable</em> than tert-butyl — when experiment puts it <strong>82 kcal/mol below</strong>. That is
+a <strong>+104 kcal/mol over-stabilization</strong>, cross-checked: xTB and experiment both
+put methyl far below tert-butyl (xTB actually over-shoots the other way, −24).
+Iteration 1 could only estimate "60–80"; this measures it against experiment and
+a second method. This is the cleanest, most dramatic entry in the error class,
+and it is structurally airtight — methane and CH₃⁺ cannot rearrange.</p>
+<p><strong>The ordinary ladder is fine, and UMA beats xTB on it.</strong> For 1°/2°/benzylic
+cations UMA sits within +1 to +5 kcal/mol of experiment; xTB scatters more
+(benzyl −7, allyl −12). So the picture is sharp: UMA is <em>excellent</em> for ordinary
+cations and <em>catastrophic</em> for the smallest electron-deficient one. The error is
+not random — it is concentrated at the empty-p, no-substituent corner.</p>
+<h3 id="two-rigor-gate-catches-the-boring-work-that-licensed-the-headline">Two rigor-gate catches (the boring work that licensed the headline)</h3>
+<ol>
+<li>
+<p><strong>Cyclopropyl disqualified.</strong> The ladder first showed cyclopropyl at UMA
+   +11.3 / exp −37 → an apparent +48 "flaw." Structure check killed it: under
+   xTB the cyclopropyl cation <strong>ring-opens fully to allyl</strong> (C–C fingerprint
+   [1.38, 1.38, 2.39] ≈ allyl), and under UMA it holds a <em>partially</em> opened
+   structure ([1.39, 1.40, 1.91]). It is not a distinct stationary species
+   (iteration 1 H29 already saw cyclopropyl→allyl electrocyclic opening), so the
+   two methods simply stop at different points on the opening path. <strong>Not a
+   flaw — a structural artifact.</strong> Dropped from the headline. This is exactly
+   the false positive the gate exists to catch.</p>
+</li>
+<li>
+<p><strong>RDKit multi-start misses non-classical bridges.</strong> My 8-seed RDKit
+   multi-start relaxed both ethyl and vinyl to their <em>classical</em> structures
+   (C–C 1.46 and 1.26 Å) — it never found the H-bridged non-classical minima
+   that iteration 1 reached only from hand-built seeds. Lesson carried into
+   H102: bridged cations must be <strong>seeded explicitly</strong>; RNG conformer sampling
+   is blind to them. (So the ethyl rung above is the classical cation; the
+   bridged form is ~3 kcal/mol lower — a small correction, noted.)</p>
+</li>
+</ol>
+<p><strong>Verdict.</strong> Thesis confirmed and quantified at the methyl end: UMA
+over-stabilizes the bare methyl cation by ~100 kcal/mol relative to experiment
+and to xTB, while getting ordinary cations right. Next: the bridged end (H102
+vinyl, seeded properly) and the geometry-penalty end (H103 bridgehead).</p>
+<hr />
+<h2 id="2026-07-21-h102-the-vinyl-cation-chase-b5-pays-off-cross-checked">2026-07-21 — H102: the vinyl cation chase (B5) pays off, cross-checked</h2>
+<p>Seeded the bridged (protonated-acetylene, C2v) vinyl cation <strong>explicitly</strong>
+(RDKit will not generate it — the H101 lesson) and compared to the classical
+CH₂=CH⁺ under both methods, vs the CCSD(T) literature gap.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>method</th>
+<th>E(bridged) − E(classical)</th>
+<th>bridged C–C</th>
+<th>bridging H (symmetric)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UMA</td>
+<td><strong>−49.4 kcal/mol</strong></td>
+<td>1.379 Å</td>
+<td>1.208 / 1.208 Å</td>
+</tr>
+<tr>
+<td>xTB</td>
+<td>+4.7 kcal/mol</td>
+<td>1.233 Å</td>
+<td>1.277 / 1.277 Å</td>
+</tr>
+<tr>
+<td>CCSD(T)/CBS (lit.)</td>
+<td>−4 to −5 (classical is a saddle)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>B5 confirmed as a real UMA over-stabilization.</strong> The true gap is small
+(~4–5 kcal/mol, bridged slightly favored); xTB brackets it correctly (within
+~5 kcal/mol either sign). UMA drops the bridged form <strong>~45–54 kcal/mol too low</strong> —
+a ~10× over-stabilization, reproducing iteration 1's H37 (−52.8) and now
+cross-checked against both xTB and CCSD(T) literature. Note the geometry tell:
+UMA's bridged C–C is stretched to 1.379 Å (vs xTB's near-triple-bond 1.233),
+consistent with UMA over-binding the three-center bridge. <strong>This unifies with
+methyl:</strong> both are small, electron-deficient cations UMA stabilizes far too much,
+and the effect is enormous where the empty orbital is most localized.</p>
+<h2 id="2026-07-21-h103-the-bridgehead-flaw-does-not-survive-the-cross-check">2026-07-21 — H103: the bridgehead "flaw" does NOT survive the cross-check</h2>
+<p>1-norbornyl (bridgehead, built by stripping a bridgehead H off norbornane —
+ETKDG cannot embed the cage cation) vs 2-norbornyl, both C7H11⁺, both methods:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>method</th>
+<th>E(1-norbornyl bridgehead) − E(2-norbornyl)</th>
+<th>bridgehead angle-sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UMA</td>
+<td>−3.1 kcal/mol</td>
+<td>348°</td>
+</tr>
+<tr>
+<td>xTB</td>
+<td>−3.6 kcal/mol</td>
+<td>348°</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Correction to iteration 1 (and to reviewer T6/B4).</strong> Iteration 1 reported the
+bridgehead sitting 3.07 kcal/mol <em>below</em> 2-norbornyl as a UMA flaw ("under-
+destabilized, sign wrong vs Bredt"), and the reviewer marked it "evidence of
+carbocation stabilization errors." But <strong>xTB does the same thing</strong> (−3.6, within
+0.5 kcal/mol of UMA). A flaw that a second, independent method reproduces
+exactly is <strong>not UMA-specific</strong> — I cannot attribute it to UMA. Either the
+bicyclic bridgehead cation is genuinely less destabilized than Bredt intuition
+suggests (it is only mildly pyramidal, angle-sum 348°, and sits β to strained,
+hyperconjugating cage bonds), or both fast methods share the limitation. Only
+DFT/CCSD(T) can settle it — exactly the escalation iteration 1 already filed in
+<code>DFT_REQUESTS.md</code>. <strong>So the bridgehead is DEMOTED</strong> from the confirmed UMA error
+class to a parked, DFT-needed question. This is the cross-check doing its job:
+the reviewer's "interesting" pruned toward this flaw, but correctness work says
+it isn't proven as UMA's.</p>
+<h3 id="where-the-error-class-stands-after-h101h103">Where the error class stands after H101–H103</h3>
+<p>The <strong>confirmed, cross-checked, UMA-specific over-stabilizations</strong>:
+- <strong>methyl cation:</strong> +104 kcal/mol vs experiment (xTB agrees methyl ≪ tert-butyl).
+- <strong>bridged vinyl cation:</strong> ~+45–54 kcal/mol vs xTB and CCSD(T).</p>
+<p>Both are small, localized-empty-orbital / three-center-bridged cations — one
+coherent class. The <strong>bridgehead</strong> under-destabilization is <strong>not</strong> confirmed
+(shared with xTB → DFT-needed). The thesis sharpens: <em>UMA over-stabilizes small,
+electron-deficient cations where the positive charge is forced into a compact,
+localized (empty-p or 3-center-bridge) region — and the error grows as that
+region shrinks.</em> The mechanism-story candidate: UMA's training (ground-state
+equilibrium organic molecules, OMol) under-samples these sparse, high-energy
+electron-deficient motifs, so it extrapolates them too low.</p>
+<hr />
+<h2 id="2026-07-21-h104-the-mechanism-tested-a-donor-quenches-the-flaw">2026-07-21 — H104: the mechanism, tested. A donor quenches the flaw.</h2>
+<p>If the thesis is right — UMA over-stabilizes the <em>bare</em> empty p — then feeding a
+donor into that orbital should switch the error off. Graded RCH₂⁺ series,
+stabilization vs tert-butyl, reading the <strong>UMA−xTB gap</strong> as the UMA-specific
+error:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>RCH₂⁺ (donor into empty p)</th>
+<th>UMA−xTB gap (kcal/mol)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methyl (no donor)</td>
+<td><strong>+128</strong></td>
+</tr>
+<tr>
+<td>fluoromethyl (F, weak π-donor)</td>
+<td><strong>+117</strong></td>
+</tr>
+<tr>
+<td>hydroxymethyl (O, oxocarbenium)</td>
+<td>+17</td>
+</tr>
+<tr>
+<td>aminomethyl (N, iminium)</td>
+<td>+14</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Clean confirmation of the mechanism.</strong> The error is enormous (&gt;115 kcal/mol)
+when the empty p is bare (methyl) or only weakly donated into (fluorine — whose
+tight lone pairs overlap poorly, leaving the p largely bare), and <strong>collapses to
+~15 kcal/mol</strong> once a real π-donor (N, O) forms a genuine double bond and quenches
+the empty orbital (iminium/oxocarbenium — which iteration 1 already found UMA
+handles well, H19/H36). So the flaw is specifically <strong>an un-quenched, localized
+empty p orbital</strong>, not size or charge per se. This is the retraining lever: the
+motif that needs training data is the <em>bare-empty-p carbenium</em>, not carbocations
+in general.</p>
+<h2 id="2026-07-21-h105-halonium-mis-ordering-b6-a-new-confirmed-flaw">2026-07-21 — H105: halonium mis-ordering (B6) — a new confirmed flaw</h2>
+<p>β-halonium: bridged (haliranium ring) vs open (β-halo primary cation), C₂H₄X⁺,
+both methods, X = Cl, Br.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>X</th>
+<th>E(bridged)−E(open), UMA</th>
+<th>xTB</th>
+<th>geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cl</td>
+<td><strong>+67.4</strong> (bridged high)</td>
+<td>0.0</td>
+<td>xTB: open &amp; bridged both relax to the SAME bridge (fp 1.47)</td>
+</tr>
+<tr>
+<td>Br</td>
+<td><strong>+56.2</strong> (bridged high)</td>
+<td>0.0</td>
+<td>UMA: two distinct minima (open fp 1.52/1.45, bridge 1.44/1.33)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Confirmed UMA flaw, cross-checked.</strong> Anchimeric assistance makes the <em>bridged</em>
+halonium the minimum; xTB agrees so strongly that the open cation isn't even a
+separate minimum — it collapses straight into the bridge (ΔE = 0, identical
+geometry). UMA instead holds a <strong>spurious open β-halo primary cation 56–67
+kcal/mol below the bridge</strong> — exactly backwards. This is iteration 1's H23/B6
+suspicion (then unverifiable without a reference), now settled by the xTB
+cross-check. And it fits the thesis: the open form is a localized-empty-p CH₂⁺
+(only weakly β-stabilized), and UMA over-stabilizes it into a deep spurious well.
+Same disease as methyl/vinyl, wearing a different hat.</p>
+<h2 id="2026-07-21-h106-c4h7-manifold-nuanced-no-dramatic-flaw">2026-07-21 — H106: C4H7⁺ manifold — nuanced, no dramatic flaw</h2>
+<p>Cyclopropylcarbinyl / cyclobutyl / homoallyl / methylallyl (all C₄H₇⁺),
+dual-method. UMA and xTB differ by only ~5–12 kcal/mol on the ordering (UMA
+places the non-classical cyclopropylcarbinyl/cyclobutyl ~10 kcal higher relative
+to methylallyl than xTB does). These are all resonance/σ-delocalized cations — no
+bare empty p — so, consistent with the thesis, there is <strong>no dramatic
+over-stabilization</strong> here, just ordinary method scatter. Logged as a nuanced
+control, not a flaw.</p>
+<h3 id="error-class-after-h101h106">Error class after H101–H106</h3>
+<p>Confirmed UMA-specific errors (each cross-checked vs xTB, most vs literature),
+all one disease — <strong>over-stabilization of a localized/bare empty-p carbenium</strong>:
+1. <strong>methyl</strong> +104 vs exp; 2. <strong>bridged vinyl</strong> +45–54; 3. <strong>halonium</strong>
+mis-ordering (open 56–67 too low); 4. <strong>fluoromethyl</strong> +117 vs xTB. The disease
+<strong>switches off</strong> under genuine π-donation (H104: N/O → gap ~15). Demoted / not
+UMA-specific: <strong>bridgehead</strong> (H103, xTB agrees) and the <strong>C4H7⁺ manifold</strong> (H106,
+modest scatter).</p>
+<hr />
+<h2 id="2026-07-21-h107h109-the-terpene-payoff-where-the-disease-does-not-bite">2026-07-21 — H107–H109: the terpene payoff — where the disease does NOT bite</h2>
+<p>The flaws are the paper, but the reviewer also wants "expected successes"
+documented. The sharpest success question: <strong>does the over-stabilization disease
+bite in the actual the experimental collaborator terpene chemistry?</strong> It shouldn't — real monoterpene
+cyclization funnels through <em>tertiary/allylic</em> cations, which have no bare empty
+p. Tested, dual-method:</p>
+<ul>
+<li><strong>H107 (terpene C₁₀H₁₇⁺ manifold).</strong> α-terpinyl / terpinen-4-yl / geranyl /
+  linalyl / pinyl. The <strong>cyclic</strong> cations that are the actual products agree
+  tightly UMA↔xTB: terpinen-4-yl 0.05, geranyl 2.8, pinyl 9.1 kcal/mol. The one
+  outlier is <strong>linalyl (+16.5 UMA−xTB)</strong> — a floppy open-chain tertiary-allylic
+  cation, almost certainly a <strong>conformer-sampling</strong> gap (8 seeds under-sample a
+  C₁₀ open chain), not the empty-p flaw. This is exactly iteration 1's B1 worry
+  (floppy terpene cation reference conformer) surfacing again → <strong>caution: use
+  denser conformer search for open-chain terpene cations</strong>; cyclic ones are safe.</li>
+<li><strong>H108 (B3 solved).</strong> Limonene protonation, made trustworthy by an isodesmic
+  proton transfer that cancels the bare-proton reference:
+  <em>limonene + tBu⁺ → α-terpinyl⁺ + isobutylene.</em> UMA <strong>−3.0</strong>, xTB <strong>−1.8</strong> —
+  agree within 1.3 kcal/mol. So limonene's ring alkene is <strong>~2–3 kcal/mol more
+  basic than isobutylene</strong> (PA ≈ 194 kcal/mol using lit. PA(isobutylene) 191.6).
+  Iteration 1 had "no trustworthy number" here; now there is one, DFT-free, two
+  methods agreeing. B3 closed.</li>
+<li><strong>H109 (Markovnikov tert vs sec).</strong> tert-amyl vs 3-methyl-2-butyl (C₅H₁₁⁺):
+  UMA +10.1, xTB +11.8 — agree within 1.8. UMA correctly places the tertiary
+  cation ~10 kcal below secondary, the thermodynamic driver of every terpene
+  cyclization/Markovnikov step.</li>
+</ul>
+<p><strong>Bottom line for the experimental collaborator:</strong> within the real terpene domain — cyclic
+tertiary/allylic cations — <strong>UMA is quantitatively reliable (≈1–3 kcal/mol),
+because the disease requires a bare empty p and these don't have one.</strong> The two
+operational cautions: (1) dense conformer sampling for floppy open-chain cations
+(H107 linalyl), and (2) watch any <em>non-classical / primary</em> intermediate that
+appears mid-cascade (that is where the empty-p flaw would strike). This is the
+usable map: UMA is a good terpene-mechanism engine, with two named failure modes
+to guard against.</p>
+<hr />
+<h2 id="2026-07-21-h110h112-the-mechanism-fully-mapped">2026-07-21 — H110–H112: the mechanism, fully mapped</h2>
+<p><strong>H110 — hyperconjugation decay is razor-sharp.</strong> UMA−xTB error along
+methyl→ethyl→isopropyl→tert-butyl:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>cation</th>
+<th>β-C–H donors</th>
+<th>UMA−xTB error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methyl</td>
+<td>0</td>
+<td><strong>+127.7</strong></td>
+</tr>
+<tr>
+<td>ethyl</td>
+<td>3</td>
+<td><strong>+7.8</strong></td>
+</tr>
+<tr>
+<td>isopropyl</td>
+<td>6</td>
+<td>+0.9</td>
+</tr>
+<tr>
+<td>tert-butyl</td>
+<td>9</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A single alkyl group collapses ~94% of the error</strong> (128 → 8). The disease is
+almost entirely the <em>bare</em> methyl cation; the faintest σ-donation quenches it.</p>
+<p><strong>H111 — halogen π-donor strength tracks the quench.</strong> CF₃⁺ (F, poor π-donor —
+tight lone pairs) UMA−xTB <strong>+30.9</strong>; CCl₃⁺ (Cl, good π-donor) <strong>−1.3</strong>; methyl
++127.7. F leaves the p partly bare (residual error), Cl quenches it — mirroring
+H104 (F-methyl errs, O/N quench). Textbook: Cl π-donates to a cation better than F.</p>
+<p><strong>H112 — aromatic controls (expected successes).</strong> Both delocalized aromatics
+come out correct-signed: tropylium (C₇H₇⁺) UMA +7.2 vs xTB +9.3 (agree within 2);
+cyclopropenyl (C₃H₃⁺) UMA +30.3 vs xTB +14.9 — both put the aromatic below, but
+UMA gives ~15 kcal more aromatic stabilization on the tiny 3-ring. Delocalized
+charge → no disease; a small residual on the smallest aromatic ring, noted.</p>
+<h3 id="the-mechanism-stated">The mechanism, stated</h3>
+<p>UMA's carbocation error is a <strong>single, sharply-localized pathology: it
+over-stabilizes an <em>unquenched, localized empty p orbital</em>.</strong> The magnitude is a
+clean function of how bare that orbital is — maximal for methyl (+104 vs exp,
++128 vs xTB), quenched by <em>any</em> real donation, whether σ-hyperconjugation (one
+alkyl → −94%) or π (N/O/Cl → ~0; F only partial). It surfaces wherever chemistry
+forces a compact, poorly-stabilized cationic center: methyl, bridged vinyl, the
+open β-halonium primary cation, CF₃⁺. It is absent wherever charge is delocalized
+or donated: ordinary 2°/3°/allylic/benzylic/aromatic cations and — crucially —
+the real terpene intermediates. Story for the paper: UMA's OMol training samples
+equilibrium closed-shell molecules densely but these bare-empty-p high-energy
+cations sparsely, so it extrapolates them too low.</p>
+<hr />
+<h2 id="2026-07-21-h113h118-secondary-class-spinopen-shell-t1t2t3">2026-07-21 — H113–H118: secondary class — spin/open-shell (T1/T2/T3)</h2>
+<p>Cross-checked iteration 1's spin flaws. <strong>First a methodological finding: xTB
+cannot arbitrate spin-state energetics</strong> — GFN2-xTB returns a near-constant
+ΔE_ST ≈ +1.7 kcal/mol for <em>every</em> carbene (CH₂, CF₂, CCl₂, CBr₂), insensitive to
+the actual electronic structure. So for this class the anchor is <strong>experiment</strong>,
+not xTB. (ΔE_ST ≡ E(triplet) − E(singlet); negative = triplet ground state.)</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>species</th>
+<th>UMA ΔE_ST</th>
+<th>exp</th>
+<th>UMA verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CH₂ (H113)</td>
+<td>−34.5</td>
+<td>+9 (triplet GS)</td>
+<td>right sign, ~4× too large</td>
+</tr>
+<tr>
+<td>CF₂ (H114)</td>
+<td>−20.8</td>
+<td>−57 (<strong>singlet GS</strong>)</td>
+<td><strong>wrong sign</strong></td>
+</tr>
+<tr>
+<td>CCl₂ (H115)</td>
+<td>−15.7</td>
+<td>−20 (<strong>singlet GS</strong>)</td>
+<td><strong>wrong sign</strong> (= iter1 H77)</td>
+</tr>
+<tr>
+<td>CBr₂ (H116)</td>
+<td>−31.5</td>
+<td>~−15 (<strong>singlet GS</strong>)</td>
+<td><strong>wrong sign</strong></td>
+</tr>
+<tr>
+<td>Cp⁺ (H117)</td>
+<td>−200.6</td>
+<td>small (near-degenerate)</td>
+<td><strong>unphysical</strong> (= iter1)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pattern.</strong> UMA systematically favors the <strong>triplet</strong> for these small carbenes
+and the antiaromatic cation. The halocarbenes are the tell: their singlet ground
+state comes from <strong>halogen lone-pair π-donation into the carbene's empty p</strong> —
+the <em>same</em> empty-p donation physics as the carbocation story. UMA under-weights
+that donation, so it misses the singlet stabilization and wrongly calls them
+triplets. Candidate unifying root (stated as a hypothesis, not a claim): <strong>UMA
+mishandles lone-pair/σ donation into a localized empty p</strong> — over-stabilizing the
+<em>bare</em> empty p in cations, under-stabilizing the <em>donor-quenched</em> singlet in
+carbenes. Two faces of one orbital-physics blind spot.</p>
+<p><strong>H118 — the antiaromatic Jahn–Teller distortion, cross-checked geometrically.</strong>
+Cp⁺ singlet ring C–C: UMA symmetric pentagon (spread <strong>1 mÅ</strong>, misses JT); <strong>xTB
+distorts</strong> (1.349/1.349/1.439/1.439/1.555 Å, spread <strong>206 mÅ</strong>, captures the
+bond alternation). So iteration 1's FLAW 1 is confirmed by a second method that
+gets it <em>right</em>: UMA specifically fails to break the symmetry of the antiaromatic
+Cp⁺ singlet. This is a clean, valid dual-method result (geometry, where xTB is
+reliable, unlike spin energy).</p>
+<p>Secondary class stands: UMA's spin-state energetics are unreliable for
+degenerate/open-shell small species (wrong sign for halocarbene singlets,
+−200 for Cp⁺, JT miss). Off the carbocation axis but a real, bounded story;
+xTB is not an arbiter here (experiment is).</p>
+<hr />
+<h2 id="2026-07-21-h119h123-off-domain-demotion-bridge-and-controls">2026-07-21 — H119–H123: off-domain demotion, σ-bridge, and controls</h2>
+<ul>
+<li><strong>H119 (off-domain, T5).</strong> UMA bond lengths are ~15–19 mÅ short for F–F, Cl–Cl,
+  O–O, N–N <strong>and</strong> ordinary C–C alike — a uniform slight contraction, <em>not</em>
+  F-specific. The real F₂ artifact (iteration 1 H55) is the non-monotonic
+  dissociation curve, but F/O/N/Cl σ-bonds do not appear in carbocation/terpene
+  mechanism → <strong>demoted</strong> per the reviewer.</li>
+<li><strong>H120 (σ-bridge geometry).</strong> 2-norbornyl cation: UMA and xTB give
+  near-identical geometries (nearest C–C 1.444/1.533/1.597 vs 1.445/1.527/1.566).
+  UMA's non-classical geometry is <strong>not</strong> a UMA-specific artifact — the second
+  method agrees. (The classical-vs-bridged <em>energy</em> remains the CCSD(T) question,
+  DFT_REQUESTS P3.)</li>
+<li><strong>H121 (β-silicon effect, T10 — expected success, confirmed).</strong> β-C–Si vs
+  β-C–H hyperconjugation: UMA <strong>+25.0</strong>, xTB <strong>+31.7</strong> kcal/mol — both confirm
+  β-Si is the far stronger σ-donor (iteration 1 reported +30.7; xTB lands almost
+  exactly there). A genuine competence, now cross-checked.</li>
+<li><strong>H122 (donor controls).</strong> acylium UMA−xTB +6.2, oxocarbenium +17.3. Nuance
+  worth stating honestly: π-donation quenches the methyl disease from +128 down
+  to a <strong>~6–17 residual</strong>, not to zero; only full σ-alkylation drives it to ~0
+  (H110 isopropyl +0.9). So donor-stabilized cations carry a small residual UMA
+  over-stabilization.</li>
+<li><strong>H123 (styrene benzylic).</strong> 1-phenylethyl (benzylic) vs 2-phenylethyl
+  (primary): both methods ≈ degenerate (UMA −0.39, xTB +0.42) — the primary
+  relaxes to the benzylic sink (iteration 1 H48); UMA and xTB agree, no issue.</li>
+</ul>
+<hr />
+<h2 id="2026-07-21-h166-dft-confirmation-of-the-methyl-over-stabilization-compute-enabled">2026-07-21 — H166: DFT CONFIRMATION of the methyl over-stabilization (compute enabled)</h2>
+<p>With compute available, the parked DFT_REQUESTS become answerable. Built a real
+ab-initio reference stage (<code>uma_core/run_dft.py</code>, PySCF): xTB start → B3LYP
+geometry optimization → B3LYP/def2-TZVP energy, isodesmic so functional error
+cancels. Ran the stabilization ladder (Stab = HIA(tBu⁺) − HIA(R⁺)):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>cation</th>
+<th>DFT Stab</th>
+<th>exp</th>
+<th>DFT−exp</th>
+<th>UMA (H101)</th>
+<th><strong>UMA−DFT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methyl</td>
+<td><strong>−82.6</strong></td>
+<td>−81.0</td>
+<td>−1.6</td>
+<td><strong>+22.1</strong></td>
+<td><strong>+104.7</strong></td>
+</tr>
+<tr>
+<td>ethyl (1°)</td>
+<td>−38.3</td>
+<td>−42.0</td>
+<td>+3.7</td>
+<td>−37.8</td>
+<td>+0.5</td>
+</tr>
+<tr>
+<td>isopropyl (2°)</td>
+<td>−15.7</td>
+<td>−15.0</td>
+<td>−0.7</td>
+<td>−15.3</td>
+<td>+0.4</td>
+</tr>
+<tr>
+<td>tert-butyl (3°)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>vinyl</td>
+<td>−60.1</td>
+<td>−56.0</td>
+<td>−4.1</td>
+<td>−44.5</td>
+<td>+15.6</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The headline is now confirmed by three independent references.</strong> B3LYP/def2-TZVP
+reproduces the experimental hydride affinities to 1.6 kcal/mol for methyl (and ≤4
+across the ladder), so the experimental anchors are validated. DFT and experiment
+agree the methyl cation is <strong>~82 kcal/mol <em>below<em> tert-butyl</em><em>; UMA puts it </em><em>22
+</em>above</em></strong> → a <strong>+104.7 kcal/mol over-stabilization confirmed at the DFT level.</strong>
+The ordinary rungs (ethyl/isopropyl) match DFT to &lt;1 kcal/mol — UMA is excellent
+there — isolating the error entirely to the bare-empty-p methyl (and, more mildly,
+vinyl +15.6). This upgrades iteration 1's <em>estimate</em> ("60–80") and iteration 2's
+xTB/experiment number to a <strong>gold-standard-anchored measurement</strong>.</p>
+<h2 id="2026-07-21-h167h168-b5-and-b6-settled-at-dft-ccsdt">2026-07-21 — H167/H168: B5 and B6 settled at DFT / CCSD(T)</h2>
+<p><strong>H167 — vinyl bridged vs classical, CCSD(T)/def2-TZVP (settle B5).</strong> True gap
+<strong>CCSD(T) = −3.3 kcal/mol</strong> (bridged slightly below classical) — matches the
+literature ~−4 to −5. So the reference ladder is: CCSD(T) −3.3, xTB +4.7 (both
+small), <strong>UMA −49.4</strong>. UMA over-stabilizes the three-center bridge by
+<strong>~46 kcal/mol vs CCSD(T)</strong> — the flaw is now anchored to the gold standard, not
+just literature. (B3LYP gave ~0 here, a known B3LYP weakness on this subtle
+3-center case — hence the CCSD(T).)</p>
+<p><strong>H168 — halonium bridged vs open, B3LYP/def2-TZVP (settle B6).</strong> DFT places
+bridged and open <strong>within ~6 kcal/mol</strong> (Cl +6.2, Br ~0) — i.e. the two are
+near-degenerate at DFT, as at xTB (where open collapses into the bridge). <strong>UMA
+separates them by 56–67 kcal/mol</strong>, over-stabilizing the open β-halo <em>primary</em>
+cation. So UMA's error vs DFT is <strong>~55–60 kcal/mol</strong> — the same empty-p disease
+(the open CH₂⁺ is over-stabilized), now confirmed against a DFT reference. The
+exact bridged-vs-open ordering is a subtle few-kcal, method-dependent question;
+UMA's ~60 kcal mis-separation is the unambiguous flaw.</p>
+<h3 id="dft-confirmation-summary-the-parked-dft_requests-now-answered">DFT confirmation summary (the parked DFT_REQUESTS, now answered)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>flaw</th>
+<th>UMA</th>
+<th>reference</th>
+<th>UMA error</th>
+<th>ref method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>methyl over-stabilization (T4)</td>
+<td>+22.1</td>
+<td>−82.6</td>
+<td><strong>+104.7</strong></td>
+<td>B3LYP/def2-TZVP (=exp ±1.6)</td>
+</tr>
+<tr>
+<td>bridged vinyl (B5)</td>
+<td>−49.4</td>
+<td>−3.3</td>
+<td><strong>−46.1</strong></td>
+<td>CCSD(T)/def2-TZVP</td>
+</tr>
+<tr>
+<td>halonium open/bridge (B6)</td>
+<td>+56–67</td>
+<td>+0 to +6</td>
+<td><strong>~+55–60</strong></td>
+<td>B3LYP/def2-TZVP</td>
+</tr>
+<tr>
+<td>ordinary 1°/2° cations</td>
+<td>—</td>
+<td>±0.5</td>
+<td>~0</td>
+<td>B3LYP (control: UMA correct)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Iteration 1 raised these as DFT requests and stayed DFT-free by instruction;
+iteration 2, with compute enabled, closes them. Every headline flaw is now
+confirmed against a real ab-initio reference, and the ordinary-cation control
+shows UMA matches DFT to &lt;1 kcal/mol — the error is specifically the bare-empty-p
+corner, nothing else.</p>
+<h2 id="2026-07-21-h169-bridgehead-settled-at-dft-uma-is-right-not-wrong">2026-07-21 — H169: bridgehead settled at DFT — UMA is RIGHT, not wrong</h2>
+<p>DFT (B3LYP/def2-TZVP): E(1-norbornyl bridgehead) − E(2-norbornyl) = <strong>−2.9
+kcal/mol</strong> — essentially identical to UMA (−3.1) and xTB (−3.6). <strong>All three
+methods agree to &lt;1 kcal/mol.</strong> So the bridgehead sitting ~3 kcal below
+2-norbornyl is <strong>real chemistry, not a UMA error</strong> — UMA matches DFT to 0.2
+kcal/mol here. Iteration 1 flagged this as a flaw (UMA-only) and the reviewer
+marked T6/B4 "evidence of carbocation stabilization errors"; the DFT confirmation
+<strong>overturns that</strong> — the naive Bredt intuition (bridgehead cations are terrible)
+is about <em>solvolysis kinetics vs a normal tertiary</em>, not this isomeric
+thermodynamic gap, where the rigid cage's C–C hyperconjugation keeps 1-norbornyl
+competitive. <strong>Lesson: the cross-check + DFT protected against reporting a
+non-flaw as a flaw</strong> — the mirror image of the methyl case (where they confirmed a
+real one). Keep both judgments running.</p>
+<hr />
+<h2 id="2026-07-21-h170-what-uma-is-for-once-you-have-dft-the-synergy">2026-07-21 — H170: what UMA is FOR once you have DFT (the synergy)</h2>
+<p>The reviewer asked the sharp question: if we can run DFT, why UMA? Answer:
+<strong>UMA's value is speed — it explores configuration space at a scale DFT cannot
+afford.</strong> The right workflow is <strong>UMA-as-explorer, DFT-as-arbiter</strong>: sweep
+hundreds of conformers/basins with UMA (trusting it in the regimes iteration 2
+validated), then spend DFT only on the survivors. Demonstrated on the two
+conformer questions iteration 1/early iteration 2 left open, <code>synergy.py</code>:</p>
+<p><strong>α-terpinyl cation (settles B1).</strong> UMA relaxed 23 conformers → <strong>6 distinct
+basins in 111 s</strong> (the same sweep at DFT ≈ 0.6 h). The catch a single relaxation
+would miss: the <em>most-populated</em> basin (pop 7) is <strong>+2.30 kcal (UMA) / +1.26
+(DFT) — NOT the global minimum</strong>; the true global-min basin is rare (pop 2/23).
+DFT//UMA single points <strong>confirm UMA's lowest basin is also DFT's lowest</strong>
+(UMA 0.00→DFT 0.00). So B1 is settled: the α-terpinyl reference conformer sits
+~1.3 kcal (DFT) below the naive single-shot, and UMA+DFT agree on it — reached in
+~2 min of UMA + a few DFT single points, not hours of DFT sampling.</p>
+<p><strong>linalyl cation (settles the H107 divergence).</strong> UMA swept 34 conformers → <strong>11
+basins in 231 s</strong>; DFT//UMA again confirms UMA's global-min basin is DFT's. The
+H107 UMA/xTB gap (+16.5 kcal) was therefore a <strong>conformer-sampling artifact</strong> —
+linalyl has 11 basins and the thin 8-seed search in H107 landed in different ones
+under each method — not a fundamental UMA error. More compute (dense sweep)
+resolved it, exactly the point.</p>
+<p><strong>The synergy, stated.</strong> DFT alone can't afford to sweep 20–34 conformers per
+cation; UMA does it in minutes and — critically — <strong>ranks the basins correctly
+where iteration 2 validated it</strong> (ordinary/terpene cations, no bare empty p), so
+the handful of DFT single points land on the right structures. The iteration-2
+<strong>failure map is the operating manual</strong>: it tells you exactly where UMA's fast
+exploration is trustworthy (here, terpene conformers) and where it isn't
+(bare-empty-p cations — never let UMA rank those). MLIP for breadth, DFT for the
+final number, failure-map for knowing which is which.</p>
+<hr />
+<h2 id="2026-07-21-h124h165-systematic-xtb-cross-check-of-iteration-1s-uma-only-claims">2026-07-21 — H124–H165: systematic xTB cross-check of iteration-1's UMA-only claims</h2>
+<p>Closed iteration 1's #1 gap (no second method on the 100 hypotheses) with a
+declarative registry of 42 isomeric dual-method comparisons (<code>mechanisms2.py</code>
+REG/REG2/REG3). <strong>32 of 42 cross-confirm</strong> (|UMA−xTB| &lt; 10 kcal/mol) — UMA tracks
+xTB across ordinary carbocation stability ladders (C3–C7 tertiary/secondary/
+primary, H124–H127, H132), Wagner–Meerwein driving forces (neopentyl→tert-amyl
+0.0, pinacolyl +6.3, H128/H129), ring-expansion (H127), terpene C₁₀H₁₇⁺ isomers
+(H142, ≤4.7), and most aromaticity/conjugation/keto–enol/Zaitsev controls. So
+iteration 1's broad "UMA reproduces physical-organic energetics" holds up under a
+second method.</p>
+<p>The 10 divergences sort cleanly:
+- <strong>The disease (carbocation):</strong> H130 allyl vs <strong>2-propenyl</strong> (a vinyl-type
+  localized-empty-orbital C₃H₅⁺) diverges 25 kcal — the empty-p over-stabilization
+  reappearing, as expected.
+- <strong>Noise (bad isomer choice):</strong> H139/H140 (139/236 kcal) compare acylium /
+  oxocarbenium to pathological "open" isomers (1-hydroxyvinyl, C-protonated
+  formaldehyde) that the two methods relax to wildly different structures — not
+  meaningful.
+- <strong>Strained neutral hydrocarbons (off carbocation axis):</strong> H151 cubane vs COT vs
+  styrene (67 kcal!), H162 Dewar benzene (16), H148/H150/H154 (11–14) — UMA and
+  xTB disagree on the strain energy of exotic cages/antiaromatics. Since iteration
+  1 found UMA's cubane strain matches <em>experiment</em> (166 kcal/mol, H99), these
+  likely reflect <strong>xTB's</strong> limitations on strained systems, not UMA's — but they
+  are neutral hydrocarbons, off the carbocation thesis.</p>
+<p>Net: the registry validates UMA broadly and re-surfaces the one carbocation
+disease (H130), exactly the two-judgment discipline working at scale.</p>
+<hr />
+<h2 id="2026-07-21-h171h173-dft-arbitration-refines-the-map-uma-often-beats-xtb">2026-07-21 — H171–H173: DFT arbitration refines the map (UMA often beats xTB)</h2>
+<p>DFT-resolved the meaningful registry divergences and the aryl-cation question —
+and the lesson is that a UMA/xTB divergence is NOT automatically UMA's fault:</p>
+<ul>
+<li><strong>H171 (2-propenyl vinyl cation, C₃H₅⁺).</strong> DFT: allyl 0, 2-propenyl <strong>+8.71</strong>.
+  <strong>UMA (+7.9) is right; xTB (−17.5) is wrong</strong> by 26 kcal. So the H130 divergence
+  was an <em>xTB</em> error. UMA matches DFT to 0.8 kcal/mol here.</li>
+<li><strong>H172 (cubane strain, C₈H₈).</strong> DFT: cubane <strong>+126.5</strong> above styrene.
+  <strong>UMA (+104) is far closer than xTB (+37)</strong> — xTB underestimates cubane strain by
+  ~90 kcal/mol; UMA by ~22. (COT: UMA 37.5 / xTB 38.5 / DFT 39.2 — all agree.)
+  Consistent with iteration 1 finding UMA's cubane strain near experiment.</li>
+<li><strong>H173 (phenyl cation).</strong> DFT Stab vs tert-butyl <strong>−51.2 ≈ UMA −50.4</strong>. UMA is
+  <strong>accurate</strong> on the aryl in-plane-empty-sp² cation — the H101 "phenyl off by
+  +16" was a <em>bad experimental anchor</em> (−67), not a UMA error. Aryl cations are
+  NOT a disease sub-class.</li>
+</ul>
+<p><strong>Map refinement.</strong> The over-stabilization is specifically the <strong>bare /
+unsubstituted small empty-p cations</strong> (methyl; parent vinyl +15/bridged +46) and
+<strong>non-classical 3-center bridges</strong> — NOT aryl cations (H173) or α-substituted
+vinyl cations (H171), which carry ring/hyperconjugative stabilization UMA handles
+fine. And where UMA and xTB fight over strained neutrals, <strong>UMA is the more
+trustworthy one</strong> (H172). Net: UMA's reliable envelope is <em>larger</em> than the raw
+registry divergences suggested — the failures are a tight, well-defined corner.</p>
+<h2 id="2026-07-21-h174-monoterpene-cascade-map-the-reaction-network-use-case">2026-07-21 — H174: monoterpene cascade map (the reaction-network use case)</h2>
+<p>Mapped the C₁₀H₁₇⁺ cyclization manifold (acyclic geranyl/neryl/linalyl →
+monocyclic α-terpinyl/terpinen-4-yl/terpinolenyl → bicyclic pinyl), dual-method.
+The <strong>cyclic</strong> cations — the ones the cascade funnels to — agree UMA↔xTB (0.05–9
+kcal): pinyl lowest (−8.5/−17.6), terpinen-4-yl (−6.6/−6.6), terpinolenyl
+(−3.3/−11), α-terpinyl (ref). The <strong>floppy acyclic</strong> ones diverge (linalyl +16.5,
+same as H107) — the conformer-sampling caveat, which the synergy (H170) resolves.
+This is the workflow in miniature: UMA maps the whole intermediate manifold in
+minutes and its ordering tells you exactly where to spend DFT (the acyclic
+conformers), rather than DFT-ing the whole network blind.</p>
+</article>
+<p class="src">Rendered from will-chem <code>diary-iter2</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>
