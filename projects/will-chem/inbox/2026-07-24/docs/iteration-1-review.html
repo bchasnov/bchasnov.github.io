@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iteration 1 — review — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="iteration-1-independent-review">Iteration 1 — independent review</h1>
+<p>Reviews branch <code>uma-carbocation-study/iteration-1</code> (commits through <code>ff0222c</code>).
+Companion to the reviewer's triage in <code>NEXT_ROUND.md</code>; this is a second,
+independent read focused on what is solid, what is shaky, and what iteration 2
+must fix. Written on <code>claude/iter1-review-iter2-plan-4wkrqn</code>.</p>
+<h2 id="what-iteration-1-did">What iteration 1 did</h2>
+<p>A single autonomous agent ran a <strong>100-hypothesis, DFT-free campaign</strong> (H1–H100)
+using UMA (<code>uma-s-1p1</code>, <code>omol</code> task, CPU) as a mechanism-exploration engine for
+carbocation / terpene physical-organic chemistry (the experimental collaborator–the experimental collaborator × the aromaticity group
+framing). Self-reported tally (<code>HYPOTHESES.md</code>): <strong>85 confirmed, ~7 genuine UMA
+flaws, rest mixed/refuted-but-informative.</strong> All comparisons are
+isodesmic/isomeric or geometric so UMA's absolute-energy reference cancels.</p>
+<p><strong>Verification meant, in the absence of DFT:</strong> (a) isodesmic/isomeric energy
+comparisons; (b) geometry dissection (connectivity, per-atom H counts, bond
+lengths, angle sums) to confirm what actually relaxed and catch silent
+rearrangements; (c) symmetry-breaking re-relaxation to tell minima from saddles
+(H15); (d) multi-start seeding (4 fixed seeds) to escape single-start traps;
+(e) spin-channel calibration on O₂/CH₂ before trusting any spin gap; (f) a 6/6
+instrument stress test (<code>stress_test.py</code>).</p>
+<h2 id="genuine-flaws-found-the-load-bearing-output">Genuine flaws found (the load-bearing output)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Flaw</th>
+<th>System</th>
+<th>Verdict</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Antiaromatic Jahn–Teller missed</td>
+<td>Cp⁺ (C₅H₅⁺) relaxes to symmetric pentagon, holds under symmetry-break (H14/H15)</td>
+<td>real</td>
+<td>high — tightly bounded by H26/H27/H30</td>
+</tr>
+<tr>
+<td>Spin-state energetics wrong</td>
+<td>Cp⁺ triplet −200 kcal/mol; CCl₂ triplet GS (should be singlet); CH₂ gap 2× loose (H16/H77)</td>
+<td>real, sign error</td>
+<td>high on sign</td>
+</tr>
+<tr>
+<td>Bredt bridgehead under-destabilized</td>
+<td>1-norbornyl <strong>3.1 below</strong> 2-norbornyl (H28)</td>
+<td>sign wrong vs Bredt</td>
+<td>medium — magnitude wants DFT</td>
+</tr>
+<tr>
+<td>Methyl cation over-stabilized</td>
+<td>CH₃⁺ ranks above tBu; ladder otherwise textbook (H43); methyl <em>radical</em> fine (H51)</td>
+<td>real (existence)</td>
+<td>high existence, <strong>soft magnitude</strong></td>
+</tr>
+<tr>
+<td>F₂ charge-shift dissociation</td>
+<td>non-monotonic, plateau ~149 vs BDE ~38 (H55); C–C homolysis fine (H24)</td>
+<td>real turnover</td>
+<td>medium — partly restricted-singlet framing</td>
+</tr>
+<tr>
+<td>Small non-classical cations over-stabilized</td>
+<td>bridged vinyl 52.8 below classical (~4–5 real, H37); halonium 49–67 above open (H23)</td>
+<td><strong>suspected/unverified</strong></td>
+<td>low — no reference</td>
+</tr>
+</tbody>
+</table></div>
+<p>The reviewer's reframing (<code>NEXT_ROUND.md</code>): <em>the flaws are the paper, the
+successes are the setup</em> — and the interesting-marked flaws cluster into <strong>one
+carbocation-stabilization error class</strong>: UMA over-stabilizes small,
+localized-empty-orbital cations (methyl, vinyl) and under-penalizes cations that
+cannot planarize/delocalize (bridgehead).</p>
+<h2 id="what-is-solid">What is solid</h2>
+<ul>
+<li>The <strong>instrument layer</strong> is sound: <code>stress_test.py</code> (determinism, translation/
+  rotation invariance, charge sensitivity, basin stability), <code>run_uma.py</code> (gated-
+  model handling), <code>run_xtb.py</code>, <code>systems.py</code> (clean frozen dataclass).</li>
+<li>The <strong>skeptical discipline</strong> is the best part: rearrangements verified by
+  geometry, spin/charge channels calibrated before use, single-start artifacts
+  caught (ethyl H6→H9, halonium H21→H23), and DFT-dependent claims explicitly
+  <em>refused</em> rather than faked (<code>DFT_REQUESTS.md</code>).</li>
+<li>Flaw bounding is careful: the Cp⁺ blind spot is pinned to the open-shell/
+  degenerate cation specifically (neutral cyclobutadiene H27 and cyclopropenyl
+  anion H30 are handled correctly).</li>
+</ul>
+<h2 id="what-is-shaky-the-gaps-iteration-2-must-close">What is shaky — the gaps iteration 2 must close</h2>
+<ol>
+<li><strong>No systematic second-method cross-check.</strong> The 100 hypotheses are
+   <strong>UMA-only</strong>; xTB was run only on the original 7 systems (<code>run_xtb.py</code>), not
+   per hypothesis. Most "UMA is right/wrong" verdicts rest on UMA-internal
+   consistency + textbook numbers. This is the single biggest rigor gap.</li>
+<li><strong>Electronic ΔE compared directly to experimental ΔH</strong> throughout (no ZPE/
+   thermal). Acknowledged for a few cases (Diels–Alder H57, benzene ASE H84) but
+   elsewhere treated as unqualified agreement — some "hits" may be fortuitous
+   cancellation.</li>
+<li><strong>Magnitudes stated as measured when they are estimates.</strong> The methyl
+   "~60–80 kcal/mol" over-stabilization is <em>inferred</em> from where the internal
+   ladder would place CH₃⁺; the existence is well-argued, the number is not
+   measured and should not be quoted as such.</li>
+<li><strong>Vertical barriers framed inconsistently</strong> — sometimes "upper bound"
+   (correct, <code>mechanisms.py:905</code>), sometimes "matches experiment" (H25 allyl,
+   H73 amide overestimates).</li>
+<li><strong>Crude heuristic classifiers are load-bearing.</strong> <code>classify_carbocation</code> /
+   distance-only <code>fingerprint</code> (<code>explore.py</code>) drive labeling and clustering and
+   already produced one wrong call (H3 labeled 2-norbornyl "secondary").</li>
+<li><strong>Multi-start is only 4 fixed seeds</strong> — too thin to claim global minima for
+   floppy terpene cations.</li>
+</ol>
+<h2 id="code-architecture">Code architecture</h2>
+<p><code>mechanisms.py</code> is a <strong>2,682-line append-only monolith</strong> and the main technical
+debt: 97 near-identical hardcoded <code>h4…h100(calc, model) -&gt; dict</code> functions, each
+embedding SMILES literals, bespoke geometry analysis, and hardcoded pass/fail
+thresholds, with no shared <code>Hypothesis</code> type or result schema. <code>main()</code> sits at
+line 2460 with H90–H100 defined <em>after</em> it; the registry is split across
+<code>EXPERIMENTS = {...}</code> (2399) and <code>EXPERIMENTS.update({...})</code> (2676). Helpers are
+duplicated across modules (<code>build</code>, <code>relax</code> with divergent fmax 0.03 vs 0.05,
+<code>rotation_matrix</code>). Notably, <code>systems.py</code> <em>is</em> clean and data-driven — but none
+of the 100 hypotheses use it. Refactoring the experiment layer into a
+declarative format is a prerequisite for the "designed cation series" iteration 2
+calls for and for applying the rigor gates uniformly.</p>
+<h2 id="dft-blocked-items-parked-not-closed">DFT-blocked items (parked, not closed)</h2>
+<p>From <code>DFT_REQUESTS.md</code>, all unrun: <strong>P1</strong> α-terpinyl cation relocated global
+minimum (2.30 kcal/mol below one-shot; the monoterpene branch-point reference
+conformer); <strong>P2</strong> tert→sec C₄H₉⁺ gap (UMA 13.2 vs xTB 15.7); <strong>P2</strong> limonene
+protonation energy (no trustworthy number — spans formula + charge); <strong>P2</strong>
+bridgehead ΔE; <strong>P2</strong> vinyl/halonium bridged-vs-open magnitudes; <strong>P3</strong>
+2-norbornyl non-classical stabilization (needs CCSD(T)).</p>
+</article>
+<p class="src">Rendered from will-chem <code>iteration-1-review</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

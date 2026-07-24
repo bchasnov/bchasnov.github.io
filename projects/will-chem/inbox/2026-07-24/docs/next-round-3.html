@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Next round (round 4) — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="round-3-driven-by-the-reviewers-round-2-verdicts">Round 3 — driven by the reviewer's round-2 verdicts</h1>
+<p>Source: <code>feedback/verdicts_2026-07-22.json</code>. Round 2 (H101–H200) is
+reviewer-validated; round 3 turns the reviewer's "chase" signals into a concrete program.</p>
+<h2 id="decoded-verdicts">Decoded verdicts</h2>
+<ul>
+<li><strong>Receipts accepted.</strong> No pushback on methyl / vinyl / bridgehead (R1–R3);
+  terpene questions "good enough, verified with DFT" (R4, hold); F₂ "boring, move
+  on" (R5). The iteration-2 conclusions stand.</li>
+<li><strong>The live thread is UMA-as-a-tool, benchmarked hard (R6, interesting; A5).</strong>
+  Not "does it have flaws" but: <strong>is UMA significantly better than xTB for
+  conformer search</strong> — does a wide UMA conformer window actually surface the
+  <em>relevant</em> (low, reactive) conformers, at what <strong>efficiency</strong>, and <strong>for which
+  systems</strong>? The reviewer wants a <strong>rule set</strong> keyed on size / bonding / atom types. Venue:
+  <strong>both</strong> — document the failures, but <em>prove</em> usability via <strong>standard
+  conformational-search protocols</strong>, characterize the <strong>energy range of minima</strong>,
+  and attempt <strong>constrained TS searches</strong>.</li>
+<li><strong>All three method directions: chase, each hardened.</strong></li>
+<li><strong>A1 dynamics</strong> → validate against <strong>established / experimental / the experimental collaborator
+    branch ratios</strong>, not in a vacuum.</li>
+<li><strong>A2 barriers</strong> → include <strong>unusual TSs — dyotropic rearrangements</strong>.</li>
+<li><strong>A3 retraining</strong> → <strong>justify</strong> the Δ-learn set; <strong>test transfer</strong> (does
+    training on simple unsubstituted carbocations actually improve <em>applicable</em>
+    systems?); and <strong>add non-planar carbocations</strong> — the reviewer flags these as
+    mechanistically central.</li>
+<li><strong>Benchmark standard (A4):</strong> real, documented systems — <strong>taxadiene</strong> and
+  the experimental collaborator papers — compared at <strong>their</strong> level of theory, <strong>mPW1PW91/6-31G(d)</strong>.</li>
+</ul>
+<h2 id="workstreams">Workstreams</h2>
+<h3 id="w1-conformer-search-rule-set-answers-r6-a5-start-here">W1 — Conformer-search rule set (answers R6 + A5) — start here</h3>
+<p>Systematic UMA-vs-xTB (vs DFT-refined) conformer search across systems spanning
+size (C₅ → C₂₀), bonding (saturated / allylic / non-classical), and heteroatoms.
+Per system measure: (a) does the true low-energy / reactive conformer get found,
+(b) how wide a window is needed, (c) wall-clock efficiency, (d) UMA-vs-xTB minimum
+quality after DFT single-points. Deliverable: a <strong>rule set</strong> — where UMA is
+strongly preferred, keyed on size/bonding/atoms — and the energy range of minima.</p>
+<h3 id="w2-non-planar-carbocations-answers-a3s-specific-ask">W2 — Non-planar carbocations (answers A3's specific ask)</h3>
+<p>Do geometrically constrained / pyramidalized carbocations show the disease? Scan
+the pyramidalization penalty (planar → forced non-planar) and a bridgehead-strain
+series (adamantyl / bicyclics), UMA vs DFT. These are the mechanistically relevant
+"can't planarize" ions; establish whether UMA gets their penalty right (the
+bridgehead at mild pyramidalization did — where does it break?).</p>
+<h3 id="w3-scale-up-on-documented-systems-a4">W3 — Scale-up on documented systems (A4)</h3>
+<p>Taxadiene / the experimental collaborator cascade cations at C₂₀; UMA conformer search + energetics
+compared to mPW1PW91/6-31G(d) reference numbers from their papers.</p>
+<h3 id="w4-barrier-ts-benchmark-incl-dyotropic-a2">W4 — Barrier / TS benchmark incl. dyotropic (A2)</h3>
+<p>UMA vs DFT for 1,2-H / 1,2-Me shift and cyclization barriers via NEB, plus a
+dyotropic rearrangement TS; attempt constrained TS searches (A5).</p>
+<h3 id="w5-rational-learning-set-transfer-test-a3">W5 — Rational Δ-learning set + transfer test (A3)</h3>
+<p>Justify the augmentation set (bare-empty-p + <strong>non-planar</strong> carbocations); fit the
+correction; test whether it improves <em>applicable</em> substituted/mechanistic systems,
+not just the training toys.</p>
+<h2 id="priority">Priority</h2>
+<p>W1 and W2 are tractable now with existing tooling (<code>synergy.py</code>, <code>iter2.py</code>,
+<code>run_dft.py</code>) and answer the reviewer's richest comments — start there. W3/W4/W5 follow,
+benchmarked at mPW1PW91/6-31G(d) against documented systems.</p>
+</article>
+<p class="src">Rendered from will-chem <code>next-round-3</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

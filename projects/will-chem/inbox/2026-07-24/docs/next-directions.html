@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Next directions — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="next-research-directions-iteration-3-seed">Next research directions (iteration-3 seed)</h1>
+<p>Grounded in iteration 2 (<code>SUMMARY_ITER2.md</code>). Iteration 2 characterized UMA's
+carbocation energetics on <strong>minima</strong> and confirmed one disease (bare empty p) at
+DFT/CCSD(T). These are the directions the findings most sharply motivate,
+ordered by leverage.</p>
+<h2 id="1-barriers-transition-states-the-biggest-gap-highest-priority">1. Barriers / transition states — the biggest gap (highest priority)</h2>
+<p>Iteration 2 tested only minima and isomer energetics. <strong>Mechanism is decided by
+barriers</strong> — Wagner–Meerwein shifts, cyclizations, hydride shifts. Warning sign:
+the one clean dissociation failure (F₂) was at <strong>stretched bonds</strong>, and a TS is a
+region of partial/stretched bonding with a locally electron-deficient center —
+exactly the "bare-p-like" regime UMA over-stabilizes.
+- <strong>Do:</strong> build a barrier benchmark (1,2-H / 1,2-Me shifts, ring expansions,
+  cyclizations) via NEB/string with UMA, DFT-refine the TSs, compare barriers.
+- <strong>Why it matters:</strong> if UMA barriers are trustworthy, the UMA-explore/DFT-refine
+  cascade workflow is fully general for the experimental collaborator's mechanism work; if not, that is a
+  critical, unmapped MLIP limitation.</p>
+<h2 id="2-close-the-retraining-loop-diagnosis-cure-re-test">2. Close the retraining loop (diagnosis → cure → re-test)</h2>
+<p><code>RETRAIN_SPEC.md</code> names the gap and now carries real DFT/CCSD(T) labels.
+- <strong>Do:</strong> generate the small bare-empty-p augmentation set (methyl / halomethyl /
+  parent vinyl / non-classical bridges / β-halonium, CCSD(T) labels), fit a cheap
+  <strong>Δ-learning residual correction</strong> on top of UMA, and re-run the iteration-2
+  ladders (<code>mechanisms2.py</code>) to verify the methyl/vinyl/halonium errors collapse
+  while terpene/ordinary numbers stay put.</p>
+<h2 id="3-predictive-error-estimator-active-learning">3. Predictive error estimator + active learning</h2>
+<p>The error scales cleanly with how <em>bare</em> the empty p is (quenched by
+σ-hyperconjugation / π-donation — measured in H104/H110/H111).
+- <strong>Do:</strong> build a cheap descriptor (empty-orbital occupancy proxy or learned
+  fingerprint) that predicts UMA's error <em>a priori</em>, so a workflow auto-decides
+  UMA-vs-DFT. Combine with #2 into an active-learning loop: UMA proposes →
+  estimator flags → DFT labels the flagged → correction refits → envelope grows.</p>
+<h2 id="4-scale-to-sesqui-diterpenes-where-speed-wins-decisively">4. Scale to sesqui-/diterpenes (where speed wins decisively)</h2>
+<p>Monoterpenes (C₁₀) are small enough for DFT to keep up; the synergy payoff
+explodes for sesqui-(C₁₅)/di-(C₂₀)terpene cascades with combinatorial
+conformer/intermediate spaces.
+- <strong>Do:</strong> confirm UMA's reliability holds at that scale (same tertiary/allylic
+  chemistry) and demonstrate the full explore→refine workflow on a real the experimental collaborator
+  diterpene cascade.</p>
+<h2 id="5-is-the-disease-uma-specific-or-universal-to-equilibrium-trained-mlips">5. Is the disease UMA-specific or universal to equilibrium-trained MLIPs?</h2>
+<ul>
+<li><strong>Do:</strong> re-run the bare-empty-p benchmark on MACE-OFF / ANI / other MLIPs. If
+  they fail the same way, it is a fundamental training-coverage law for MLIPs on
+  reactive intermediates — a far bigger claim than a single model's bug. Also
+  probe other electron-deficient species (silylium, boranes, main-group cations).</li>
+</ul>
+<h2 id="6-open-shell-antiaromatic-class">6. Open-shell / antiaromatic class</h2>
+<p>UMA fails on carbenes (halocarbene singlet–triplet sign) and antiaromatic Cp⁺
+(misses Jahn–Teller, −200 kcal/mol triplet) — the secondary class.
+- <strong>Do:</strong> systematically map UMA's spin-state and antiaromatic/aromaticity
+  failures against multireference references; test whether a spin-aware or
+  multireference-labeled correction helps. Directly on-target for the aromaticity group's
+  reactive-intermediate / aromaticity research.</p>
+<h2 id="traceability-to-the-reviewers-last-round-verdicts-feedbackverdicts_2026-07-21json">Traceability to the reviewer's last-round verdicts (<code>feedback/verdicts_2026-07-21.json</code>)</h2>
+<ul>
+<li><strong>Dir 2 (retraining)</strong> ← T10 (the reviewer's explicit "how can it be retrained / what
+  molecules to add") + open question "how far into the retraining prescription."
+  Tightest match to a stated ask.</li>
+<li><strong>Dir 6 (open-shell/antiaromatic)</strong> ← T1/T2/T3, all marked <code>interesting</code>; kept
+  <strong>6th</strong> because the reviewer ranked this class <em>secondary</em> to the carbocation axis. Also
+  aligns with the aromaticity/hyperconjugation direction.</li>
+<li><strong>Dir 1 (barriers/TSs)</strong> ← new, but obeys the reviewer's master filter T5 ("relevant to
+  carbocation/NP chemistry?"): barriers <em>are</em> the mechanism. Re-frames the
+  stretched-bond lesson (F₂, which the reviewer demoted off-domain) toward the in-domain
+  place stretched bonds matter — rearrangement TSs.</li>
+<li><strong>Dir 4 (sesqui/diterpenes)</strong> ← T10's "mechanistic natural product chemistry."</li>
+<li><strong>Dir 3 (error estimator)</strong> ← T7 (the reviewer marked <code>boring</code> as <em>novelty</em>, but the reviewer's own
+  meta-principle: "do the boring correctness work — it licenses the exciting
+  claims"). Operationalizes "know when to trust UMA."</li>
+<li><strong>Dir 5 (cross-MLIP generality)</strong> ← gated by the reviewer's UNANSWERED open question:
+  venue = MLIP-methods vs physical-organic. Headline only if MLIP-methods.
+  <strong>Needs the reviewer's input before prioritizing.</strong></li>
+</ul>
+<p>Resolved since last round (so next round does not re-litigate): the reviewer's <code>verify</code>
+items T4 methyl (DFT +104.7 → headline) and B1 α-terpinyl (synergy) are closed;
+B2 tert/sec gap is the only <code>verify</code> left, now a trivial PySCF run. The reviewer's <code>chase</code>
+B5 (vinyl, CCSD(T)) and <code>hold</code> B3/B6 are settled. The reviewer's <code>interesting</code> B4/T6
+bridgehead was <strong>demoted</strong> — UMA/xTB/DFT all agree, not a flaw — so it is
+deliberately dropped, not carried forward.</p>
+<h2 id="parked-still-want-higher-theory">Parked (still want higher theory)</h2>
+<p>2-norbornyl classical-vs-nonclassical stabilization (CCSD(T)/CBS), and the
+tert/sec C₄H₉⁺ gap to sub-kcal (B2) — both cheap to run now that the PySCF stage
+(<code>run_dft.py</code>) exists.</p>
+</article>
+<p class="src">Rendered from will-chem <code>next-directions</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>

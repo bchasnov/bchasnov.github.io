@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback Inbox — Round 3</title>
+
+<!--
+  Feedback Inbox — Round 3 Debrief
+  -----------------------------------------------------------------------
+  A phone-friendly one-tap deck in two acts:
+    · RECEIPT cards (lane "blocker") — for each call the reviewer made last round,
+      what it produced, now confirmed with real DFT/CCSD(T).
+    · AIM cards (lane "triage")      — the round-3 scientific options and the
+      framing decision we need from the reviewer; the comment box is the point here.
+  Reaction vocabulary carried over from round 1 (interesting/boring/verify/
+  chase/hold). Every card has an optional free-text comment.
+  Fully self-contained: inline CSS + JS, no network, no external assets.
+  Responses persist in localStorage; "Export verdicts" emits a compact JSON.
+-->
+
+<style>
+  /* ---------- Theme tokens (light default, dark via media + [data-theme]) ---------- */
+  :root {
+    --bg:        #f4f5f7;
+    --panel:     #ffffff;
+    --panel-2:   #fbfbfc;
+    --ink:       #1a1d21;
+    --ink-soft:  #52585f;
+    --ink-faint: #868d95;
+    --line:      #e2e5e9;
+    --line-2:    #d3d7dd;
+    --accent:    #3563e0;
+    --accent-ink:#ffffff;
+    --blocker:   #b4531a;   /* warm — "I'm blind here" */
+    --blocker-bg:#fdf1e7;
+    --triage:    #3f7a52;   /* cool green — "taste" */
+    --triage-bg: #eef5f0;
+    --good:      #2f9e5f;
+    --bad:       #c0483f;
+    --shadow:    0 6px 24px rgba(20,25,35,.08), 0 1px 3px rgba(20,25,35,.06);
+    --radius:    18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #0f1216;
+      --panel:     #1a1f26;
+      --panel-2:   #151a20;
+      --ink:       #e9edf2;
+      --ink-soft:  #b0b8c1;
+      --ink-faint: #7c848e;
+      --line:      #2a313a;
+      --line-2:    #363f4a;
+      --accent:    #6b93ff;
+      --accent-ink:#0b0e12;
+      --blocker:   #e39a63;
+      --blocker-bg:#2a2019;
+      --triage:    #7fc99a;
+      --triage-bg: #18241d;
+      --good:      #5fd08b;
+      --bad:       #f0847b;
+      --shadow:    0 8px 28px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  /* Explicit theme override wins in both directions */
+  :root[data-theme="dark"] {
+    --bg:#0f1216; --panel:#1a1f26; --panel-2:#151a20; --ink:#e9edf2;
+    --ink-soft:#b0b8c1; --ink-faint:#7c848e; --line:#2a313a; --line-2:#363f4a;
+    --accent:#6b93ff; --accent-ink:#0b0e12; --blocker:#e39a63; --blocker-bg:#2a2019;
+    --triage:#7fc99a; --triage-bg:#18241d; --good:#5fd08b; --bad:#f0847b;
+    --shadow:0 8px 28px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f5f7; --panel:#ffffff; --panel-2:#fbfbfc; --ink:#1a1d21;
+    --ink-soft:#52585f; --ink-faint:#868d95; --line:#e2e5e9; --line-2:#d3d7dd;
+    --accent:#3563e0; --accent-ink:#ffffff; --blocker:#b4531a; --blocker-bg:#fdf1e7;
+    --triage:#3f7a52; --triage-bg:#eef5f0; --good:#2f9e5f; --bad:#c0483f;
+    --shadow:0 6px 24px rgba(20,25,35,.08), 0 1px 3px rgba(20,25,35,.06);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color-scheme: light dark; }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 16px 14px 40px;
+    color: var(--ink);
+    background: var(--bg);
+    min-height: 100%;
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;               /* body never scrolls horizontally */
+  }
+
+  /* ---------- Header ---------- */
+  header { margin-bottom: 12px; }
+  .kicker {
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+  }
+  h1 { font-size: 20px; margin: 2px 0 2px; letter-spacing: -.01em; }
+  .sub { color: var(--ink-soft); font-size: 13px; }
+
+  /* ---------- Intro (one-time popup) ---------- */
+  /* Reuses the .modal scrim; unlike the export sheet it centers a dialog card. */
+  .modal.center { align-items: center; padding: 18px; }
+  .introcard {
+    background: var(--panel); width: 100%; max-width: 460px; border-radius: 18px;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+    padding: 20px 18px 18px; max-height: 88vh; overflow-y: auto;
+  }
+  .introcard h3 { margin: 0 0 4px; font-size: 17px; letter-spacing: -.01em; }
+  .introcard .body { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); margin: 8px 0 16px; }
+  .introcard .body b { color: var(--ink); font-weight: 650; }
+  .introcard .start {
+    width: 100%; appearance: none; border: 1px solid var(--accent);
+    background: var(--accent); color: var(--accent-ink); border-radius: 12px;
+    padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; min-height: 50px;
+  }
+  .introcard .start:active { transform: scale(.98); }
+  /* Header "About" affordance to reopen the intro */
+  .abtn {
+    appearance: none; background: transparent; border: 1px solid var(--line-2);
+    color: var(--ink-soft); border-radius: 99px; padding: 3px 10px; font-size: 11px;
+    font-weight: 700; cursor: pointer; margin-left: 8px; vertical-align: middle;
+  }
+  .abtn:active { transform: scale(.96); }
+  .headrow { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+  /* Only animate for users who haven't asked to reduce motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .modal.center .introcard { animation: introIn .22s ease; }
+  }
+  @keyframes introIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .meter {
+    display: flex; align-items: center; gap: 10px; margin-top: 12px;
+  }
+  .bar {
+    flex: 1; height: 6px; border-radius: 99px; background: var(--line);
+    overflow: hidden;
+  }
+  .bar > i { display: block; height: 100%; width: 0%; background: var(--accent);
+    border-radius: 99px; transition: width .25s ease; }
+  .count { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-soft);
+    white-space: nowrap; font-weight: 600; }
+
+  /* ---------- Card deck ---------- */
+  .deck { position: relative; margin-top: 14px; min-height: 430px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 16px 16px;
+    touch-action: pan-y;             /* allow horizontal swipe capture */
+    user-select: none;
+  }
+  .card.swiping { transition: none; }
+  .card.anim { transition: transform .28s cubic-bezier(.22,.61,.36,1), opacity .28s; }
+
+  .lane {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 99px;
+  }
+  .lane.blocker { color: var(--blocker); background: var(--blocker-bg); }
+  .lane.triage  { color: var(--triage);  background: var(--triage-bg); }
+  .lane .dot { width: 6px; height: 6px; border-radius: 99px; background: currentColor; }
+  .idtag { float: right; font-size: 11px; color: var(--ink-faint); font-weight: 600;
+    font-variant-numeric: tabular-nums; margin-top: 4px; }
+
+  .card h2 { font-size: 17px; line-height: 1.3; margin: 12px 0 8px; letter-spacing: -.01em; }
+
+  .row { margin: 9px 0; }
+  .label {
+    font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; margin-bottom: 2px;
+  }
+  .val { font-size: 13.5px; color: var(--ink-soft); }
+  .val strong { color: var(--ink); font-weight: 650; }
+  .val .num { font-variant-numeric: tabular-nums; }
+
+  .conf {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px;
+    border-radius: 6px; margin-left: 4px; border: 1px solid var(--line-2);
+    color: var(--ink-soft);
+  }
+  .conf.high { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+  .conf.med  { color: var(--blocker); border-color: color-mix(in srgb, var(--blocker) 40%, transparent); }
+  .conf.low  { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+
+  .ask {
+    margin-top: 12px; padding: 11px 12px; border-radius: 12px;
+    background: var(--panel-2); border: 1px dashed var(--line-2);
+  }
+  .ask .label { color: var(--accent); }
+  .ask .qtext { font-size: 13.5px; color: var(--ink); font-weight: 550; }
+
+  /* ---------- Reaction buttons ---------- */
+  .reactions {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px;
+  }
+  .rbtn {
+    appearance: none; border: 1px solid var(--line-2); background: var(--panel-2);
+    color: var(--ink); border-radius: 12px; padding: 10px 4px; cursor: pointer;
+    font-size: 12px; font-weight: 600; min-height: 52px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    transition: transform .08s, border-color .12s, background .12s;
+  }
+  .rbtn .emoji { font-size: 19px; line-height: 1; }
+  .rbtn:active { transform: scale(.94); }
+  .rbtn.on {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, var(--panel));
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  /* ---------- Comment box (all cards) ---------- */
+  .commentwrap { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .commentwrap .label { margin-bottom: 0; }
+  .notein {
+    display: block; width: 100%; padding: 12px 13px; border-radius: 12px;
+    border: 1px solid var(--line-2); background: var(--panel); color: var(--ink);
+    font-family: inherit;                 /* readable sans comment box, not mono */
+    font-size: 16px; line-height: 1.45; min-height: 108px; resize: vertical;
+    /* override the bare `textarea { white-space: pre }` (export box) so the
+       comment + its placeholder wrap normally instead of running off one line */
+    white-space: pre-wrap; overflow-wrap: break-word; word-break: break-word;
+  }
+  /* Placeholders: strengthen so they're readable but still clearly fainter than
+     entered ink text. Uses existing tokens so it holds in light AND dark. */
+  .notein::placeholder,
+  textarea::placeholder {
+    color: var(--ink-faint); opacity: 1;   /* opacity:1 defeats Firefox's default fade */
+  }
+  input:focus { outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent); outline-offset: 1px; }
+
+  /* ---------- Nav ---------- */
+  .nav { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .nav button {
+    flex: 1; appearance: none; border: 1px solid var(--line-2); background: var(--panel);
+    color: var(--ink); border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 650;
+    cursor: pointer; min-height: 48px;
+  }
+  .nav button:active { transform: scale(.98); }
+  .nav button:disabled { opacity: .4; cursor: default; }
+  .nav .primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .hint { text-align: center; font-size: 11.5px; color: var(--ink-faint); margin-top: 8px; }
+
+  /* ---------- Taste model ---------- */
+  .taste {
+    margin-top: 18px; padding: 13px 14px; border-radius: 14px;
+    background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .taste .trow { display: flex; gap: 8px; margin-bottom: 8px; }
+  .pill {
+    flex: 1; text-align: center; padding: 8px 6px; border-radius: 10px; font-size: 12px;
+    font-weight: 700; background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .pill .big { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+  .pill.good .big { color: var(--good); }
+  .pill.bad .big  { color: var(--bad); }
+  .pill.neutral .big { color: var(--ink-soft); }
+  .learned { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+  .learned b { color: var(--ink); }
+
+  /* ---------- Export ---------- */
+  .actions { margin-top: 16px; display: flex; gap: 10px; }
+  .actions button {
+    flex: 1; appearance: none; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700;
+    cursor: pointer; min-height: 50px; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink);
+  }
+  .actions .exp { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .actions .reset { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line-2)); }
+  .actions button:active { transform: scale(.98); }
+
+  /* ---------- Export modal ---------- */
+  .modal {
+    position: fixed; inset: 0; background: rgba(10,12,16,.55); display: none;
+    align-items: flex-end; justify-content: center; padding: 0; z-index: 50;
+  }
+  .modal.show { display: flex; }
+  .sheet {
+    background: var(--panel); width: 100%; max-width: 560px; border-radius: 18px 18px 0 0;
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom)); box-shadow: var(--shadow);
+    max-height: 88vh; display: flex; flex-direction: column;
+  }
+  .sheet h3 { margin: 4px 0 2px; font-size: 16px; }
+  .sheet p { margin: 0 0 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .sheet .grab { width: 40px; height: 4px; border-radius: 99px; background: var(--line-2);
+    margin: 0 auto 10px; }
+  textarea {
+    width: 100%; flex: 1; min-height: 220px; resize: none; border-radius: 12px;
+    border: 1px solid var(--line-2); background: var(--panel-2); color: var(--ink);
+    font: 16px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;  /* >=16px readable, no iOS zoom */
+    padding: 12px; overflow: auto; white-space: pre;      /* wide content scrolls inside */
+  }
+  .sheet .mbtns { display: flex; gap: 8px; margin-top: 10px; }
+  .sheet .mbtns button { flex: 1; border-radius: 11px; padding: 12px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink); min-height: 46px; }
+  .sheet .mbtns .copy { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 99px;
+    font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: all .2s; z-index: 60;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .done-badge { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700;
+    color: var(--good); }
+
+  /* Instrument-readout treatment: numbers/IDs are output from a compute engine,
+     so set them in mono with tabular figures — reads as a readout, not decoration. */
+  :root { --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Code", Consolas, monospace; }
+  .idtag, .count, .pill .big, .conf, .val .num {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .idtag { letter-spacing: .02em; }
+  .kicker { font-family: var(--mono); }
+  .docslink { display:inline-block; margin:.15rem 0 .1rem; font-size:.9rem;
+    color:var(--accent); text-decoration:none; font-weight:500; }
+  .docslink:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">mechanism study · round 3 debrief</div>
+    <div class="headrow">
+      <h1>Round 3 — receipts &amp; aim</h1>
+      <button class="abtn" id="aboutBtn" type="button" aria-haspopup="dialog">ⓘ About</button>
+    </div>
+    <div class="sub">The six calls you made last round drove round 3 (your own words are quoted on each card). First 6 cards: what each produced — one is an honest miss. Last 5: the round-4 options, including one thing worth double-checking about the 6-31G(d) reference.</div>
+    <a class="docslink" href="docs/">📄 Reference docs — iteration 3 + earlier rounds →</a>
+    <div class="meter">
+      <div class="bar"><i id="progFill"></i></div>
+      <div class="count" id="progText">1 / 11</div>
+    </div>
+  </header>
+
+  <!-- Card gets rendered here -->
+  <div class="deck">
+    <div class="card anim" id="card"></div>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">‹ Back</button>
+    <button id="nextBtn" class="primary">Next ›</button>
+  </div>
+  <div class="hint">Swipe left/right on the card, or use arrow keys. Taps alone submit — no typing needed.</div>
+
+  <!-- Taste model -->
+  <div class="taste">
+    <div class="trow">
+      <div class="pill good"><span class="big" id="cInt">0</span>interesting</div>
+      <div class="pill bad"><span class="big" id="cBor">0</span>boring</div>
+      <div class="pill neutral"><span class="big" id="cAns">0</span>answered</div>
+    </div>
+    <div class="learned" id="learned">Tap through the deck and I'll learn what you find worth chasing.</div>
+  </div>
+
+  <div class="actions">
+    <button class="exp" id="exportBtn">Export verdicts</button>
+    <button class="reset" id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<!-- Intro popup: shown once automatically, reopenable via the About button -->
+<div class="modal center" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="introcard">
+    <h3 id="introTitle">What is this?</h3>
+    <div class="body">
+      The six calls you made last round drove round 3 — so this deck mirrors them, and quotes your own
+      words on each card. <b>Receipts (6):</b> for each call, what it produced, checked against
+      <b>DFT / CCSD(T)</b> — including the one ask I did not close (the branch ratio). <b>Aim (5):</b>
+      the round-4 options, including one worth double-checking: on 2 isomerizations UMA tracked the
+      gold-standard (CCSD(T)) more closely than mPW1PW91/6-31G(d) did — 2 data points, not a verdict.
+      Tap a reaction on each card; on the Aim cards the comment <i>is</i> the point.
+    </div>
+    <button class="start" id="introStart" type="button">Start reviewing</button>
+  </div>
+</div>
+
+<!-- Export sheet -->
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3>Export verdicts</h3>
+    <p>Compact JSON of every reaction + comment. The agent ingests this next loop. Copy, or select-all the box below (plaintext fallback).</p>
+    <textarea id="exportText" readonly spellcheck="false"></textarea>
+    <div class="mbtns">
+      <button class="copy" id="copyBtn">Copy to clipboard</button>
+      <button id="closeBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   DATA — real content pulled from HYPOTHESES.md, UMA_FLAWS.md, DFT_REQUESTS.md
+   Two lanes: "blocker" (needs a number / fork decision) and "triage" (taste).
+   ========================================================================== */
+
+const CARDS = [
+  /* ------------------------- ACT 1 · RECEIPTS (6) ------------------------ */
+  {
+    id: "R6", lane: "blocker", ref: "Your call last round · UMA-vs-xTB rule set",
+    title: "The rule set you asked for: when is UMA worth it over xTB?",
+    l1: "Your call last round", l2: "The catch you named", l3: "What we found", lAsk: "The ask",
+    why: "interesting — “is a conf search at UMA superior? is there a clear rule set by size / bonding / atoms? compare efficiencies.”",
+    pred: "A UMA global basin isn’t automatically the right one, and speed matters — the rule has to say WHEN to spend UMA.",
+    conf: "high", confText: "6 systems, DFT-refined",
+    result: "For species that stay one constitution (neutral chains / alcohols, cyclic cations, heteroatom-bearing) UMA’s global basin IS the DFT global in 4/4 refined; xTB’s sits 0.5–3.1 kcal above every time. xTB is 10–40× faster/conf on CPU (erased by GPU). Rule: xTB for the wide first sweep, UMA for the ranked shortlist that feeds DFT; ALWAYS connectivity-filter reactive acyclic cations (they cyclize mid-relaxation). Real-minima window ~1–4 kcal.",
+    ask: "Is this the decision rule you wanted, or stress-test it on a class you don’t yet trust? (👍 · ❓ · ⏸)",
+    commentHint: "Rule good enough? A system class to stress-test it on?"
+  },
+  {
+    id: "A1", lane: "blocker", ref: "Your call last round · dynamics / branch ratios",
+    title: "The branch ratio vs experiment — the one call I did NOT close",
+    l1: "You asked us to", l2: "What it needed", l3: "Where it actually stands", lAsk: "The ask",
+    why: "You said “chase”: compare our ensemble-dynamics product ratios to established / experimental / the experimental collaborator numbers (the dynamics-driven branching in carbocation cascades).",
+    pred: "A real branch ratio needs many trajectories converged to a number, not just a demo that the dynamics engine runs stably.",
+    conf: "med", confText: "partial — honest",
+    result: "The engine checks out: UMA molecular dynamics conserves energy, gives an unbiased 50:50 split on a deliberately symmetric branch point (the control that SHOULD be 50:50), and stays stable on the real α-terpinyl branch point. But the actual number — a product ratio to compare against a measured/computed one — is NOT delivered: plain constant-energy MD doesn’t converge a ratio; that needs an enhanced-sampling free-energy method (metadynamics / transition-path sampling), which UMA-on-GPU now makes affordable. This is the one thing you asked for last round that is still open.",
+    ask: "Make this round-4 headline #1? Name a documented bifurcation (a the experimental collaborator system) to target. (➡️ chase · 👍 · ⏸)",
+    commentHint: "Which documented / experimental bifurcation should I target?"
+  },
+  {
+    id: "A2", lane: "blocker", ref: "Your call last round · barriers & transition states",
+    title: "Barriers + dyotropic — delivered, and I had to correct myself",
+    l1: "You asked us to", l2: "Why it matters", l3: "What we found", lAsk: "The ask",
+    why: "You said “chase”: test transition-state / barrier accuracy, including weird ones like dyotropic rearrangements.",
+    pred: "Mechanism is decided by transition states, and a rigid coordinate scan is not a real transition state — it can invent a barrier that isn’t there.",
+    conf: "high", confText: "proper MEP · self-corrected",
+    result: "My first-pass “barriers” (from rigid scans) turned out to be artifacts of the scan. A proper minimum-energy-path search (climbing-image NEB) shows the carbocation 1,2-hydride / 1,2-methyl shifts — and the dyotropic double-shift — are essentially barrierless, and UMA agrees with DFT (~0). On a REAL terpene cyclization barrier, UMA lands within 0.4 kcal/mol of DFT. So UMA gets the low barriers that set terpene regiochemistry right — but I have NOT yet tested a genuinely high (≥10 kcal/mol) saddle.",
+    ask: "Trust the low-barrier result; want the high-barrier / IRC stress test next? (👍 · ➡️ do IRC · ⏸)",
+    commentHint: "A high-barrier reaction (electrocyclic / less-facile cyclization) to stress-test?"
+  },
+  {
+    id: "A3", lane: "blocker", ref: "Your call last round · retraining / correcting UMA",
+    title: "Retraining: does toy-cation training transfer? No — and here’s why",
+    l1: "You asked us to", l2: "Non-planar cations (you flagged)", l3: "What we found", lAsk: "The ask",
+    why: "You said “chase”: pick a justified set of molecules to correct UMA on, and check whether training on simple unsubstituted cations actually improves the real, applicable ones — and to include non-planar cations.",
+    pred: "For a cheap correction to be worth it, it has to transfer from the toy cations to the real substituted ones you actually care about.",
+    conf: "high", confText: "transfer test ran",
+    result: "First, the non-planar / bridgehead cations you flagged: UMA is within 2.5 kcal/mol of DFT there (xTB is off by 23–30) — so UMA already handles them. The retraining transfer FAILS, though: UMA’s error jumps around unpredictably from one molecule to the next, so a correction fit to the bare toy cations doesn’t help the substituted ones (whose error is already ~1 kcal), and forcing a single global correction actually makes the good ones worse. Conclusion: don’t bolt on a correction — instead flag the narrow problem cases and send just those to DFT, or retrain with proper high-level labels plus a “is-this-in-range” gate. (Written up in the retraining plan.)",
+    ask: "Is “gate + defer” acceptable, or build the gated CCSD(T) retrain for real? (👍 gate is fine · ➡️ build it · ⏸)",
+    commentHint: "Gate-and-defer, or actually build the gated retrain?"
+  },
+  {
+    id: "A4", lane: "blocker", ref: "Your call last round · scale to bigger terpenes",
+    title: "Scale to di-/sesquiterpene at your level of theory — holds",
+    l1: "You asked us to", l2: "Why it matters", l3: "What we found", lAsk: "The ask",
+    why: "You found this “interesting”: test on applicable / well-documented systems (taxadiene, the experimental collaborator papers) at your level of theory, mPW1PW91/6-31G(d).",
+    pred: "At monoterpene size (C10) DFT keeps up, so UMA’s speed edge is modest; at sesqui-/di-terpene size (C15/C20) the conformer and cascade space outruns DFT — that’s where UMA has to earn it.",
+    conf: "high", confText: "C10 → C15 → C20",
+    result: "UMA’s conformer search runs all the way to C20 (taxa-4,11-diene, structure intact), and across C10 → C15 → C20 it reproduces the DFT energy ordering within 2.5 kcal/mol at mPW1PW91/6-31G(d) — your level. The tertiary-vs-secondary ring-cation ordering that drives cyclization is reproduced to ≤2.6 kcal across C6–C8 rings. (Running DFT/CCSD(T)/UMA in parallel on cloud GPUs removed the speed ceiling that used to make this impractical.)",
+    ask: "Solid enough to build terpene energetics on at scale, or want a specific documented cascade run end-to-end? (👍 · ❓ · ⏸)",
+    commentHint: "A specific the experimental collaborator cascade to run end-to-end?"
+  },
+  {
+    id: "A5", lane: "blocker", ref: "Your call last round · what paper is this?",
+    title: "Both papers — standard protocols tested; not unusable",
+    l1: "You said", l2: "What you asked to test", l3: "What we found", lAsk: "The ask",
+    why: "You said “both”: discuss the failures, but a model isn’t unusable for conformer search or MD just because it has flaws — so test the standard protocols, the energy range of real minima, and constrained TS searches if feasible.",
+    pred: "The “it’s usable” claim has to survive an ordinary-protocol test, not just hand-picked wins.",
+    conf: "high", confText: "protocols run",
+    result: "Standard conformer protocol tested (that’s the rule set in the first card; real low-energy conformers cluster within ~1–4 kcal/mol); MD is stable; transition-state search via NEB works. So no — it’s not unusable; UMA is DFT-quality across the real carbocation / terpene domain. On the flaw side, the failures sharpened to three narrow edges (bare empty-orbital cations, halogen-bridged cations, and spin-state energies) plus one new caveat (last card).",
+    ask: "Does the framing hold — usability paper + flaw catalog, both? (see the last card) (👍 · ➡️ · ⏸)",
+    commentHint: "Framing still right? Anything missing from the usability case?"
+  },
+
+  /* ---------------------- ACT 2 · AIM — round-4 options ------------------- */
+  {
+    id: "N1", lane: "triage", ref: "Round 4 · something to check, not a conclusion",
+    title: "On 2 isomerizations, the UMA–DFT gap may trace to the 6-31g(d) reference, not UMA",
+    l1: "What I saw", l2: "The numbers (and the caveat)", l3: "A tentative reading", lAsk: "Your call",
+    why: "Everything is anchored to mpw1pw91/6-31g(d). Two isomerizations I first read as UMA errors (keto-enol; ring↔chain) look, on a closer check, like the gap might sit with the small-basis reference rather than UMA. I want to flag it, not claim it.",
+    pred: "At CCSD(T)/def2-TZVP on these cases: UMA is ≤1.3 kcal from CCSD(T), 6-31g(d) ~4 kcal away. Caveat, stated plainly: it’s only 2 comparisons, single-points on DFT geometries, and def2-TZVP is not the exact / CBS limit — so this is suggestive, not settled.",
+    conf: "med", confText: "n=2 · not settled",
+    result: "IF it holds up with more cases: a UMA–DFT gap wouldn’t automatically be a UMA error — on empty-p / bare-cation character DFT still looks right (cyclopropyl cation UMA −48 kcal vs CCSD(T)), but on bonding-type isomerizations the small basis may be a real contributor. I’d want 2–3 more cases before either of us leans on it.",
+    ask: "Worth pinning down? Should I add a few more isomerizations at CCSD(T) before we trust this, or is it not worth the compute? (➡️ pin it down · 👍 · ⏸)",
+    commentHint: "Worth chasing? Or over-reading 2 data points?",
+    number: false
+  },
+  {
+    id: "N2", lane: "triage", ref: "Round 4 · option — finish the branch ratio",
+    title: "The branch ratio, done properly",
+    l1: "The question", l2: "Why it matters", l3: "What it’d take", lAsk: "Your call",
+    why: "The dynamics card above (card 2) is a partial: the engine is validated but the actual ratio isn’t converged. This is the option to go finish it — to deliver the product-ratio number you asked for.",
+    pred: "Product ratios in bifurcating cascades are set by dynamics, not barriers — resolving one needs enhanced sampling (metadynamics / umbrella / TPS), now affordable on UMA-GPU, with DFT verifying the decisive points.",
+    conf: "", confText: "",
+    result: "A free-energy branch ratio on a documented terpene bifurcation, vs the published / experimental number.",
+    ask: "Round-4 headline? Which system? (➡️ chase · 👍 · ⏸ — name it in the comment)",
+    commentHint: "Which bifurcation, and vs whose number?",
+    number: false
+  },
+  {
+    id: "N3", lane: "triage", ref: "Round 4 · option — hard transition states",
+    title: "High-barrier transition-state stress test",
+    l1: "The question", l2: "Why it matters", l3: "What it’d take", lAsk: "Your call",
+    why: "The barriers card (card 3) only covers near-barrierless shifts. Whether UMA nails a genuinely high (≥10 kcal/mol) saddle is untested — and that’s where the “explore fast with UMA, refine with DFT” workflow lives or dies.",
+    pred: "Find the saddle properly (NEB → eigenvector-following), confirm it’s a real transition state (one imaginary frequency), trace it down both sides (IRC), UMA vs DFT — on a real high-barrier reaction.",
+    conf: "", confText: "",
+    result: "A verified UMA barrier at a true saddle, beyond the 0.4-kcal low-barrier result.",
+    ask: "Worth it, and on what reaction? (➡️ chase · 👍 · ⏸)",
+    commentHint: "A high-barrier reaction worth verifying?",
+    number: false
+  },
+  {
+    id: "N4", lane: "triage", ref: "Round 4 · decision — how much breadth is enough",
+    title: "How much more breadth is worth it? (I over-produced this round)",
+    l1: "Honest note", l2: "What was signal vs padding", l3: "The one loose end", lAsk: "Your call",
+    why: "Round 3 ran ~102 comparisons total. Being straight with you: ~26 of the last batch were confirmatory breadth that just re-confirmed what we already knew — UMA ≈ DFT across the normal in-domain cases.",
+    pred: "The real signal came from a handful of gold-standard (CCSD(T)) tie-breakers, not the breadth. More same-type isomer comparisons have diminishing returns.",
+    conf: "", confText: "",
+    result: "One loose end I won’t assert without checking: azulene vs naphthalene (~4.5 kcal) is flagged as a UMA aromatic signature but is NOT yet CCSD(T)-verified — after two same-shaped flags dissolved, I don’t trust it yet.",
+    ask: "Is the domain “covered” — stop breadth, spend only on the targeted follow-ups? And: close azulene, or drop it? (👍 stop breadth · ➡️ one more class · ✋ close azulene)",
+    commentHint: "Set my stopping rule. Any class still untrusted? Azulene: close or drop?",
+    number: false
+  },
+  {
+    id: "N5", lane: "triage", ref: "Round 4 · decision — the paper",
+    title: "The paper: usability + flaw catalog — which leads?",
+    l1: "The fork", l2: "Option A — the flaw catalog", l3: "Option B — the usability story", lAsk: "Your call",
+    why: "You said “both” last time. The reference-sensitivity note (the previous card) is a possible supporting point, but it’s only 2 data points — I would not headline it, and I don’t want to oversell it to you.",
+    pred: "Lead with the failure map + the fix: where a general MLIP breaks on reactive intermediates (empty-p, the one CCSD(T)-confirmed flaw) and how to gate it. Audience: comp-chem / ML.",
+    conf: "", confText: "",
+    result: "Lead with the workflow: UMA as a DFT-quality cheap engine for carbocations — explore at scale, verify survivors with DFT — with the reference-sensitivity as a small supporting observation, not a “beats DFT” claim. Audience: phys-org / NP.",
+    ask: "A, B, or B-with-A-as-the-caveat-section? Which leads? (👍 A · ➡️ B · ❓ both)",
+    commentHint: "Which headline leads?",
+    number: false
+  }
+];
+
+/* ============================================================================
+   STATE — persisted in localStorage
+   ========================================================================== */
+const STORE_KEY = "feedback_inbox_iter3_v1";
+let state = loadState();
+let idx = state.lastIdx || 0;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* ignore corrupt store */ }
+  return { responses: {}, lastIdx: 0 };
+}
+function saveState() {
+  state.lastIdx = idx;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function respFor(id) {
+  if (!state.responses[id]) state.responses[id] = { reaction: null, note: null };
+  return state.responses[id];
+}
+
+// Escape user text before injecting it back into innerHTML (comment restore).
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+}
+
+/* ============================================================================
+   REACTIONS config
+   ========================================================================== */
+const REACTIONS = [
+  { key: "interesting",  emoji: "👍", label: "interesting" },
+  { key: "boring",       emoji: "👎", label: "boring" },
+  { key: "verify",       emoji: "❓", label: "verify" },
+  { key: "chase",        emoji: "➡️", label: "chase" },
+  { key: "wrong-struct", emoji: "✋", label: "wrong struct" },
+  { key: "hold",         emoji: "⏸", label: "hold" }
+];
+
+/* ============================================================================
+   RENDER
+   ========================================================================== */
+const cardEl   = document.getElementById("card");
+const progFill = document.getElementById("progFill");
+const progText = document.getElementById("progText");
+
+function render() {
+  const c = CARDS[idx];
+  const r = respFor(c.id);
+  const laneClass = c.lane === "blocker" ? "blocker" : "triage";
+  const laneName  = c.lane === "blocker" ? "Receipt" : "Aim";
+  const answered  = !!r.reaction;
+
+  // Build reaction buttons
+  const rbtns = REACTIONS.map(rx => `
+    <button class="rbtn ${r.reaction === rx.key ? "on" : ""}" data-react="${rx.key}" aria-pressed="${r.reaction === rx.key}">
+      <span class="emoji">${rx.emoji}</span>${rx.label}
+    </button>`).join("");
+
+  // Optional free-text comment — on EVERY card (blocker and triage).
+  // Never required; taps alone submit. Value is HTML-escaped so stray
+  // characters (e.g. "</textarea>") can't break the markup on re-render.
+  // Per-card placeholder tuned to this card's question; generic fallback.
+  const commentHint = c.commentHint
+    || "Anything — a priority, why it matters, or just 'chase' / 'skip'.";
+  const commentBlock = `
+    <div class="commentwrap">
+      <div class="label">Comment (optional)</div>
+      <textarea id="noteIn" class="notein" maxlength="400" rows="3"
+                placeholder="${escapeHtml(commentHint)}"
+                aria-label="comment">${escapeHtml(r.note ?? "")}</textarea>
+    </div>`;
+
+  cardEl.innerHTML = `
+    <span class="lane ${laneClass}"><span class="dot"></span>${laneName}${answered ? '<span class="done-badge">✓ logged</span>' : ""}</span>
+    <span class="idtag">${c.ref}</span>
+    <h2>${c.title}</h2>
+
+    <div class="row">
+      <div class="label">${c.l1 || "Why it matters"}</div>
+      <div class="val">${c.why}</div>
+    </div>
+    <div class="row">
+      <div class="label">${c.l2 || "My prediction"}</div>
+      <div class="val">${c.pred}${c.confText ? `<span class="conf ${c.conf}">${c.confText}</span>` : ""}</div>
+    </div>
+    <div class="row">
+      <div class="label">${c.l3 || "Observed"}</div>
+      <div class="val">${c.result}</div>
+    </div>
+
+    <div class="ask">
+      <div class="label">${c.lAsk || "The ask"}</div>
+      <div class="qtext">${c.ask}</div>
+    </div>
+
+    <div class="reactions">${rbtns}</div>
+    ${commentBlock}
+  `;
+
+  // Wire reaction buttons
+  cardEl.querySelectorAll("[data-react]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const k = btn.getAttribute("data-react");
+      const rr = respFor(c.id);
+      rr.reaction = (rr.reaction === k) ? null : k;   // tap again to clear
+      saveState();
+      render();
+      updateTaste();
+    });
+  });
+
+  // Wire the comment box (persist on input; never blocks submit)
+  const noteIn = document.getElementById("noteIn");
+  if (noteIn) noteIn.addEventListener("input", () => {
+    const rr = respFor(c.id);
+    rr.note = noteIn.value.trim() || null;
+    saveState();
+  });
+
+  // Progress
+  progText.textContent = `${idx + 1} / ${CARDS.length}`;
+  progFill.style.width = `${Math.round(((idx + 1) / CARDS.length) * 100)}%`;
+  document.getElementById("prevBtn").disabled = idx === 0;
+  document.getElementById("nextBtn").disabled = idx === CARDS.length - 1;
+  document.getElementById("nextBtn").textContent = idx === CARDS.length - 1 ? "End" : "Next ›";
+
+  updateTaste();
+}
+
+/* ============================================================================
+   TASTE MODEL — static heuristic, illustrative
+   ========================================================================== */
+function updateTaste() {
+  let interesting = 0, boring = 0, answered = 0;
+  let intFlaws = 0, intConfirm = 0, borConfirm = 0;
+
+  for (const c of CARDS) {
+    const r = state.responses[c.id];
+    if (!r || !r.reaction) continue;
+    answered++;
+    // A card is a "flaw/finding" if it's a blocker or a flaw-derived triage card.
+    const isConfirmation = /confirmation/i.test(c.ref);
+    if (r.reaction === "interesting" || r.reaction === "chase") {
+      interesting++;
+      if (isConfirmation) intConfirm++; else intFlaws++;
+    }
+    if (r.reaction === "boring") {
+      boring++;
+      if (isConfirmation) borConfirm++;
+    }
+  }
+
+  document.getElementById("cInt").textContent = interesting;
+  document.getElementById("cBor").textContent = boring;
+  document.getElementById("cAns").textContent = answered;
+
+  const learned = document.getElementById("learned");
+  if (answered === 0) {
+    learned.innerHTML = "Tap through the deck and I'll learn what you find worth chasing.";
+  } else if (intFlaws > intConfirm && (borConfirm > 0 || intConfirm === 0) && intFlaws >= 2) {
+    learned.innerHTML = "<b>Learned:</b> you find flaws more interesting than confirmations — I'll surface fewer confirmations next digest and lead with the anomalies.";
+  } else if (intConfirm >= intFlaws && intConfirm >= 2) {
+    learned.innerHTML = "<b>Learned:</b> you value confirmations too — I'll keep reporting clean wins alongside the flaws.";
+  } else {
+    learned.innerHTML = `<b>Learned:</b> ${interesting} chase / ${boring} boring so far — a few more taps and I'll tune the next digest to your taste.`;
+  }
+}
+
+/* ============================================================================
+   NAVIGATION — buttons, keyboard, swipe
+   ========================================================================== */
+function go(delta, animate) {
+  const next = idx + delta;
+  if (next < 0 || next >= CARDS.length) return;
+  if (animate) {
+    // slide the outgoing card
+    cardEl.classList.add("anim");
+    cardEl.style.transform = `translateX(${delta > 0 ? -40 : 40}px)`;
+    cardEl.style.opacity = "0";
+    setTimeout(() => {
+      idx = next; saveState(); render();
+      cardEl.style.transform = `translateX(${delta > 0 ? 40 : -40}px)`;
+      requestAnimationFrame(() => {
+        cardEl.style.transform = "translateX(0)";
+        cardEl.style.opacity = "1";
+      });
+    }, 150);
+  } else {
+    idx = next; saveState(); render();
+  }
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => go(-1, true));
+document.getElementById("nextBtn").addEventListener("click", () => go(1, true));
+
+document.addEventListener("keydown", e => {
+  // Don't navigate cards while the intro popup is open
+  if (document.getElementById("introModal").classList.contains("show")) return;
+  if (e.key === "ArrowLeft")  go(-1, true);
+  if (e.key === "ArrowRight") go(1, true);
+});
+
+/* --- touch swipe (horizontal); ignore when starting on an input --- */
+let touchX = 0, touchY = 0, swiping = false;
+cardEl.addEventListener("touchstart", e => {
+  if (e.target.closest("input, textarea")) return;   // let the comment box work normally
+  touchX = e.touches[0].clientX;
+  touchY = e.touches[0].clientY;
+  swiping = true;
+  cardEl.classList.remove("anim");
+}, { passive: true });
+
+cardEl.addEventListener("touchmove", e => {
+  if (!swiping) return;
+  const dx = e.touches[0].clientX - touchX;
+  const dy = e.touches[0].clientY - touchY;
+  if (Math.abs(dx) > Math.abs(dy)) {          // horizontal intent
+    cardEl.style.transform = `translateX(${dx * 0.6}px)`;
+    cardEl.style.opacity = String(1 - Math.min(Math.abs(dx) / 400, 0.4));
+  }
+}, { passive: true });
+
+cardEl.addEventListener("touchend", e => {
+  if (!swiping) return;
+  swiping = false;
+  const dx = e.changedTouches[0].clientX - touchX;
+  cardEl.classList.add("anim");
+  if (dx < -60 && idx < CARDS.length - 1) {   // swipe left → next
+    go(1, true);
+  } else if (dx > 60 && idx > 0) {            // swipe right → back
+    go(-1, true);
+  } else {                                    // snap back
+    cardEl.style.transform = "translateX(0)";
+    cardEl.style.opacity = "1";
+  }
+}, { passive: true });
+
+/* ============================================================================
+   EXPORT — compact JSON, clipboard, plaintext fallback
+   ========================================================================== */
+const modal = document.getElementById("modal");
+const exportText = document.getElementById("exportText");
+
+function buildExport() {
+  const verdicts = CARDS.map(c => {
+    const r = state.responses[c.id] || {};
+    // Every card carries a reaction + an optional free-text comment now.
+    return {
+      id: c.id,
+      lane: c.lane,
+      title: c.title,
+      reaction: r.reaction || null,
+      comment: (r.note || null)
+    };
+  });
+  const answered = verdicts.filter(v => v.reaction).length;
+  return {
+    campaign: "Mechanism study round 3 (H201–H331, DFT/CCSD(T)-checked)",
+    exported_at: new Date().toISOString(),
+    summary: {
+      total: CARDS.length,
+      answered,
+      interesting: verdicts.filter(v => ["interesting","chase"].includes(v.reaction)).length,
+      boring: verdicts.filter(v => v.reaction === "boring").length,
+      verify: verdicts.filter(v => v.reaction === "verify").length,
+      hold: verdicts.filter(v => v.reaction === "hold").length,
+      wrong_structure: verdicts.filter(v => v.reaction === "wrong-struct").length
+    },
+    verdicts
+  };
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  exportText.value = JSON.stringify(buildExport(), null, 2);
+  modal.classList.add("show");
+});
+document.getElementById("closeBtn").addEventListener("click", () => modal.classList.remove("show"));
+modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  const txt = exportText.value;
+  let ok = false;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(txt);
+      ok = true;
+    }
+  } catch (e) { ok = false; }
+  if (!ok) {
+    // plaintext fallback: select the textarea for manual copy
+    exportText.focus();
+    exportText.select();
+    try { ok = document.execCommand("copy"); } catch (e) {}
+  }
+  toast(ok ? "Copied to clipboard" : "Select the text and copy manually");
+});
+
+/* ============================================================================
+   RESET + toast
+   ========================================================================== */
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Clear all your reactions and comments?")) return;
+  state = { responses: {}, lastIdx: 0 };
+  idx = 0;
+  saveState();
+  render();
+  toast("Cleared");
+});
+
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1900);
+}
+
+/* ============================================================================
+   INTRO POPUP — greets once, then remembers (localStorage), reopenable
+   ========================================================================== */
+const INTRO_SEEN_KEY = "uma_inbox_intro_seen_v1";
+const introModal = document.getElementById("introModal");
+const introStart = document.getElementById("introStart");
+const aboutBtn   = document.getElementById("aboutBtn");
+let introPrevFocus = null;
+
+function openIntro() {
+  introPrevFocus = document.activeElement;
+  introModal.classList.add("show");
+  introStart.focus();                       // sane focus on the dismiss button
+}
+function closeIntro(markSeen) {
+  introModal.classList.remove("show");
+  if (markSeen) {
+    try { localStorage.setItem(INTRO_SEEN_KEY, "1"); } catch (e) {}
+  }
+  // Return focus somewhere sensible for keyboard users
+  if (introPrevFocus && introPrevFocus.focus) introPrevFocus.focus();
+  else if (aboutBtn) aboutBtn.focus();
+}
+
+introStart.addEventListener("click", () => closeIntro(true));
+aboutBtn.addEventListener("click", openIntro);
+// Click on the dimmed scrim (outside the card) dismisses too
+introModal.addEventListener("click", e => { if (e.target === introModal) closeIntro(true); });
+// Keyboard-dismissible
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && introModal.classList.contains("show")) closeIntro(true);
+});
+
+// Show automatically on first visit only
+let introSeen = false;
+try { introSeen = localStorage.getItem(INTRO_SEEN_KEY) === "1"; } catch (e) {}
+
+/* ============================================================================
+   BOOT
+   ========================================================================== */
+if (idx >= CARDS.length) idx = 0;
+render();
+if (!introSeen) openIntro();
+</script>
+</body>
+</html>

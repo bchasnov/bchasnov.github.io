@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iteration 3 — plan — will-chem</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;
+    --quote:#3f7a52;--quote-bg:#eef5f0;--shadow:0 6px 24px rgba(20,25,35,.08),0 1px 3px rgba(20,25,35,.06);
+    --radius:16px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;
+    --ink-faint:#7c848e;--line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;
+    --code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;--shadow:0 8px 28px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.5);}}
+  :root[data-theme="dark"]{--bg:#0f1216;--panel:#1a1f26;--ink:#e9edf2;--ink-soft:#b0b8c1;--ink-faint:#7c848e;
+    --line:#2a313a;--line-2:#363f4a;--accent:#6b93ff;--accent-ink:#0b0e12;--code-bg:#11161c;--quote:#7fc99a;--quote-bg:#18241d;}
+  :root[data-theme="light"]{--bg:#f4f5f7;--panel:#fff;--ink:#1a1d21;--ink-soft:#52585f;--ink-faint:#868d95;
+    --line:#e2e5e9;--line-2:#d3d7dd;--accent:#3563e0;--accent-ink:#fff;--code-bg:#f2f3f5;--quote:#3f7a52;--quote-bg:#eef5f0;}
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.62;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:.7rem 1rem;font-size:.85rem;display:flex;gap:.9rem;align-items:center;flex-wrap:wrap;}
+  .bar a{color:var(--accent);text-decoration:none;} .bar a:hover{text-decoration:underline;} .bar .sep{color:var(--ink-faint);}
+  main{max-width:46rem;margin:0 auto;padding:1.5rem 1.15rem 5rem;}
+  .doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.5rem;}
+  .doc>*:first-child{margin-top:0;}
+  h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.01em;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  h2{font-size:1.25rem;margin:2rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--line);}
+  h3{font-size:1.05rem;margin:1.4rem 0 .4rem;} h4{font-size:.95rem;margin:1.1rem 0 .3rem;color:var(--ink-soft);}
+  p{margin:.7rem 0;} a{color:var(--accent);}
+  ul,ol{padding-left:1.4rem;margin:.7rem 0;} li{margin:.28rem 0;}
+  hr{border:none;border-top:1px solid var(--line);margin:1.6rem 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;overflow-x:auto;}
+  pre code{background:none;padding:0;font-size:.82rem;line-height:1.5;}
+  blockquote{margin:.9rem 0;padding:.5rem .95rem;border-left:3px solid var(--quote);background:var(--quote-bg);border-radius:0 8px 8px 0;color:var(--ink-soft);}
+  blockquote p{margin:.35rem 0;}
+  .tablewrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch;}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;}
+  th,td{border:1px solid var(--line-2);padding:.45rem .6rem;text-align:left;vertical-align:top;}
+  th{background:var(--code-bg);font-weight:600;}
+  .src{margin-top:1.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center;}
+  .grouphead{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:1.6rem 0 .4rem;}
+  .doc>.grouphead:first-of-type{margin-top:.6rem;}
+</style>
+<script>
+(function(){var KEY='will-docs-theme';
+try{var t=localStorage.getItem(KEY); if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+window.__toggleTheme=function(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+var next=cur==='dark'?'light':'dark';el.setAttribute('data-theme',next);
+try{localStorage.setItem(KEY,next);}catch(e){}};})();
+</script>
+</head>
+<body>
+<div class="bar">
+  <a href="../">&larr; Inbox</a><span class="sep">/</span><a href="./">Docs</a>
+  <span class="sep">·</span>
+  <a href="#" onclick="__toggleTheme();return false;">Toggle theme</a>
+</div>
+<main>
+<article class="doc">
+<h1 id="iteration-3-launch-brief-h201h300">Iteration 3 — launch brief (H201–H300)</h1>
+<p><strong>You are the iteration-3 agent.</strong> Iterations 1–2 built and DFT/CCSD(T)-confirmed
+a failure map of UMA on carbocation chemistry; the domain reviewer (the reviewer the experimental collaborator,
+the experimental collaborator group → the aromaticity group) has now triaged round 2 and said <em>chase</em>. Your job:
+run ~100 hypotheses (H201–H300) driven by the reviewer's verdicts, keeping the same rigor.</p>
+<p>Branch: <code>uma-carbocation-study/iteration-3</code> (you are on it). Commit each batch.</p>
+<h2 id="read-first">Read first</h2>
+<ul>
+<li><code>feedback/verdicts_2026-07-22.json</code> — the reviewer's round-2 reactions + comments (the mandate).</li>
+<li><code>NEXT_ROUND_3.md</code> — the reviewer's verdicts decoded into workstreams.</li>
+<li><code>SUMMARY_ITER2.md</code>, <code>UMA_FLAWS.md</code>, <code>RETRAIN_SPEC.md</code> — what's already established.</li>
+<li><code>CLAUDE.md</code> — the standing loop discipline.</li>
+</ul>
+<h2 id="environment">Environment</h2>
+<p>Fresh container? Run <code>bash setup_env.sh</code> (installs ase/rdkit/tblite + torch/
+fairchem for UMA + pyscf/geometric for DFT; needs <code>HF_TOKEN</code> with gate access to
+facebook/UMA, or a checkpoint at <code>uma_core/weights/uma-s-1p1.pt</code>).</p>
+<h2 id="tooling-already-in-place-reuse-it-do-not-rebuild">Tooling already in place (reuse it — do not rebuild)</h2>
+<ul>
+<li><code>uma_core/iter2.py</code> — dual-method harness: <code>compare()</code> (isomeric UMA+xTB),
+  <code>stab_ladder()</code> (isodesmic hydride transfer), <code>relax_multistart</code>, conformer
+  fingerprints, durable logging to <code>results/iter2_results.json</code>.</li>
+<li><code>uma_core/mechanisms2.py</code> — H101–H200 + the declarative registry (<code>REG*</code>);
+  add new hypotheses as functions or registry rows.</li>
+<li><code>uma_core/run_dft.py</code> — PySCF DFT/CCSD(T). <strong>Round-3 DFT uses the reviewer's level of
+  theory: mPW1PW91/6-31G(d)</strong> → <code>xc="mpw1pw"</code>, <code>basis="6-31g*"</code> (see <code>round3.py</code>).</li>
+<li><code>uma_core/synergy.py</code> — dense UMA conformer sweep → cluster basins →
+  DFT-refine. This is the engine for W1 (conformer rule set) and W3 (scale-up).</li>
+<li><code>uma_core/round3.py</code> — H201 non-planar pyramidalization scan (already runs).</li>
+</ul>
+<h2 id="the-mandate-the-reviewers-verdicts-workstreams-in-priority-order">The mandate (the reviewer's verdicts → workstreams), in priority order</h2>
+<p>Every hypothesis passes the rigor gates: multi-start / validate the structure,
+cross-check (xTB and/or DFT), anchor to literature or <strong>mPW1PW91/6-31G(d)</strong>.</p>
+<p><strong>W1 — Conformer-search rule set</strong> <em>(the reviewer's richest ask: R6 "interesting" + A5)</em>.
+Is UMA <em>significantly</em> better than xTB for conformer search, and <strong>for which
+systems</strong>? Across a matrix spanning size (C₅→C₂₀), bonding (saturated / allylic /
+non-classical), and heteroatoms: measure whether the relevant low/reactive
+conformer is found, the window width needed, wall-clock efficiency, and
+minimum quality after DFT single-points. <strong>Deliverable: a rule set keyed on
+size/bonding/atoms</strong> + the energy range of minima (the reviewer's "standard conformational
+search protocols, determine energy range for minima"). Engine: <code>synergy.py</code>.</p>
+<p><strong>W2 — Non-planar carbocations</strong> <em>(A3: "relevant for mechanistic rearrangements")</em>.
+Does UMA get the pyramidalization penalty right? <code>round3.py</code> H201 scans it for
+tert-butyl/isopropyl vs mPW1PW91/6-31G(d); extend to a bridgehead-strain series
+(adamantyl, bicyclo[2.2.2]/[2.2.1]/[1.1.1] bridgeheads) and forced-non-planar
+ring cations. Where does the penalty error appear?</p>
+<p><strong>W3 — Scale-up on documented systems</strong> <em>(A4)</em>. Taxadiene and the experimental collaborator cascade
+cations (C₂₀); UMA conformer search + energetics vs <strong>mPW1PW91/6-31G(d)</strong> and
+their published numbers. Validates UMA at natural-product scale.</p>
+<p><strong>W4 — Barriers / transition states</strong> <em>(A2, chase)</em>. UMA vs DFT for 1,2-H /
+1,2-Me shift and cyclization barriers via NEB; <strong>include a dyotropic
+rearrangement TS</strong> (the reviewer's explicit ask); attempt constrained TS searches (A5).
+This is the untested regime — UMA failed at stretched bonds (F₂), and a TS is
+stretched bonding, so expect trouble and measure it.</p>
+<p><strong>W5 — Rational Δ-learning set + transfer test</strong> <em>(A3, chase)</em>. Justify the
+augmentation set (bare-empty-p <strong>and non-planar</strong> carbocations); fit a residual
+correction on top of UMA; <strong>test whether it improves <em>applicable</em> substituted /
+mechanistic systems</strong>, not just the training toys (the reviewer's exact concern).</p>
+<h2 id="framing-the-reviewers-a5-both">Framing (the reviewer's A5 "both")</h2>
+<p>The paper is <strong>both</strong> an MLIP-methods failure/fix taxonomy <strong>and</strong> a demonstration
+that UMA is usable for conformational searching / MD despite the failures. Keep
+both threads: document where it breaks, and prove where it works.</p>
+<h2 id="loop-discipline-from-claudemd">Loop discipline (from CLAUDE.md)</h2>
+<p>One hypothesis at a time, wrinkle-driven; multi-start always; validate every
+structure; keep a dated <code>DIARY_ITER3.md</code>, the <code>HYPOTHESES_ITER3.md</code> ledger, and
+the <code>UMA_FLAWS.md</code> log; commit each batch; report failures plainly. Two judgments
+running: the reviewer's taste (novel / domain-relevant → the paper) and yours (true /
+artifact → the science). Do the boring correctness work — it licenses the
+exciting claims.</p>
+<h2 id="start-here">Start here</h2>
+<ol>
+<li><code>bash setup_env.sh</code></li>
+<li><code>python3 -m uma_core.round3</code> (H201, non-planar — confirms the pipeline).</li>
+<li>Build the W1 conformer-search matrix (highest-value, answers the reviewer's richest
+   comment), then proceed W2→W5.</li>
+</ol>
+</article>
+<p class="src">Rendered from will-chem <code>iteration-3-plan</code> @ <code>835748c</code> · snapshot 2026-07-24</p>
+</main>
+</body>
+</html>
