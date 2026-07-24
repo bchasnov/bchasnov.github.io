@@ -88,13 +88,15 @@ anchored failure map — and prescribes the data that would fix UMA.</p>
 stabilization, and prescribe the training data that would fix it — DFT-free
 (UMA + xTB + literature).</strong></p>
 </blockquote>
-<p>Every candidate flaw must pass three <strong>rigor gates</strong> before it is reported:
-1. <strong>Multi-start / symmetry-break</strong> — prove it is not a sampling artifact
-   (broaden beyond iteration 1's 4 fixed seeds).
-2. <strong>xTB cross-check</strong> — GFN2-xTB on the same isodesmic/isomeric comparison;
-   agreement strengthens, disagreement is itself a finding.
-3. <strong>Literature / novelty check</strong> (web search) — unreported → headline; known →
-   cite. Log every check.</p>
+<p>Every candidate flaw must pass three <strong>rigor gates</strong> before it is reported:</p>
+<ol>
+<li><strong>Multi-start / symmetry-break</strong> — prove it is not a sampling artifact
+   (broaden beyond iteration 1's 4 fixed seeds).</li>
+<li><strong>xTB cross-check</strong> — GFN2-xTB on the same isodesmic/isomeric comparison;
+   agreement strengthens, disagreement is itself a finding.</li>
+<li><strong>Literature / novelty check</strong> (web search) — unreported → headline; known →
+   cite. Log every check.</li>
+</ol>
 <h2 id="workstreams">Workstreams</h2>
 <h3 id="a-infrastructure-refactor-prerequisite-do-first">A. Infrastructure refactor (prerequisite, do first)</h3>
 <p>The monolith blocks a <em>designed</em> series. Refactor the experiment layer into a

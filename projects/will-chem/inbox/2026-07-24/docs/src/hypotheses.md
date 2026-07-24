@@ -117,6 +117,7 @@ Status: ✅ confirmed · ❌ refuted · 🌀 mixed/nuanced · ⏳ in progress ·
 | H100 | Neryl → α-terpinyl cyclization (capstone) | ✅ | open-chain 12.1 kcal/mol above cyclic (loop closed) |
 
 ## ⚑ UMA flaws / limitations found → see `UMA_FLAWS.md`
+
 - **Antiaromatic distortion missed for the cyclopentadienyl cation** (H14/H15) —
   but NOT for neutral cyclobutadiene (H27), so it's the open-shell/degenerate
   cation specifically, not antiaromatics in general.
@@ -138,6 +139,7 @@ multi-start is mandatory. Next (H11): multi-start the C4H7⁺ surface
 (cyclopropylcarbinyl ⇌ cyclobutyl ⇌ bicyclobutonium) properly.
 
 ## Backlog / candidate directions (will be reordered by wrinkles)
+
 - **Continuum:** ethyl cation H-bridge; β-C–C vs β-C–H vs β-C–Si bridging ladder;
   cyclopropylcarbinyl σ-participation (bicyclobutonium); phenonium (aryl) bridge.
 - **Rearrangement stereoelectronics (the experimental collaborator):** antiperiplanar bond migrates;
@@ -168,6 +170,7 @@ acidity/basicity ladders, ring strain (incl. cubane 166 kcal/mol), cation–π,
 H-bonds (water dimer, bifluoride, RAHB), dispersion, and Hessian/frequencies.
 
 ## Where UMA fails or needs a spot-check (see `UMA_FLAWS.md`)
+
 1. **Antiaromatic cyclopentadienyl cation** — misses Jahn–Teller distortion
    (triplet-ground-state/degenerate; H14/H15). Neutral cyclobutadiene & the
    cyclopropenyl anion are fine (H27/H30) — the blind spot is narrow.

@@ -1,7 +1,7 @@
 # Iteration 3 — summary (H201–H261)
 
 **One sentence:** driven by the reviewer's round-2 "chase" verdicts, iteration 3
-benchmarks UMA *as a tool* against the reviewer's own level of theory (mPW1PW91/6-31G(d))
+benchmarks UMA *as a tool* against the study's level of theory (mPW1PW91/6-31G(d))
 and finds it is **strongly preferred over xTB for non-planar/bridgehead cations
 and for ranking conformers of stable species, usable-with-care for low reaction
 barriers, and — importantly — not fixable in its one failure regime by a cheap
@@ -9,7 +9,7 @@ correction**; the paper is therefore *both* a failure/fix taxonomy *and* a
 demonstration that UMA is a real conformational-search / mechanism engine (the reviewer's A5
 "both").
 
-All round-3 DFT is **mPW1PW91/6-31G(d)** (the experimental collaborator/the experimental collaborator level), so numbers
+All round-3 DFT is **mPW1PW91/6-31G(d)** (the study's level), so numbers
 compare directly to their papers. Modules: `w1_conformers.py`, `w2_bridgehead.py`,
 `w3_scaleup.py`, `w4_barriers.py`, `w5_deltalearn.py`, `round3.py`.
 
@@ -23,6 +23,7 @@ there a clear rule set? Energy range for minima?"*
 
 Matrix across size (C8→C15), bonding, and heteroatoms; UMA vs xTB vs
 DFT-refined ranking. **Rule set:**
+
 1. **Accuracy —** for any species that stays one constitutional isomer (neutral
    chains/alcohols, cyclic cations, N/O-bearing), **UMA-relaxed conformers rank
    better than xTB**: UMA's global basin is the DFT global in **4/4** such systems
@@ -65,7 +66,7 @@ for this system class" result — exactly the mechanistically central
 (Wagner–Meerwein, Bredt-constrained) class.
 
 ### W3 — Scale-up to documented systems (your A4)
-*"Test for well-documented systems (taxadiene, the experimental collaborator), their level of theory
+*"Test for well-documented systems (taxadiene, the collaborator's own systems), their level of theory
 (mpw1pw91/6-31gd)."*
 
 UMA conformer search runs at diterpene scale: **taxa-4,11-diene (C20H32, verified
@@ -120,6 +121,7 @@ and gated.
 ---
 
 ## The paper (your A5 "both")
+
 - **Failure/fix taxonomy:** the one confirmed disease (bare-empty-p
   over-stabilization) + the new mild TS under-penalization (W4), plus the honest
   result that the disease is **not cheaply correctable** (W5) — so the fix is a
@@ -134,7 +136,7 @@ and gated.
 ## Extended wrinkle-driven loop (H244–H256) — inferred from the reviewer's verdicts
 Beyond the five commissioned workstreams, one hypothesis at a time (each wrinkle
 generating the next), toward the broader program the reviewer's responses imply. The result
-is a **unified UMA error map** at the reviewer's level of theory:
+is a **unified UMA error map** at the study's level of theory:
 
 | regime | UMA vs mPW1PW91/6-31G(d) | fixability |
 |---|---|---|
@@ -268,5 +270,5 @@ open-shell / antiaromatic / spin-state energetics (and there, beyond single-ref
 DFT too); reactive-acyclic-cation conformer search (connectivity-filter);
 quantitative branch ratios (enhanced sampling). **Everything in the ordinary /
 terpene / non-classical / bridgehead carbocation domain — statics, conformer
-ranking, low mechanistic barriers, and MD stability — is UMA-reliable at the
-the experimental collaborator level, now at natural-product scale.**
+ranking, low mechanistic barriers, and MD stability — is UMA-reliable at the study's
+level, now at natural-product scale.**

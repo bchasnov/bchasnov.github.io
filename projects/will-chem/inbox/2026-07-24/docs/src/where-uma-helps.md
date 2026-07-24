@@ -20,6 +20,7 @@ intermediates, each with many conformers, connected by competing
 Wagner–Meerwein/hydride-shift/cyclization steps. This is precisely the
 combinatorial space DFT cannot afford to enumerate — and precisely where UMA is
 both **fast and validated**:
+
 - **Fast:** UMA relaxed 20–34 conformers of a C₁₀H₁₇⁺ terpene cation into
   6–11 basins in **2–4 minutes**; the same DFT sweep is ~0.6–0.8 h (`synergy.py`).
 - **Reliable here:** cyclic tertiary/allylic terpene cations match DFT to
@@ -52,6 +53,7 @@ screen for *relative* trends in ordinary cations.
 ## Where UMA helps for aromaticity / hyperconjugation work
 Closed-shell aromaticity/hyperconjugation/σ-delocalization is a UMA **strength**,
 now validated:
+
 - Hyperconjugation geometric fingerprints (β-C–H +18 mÅ, β-Si bridging +30.7,
   cross-confirmed at xTB H121), aromatic stabilization energies (benzene ASE ~37,
   tropylium, cyclopropenyl), resonance delocalization (allyl/benzyl/carboxylate/
@@ -65,9 +67,10 @@ now validated:
 ### 5. Non-planar / bridgehead carbocations — UMA ≫ xTB (iteration 3, W2)
 The mechanistically central "can't-planarize" ions (Bredt-constrained bridgeheads,
 Wagner–Meerwein intermediates) are a UMA **strength**, and the place its advantage
-over xTB is largest. Against mPW1PW91/6-31G(d) (the experimental collaborator level), on a
+over xTB is largest. Against mPW1PW91/6-31G(d) (the study's level), on a
 structure-validated bridgehead series (1-adamantyl, bicyclo[2.2.2]oct-1-yl,
 1-norbornyl):
+
 - **UMA isodesmic stability error ≤ 2.5 kcal/mol**, even for the strongly
   Bredt-destabilized 1-norbornyl bridgehead cation (−13 kcal vs tert-butyl⁺).
 - **GFN2-xTB, run end-to-end (its own optimized geometry), errs by 23–30
@@ -85,6 +88,7 @@ structure-validated bridgehead series (1-adamantyl, bicyclo[2.2.2]oct-1-yl,
 ## The guardrails (hand these to DFT / higher theory)
 The reactive-intermediate edge cases the aromaticity group cares about are exactly
 UMA's failures — so the map matters most there:
+
 - **Bare-empty-p cations** — methyl, non-α-substituted vinyl, primary /
   non-classical small bridged cations, β-halonium open forms. Over-stabilized by
   up to +100 kcal/mol (DFT/CCSD(T)-confirmed). Never let UMA rank these.

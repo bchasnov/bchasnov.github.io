@@ -123,6 +123,7 @@ contaminate the conclusions. No DFT used.*
 
 Two independent cases where UMA makes a bridged/non-classical small cation
 implausibly *low* relative to the alternative:
+
 - **β-halonium (H23):** bridged halonium sit 49–67 kcal/mol from the open forms.
 - **vinyl cation (H37):** the bridged (non-classical) C2H3⁺ comes out **52.8
   kcal/mol below** the classical vinyl cation; the known gap is only ~4–5 kcal/mol.
@@ -238,6 +239,7 @@ where UMA disagrees with **both** xTB **and** experiment.
 
 **Mechanism (H104, H110, H111, H122).** The error scales with how *bare* the
 empty p is, and is quenched by *any* donation into it:
+
 - **σ-hyperconjugation:** methyl (0 β-CH) +128 → ethyl (3) +7.8 → isopropyl +0.9
   → tert-butyl 0. One alkyl group removes 94%.
 - **π-donation:** N/O (iminium/oxocarbenium) → residual ~15; Cl → ~0; **F only
@@ -250,6 +252,7 @@ bite: UMA reproduces the terpene C₁₀H₁₇⁺ manifold and Markovnikov ener
 bare-empty-p / non-classical / primary intermediates.
 
 ## Demoted (were candidate flaws; the cross-check clears UMA)
+
 - **Bridgehead (1-norbornyl, iter1 FLAW 3 / B4 / T6):** UMA −3.1 vs 2-norbornyl,
   but **xTB −3.6** reproduces it → NOT UMA-specific; needs DFT (H103).
 - **F₂ / charge-shift bond lengths (iter1 FLAW 6):** UMA is ~15–19 mÅ short on
@@ -271,7 +274,7 @@ CCSD(T) labels; leave the already-correct ordinary/terpene cations alone).
 
 ---
 
-# ITERATION 3 ADDENDUM (H201–H261, mPW1PW91/6-31G(d) = the experimental collaborator level)
+# ITERATION 3 ADDENDUM (H201–H261, mPW1PW91/6-31G(d) = the study's level)
 
 ## RESOLVED — bridgehead/non-planar cations are a UMA STRENGTH, not a flaw (H201–H203)
 The iter-1 FLAW 3 worry is overturned at DFT (details in FLAW 3 above and

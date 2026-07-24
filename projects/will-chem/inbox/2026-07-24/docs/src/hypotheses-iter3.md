@@ -35,9 +35,9 @@ Status: ✅ confirmed · ➖ demoted/not-UMA-specific · 🌀 nuanced · ⏳ ope
 | H247 | W6 dynamics | Does UMA MD conserve energy *through* a reactive barrier crossing (the stretched-bond region)? | ✅ | sec-butyl hot NVE (900 K, 1.5 ps): hydride scrambling occurs, composition intact, drift **0.78 meV/atom** — energy conserved through the reactive region. The W4 static under-penalization does **not** corrupt dynamical conservation. (H247b isobutyl→tert-butyl pending.) |
 | H248 | W4 meta | Are UMA barriers a systematic linear function of DFT barriers (correctable), not random? | ✅ | **UMA_barrier = 0.953·DFT − 0.71, R²=0.9999** across 0.2–96 kcal (residuals ≤0.6 kcal). The TS under-penalization is a near-perfect ~5% under-slope — a *single scalar* recovers quantitative barriers. Constructive flip-side of the W4 "flaw". |
 | H249 | W4 meta | Does the linear barrier correction TRANSFER (train low-barrier, predict high)? — a foil to W5 | 🌀 | Partially: trained on <15-kcal barriers (slope 0.875), it over-predicts the 46/96-kcal barriers by +3/+8 kcal → the ratio **rises with barrier height** (low barriers proportionally more under-penalized). So the correction is *regime-local*, not one universal constant — but **transfers within the carbocation-shift window that matters**. **Key contrast: the barrier flaw is smooth/monotonic/correctable (unlike W5's non-smooth, uncorrectable stabilization flaw). UMA has two flaw types with opposite fixability.** |
-| H250 | non-classical | Does UMA over-stabilize the C4H7⁺ non-classical manifold (cyclopropylcarbinyl/cyclobutyl/homoallyl) at mPW1PW91/6-31G(d)? | ✅ | No — **cross-confirmed, max |UMA−DFT| = 2.3 kcal** (UMA slightly *under*-stabilizes cyclobutyl). The over-stabilization flaw does NOT extend to σ-delocalized larger carbocations — it's confined to the smallest *bare* bridged ions (vinyl, halonium). |
-| H251 | non-classical | Does UMA get the 2-norbornyl (non-classical archetype) vs 1-norbornyl (bridgehead) gap right at mPW1PW91/6-31G(d)? | ✅ | Yes — UMA −3.1 vs DFT −2.8 (UMA−DFT 0.4 kcal). Both put the bridgehead ~3 kcal below 2-norbornyl → the iter-1 "bridgehead below secondary" is **real chemistry, cross-confirmed at the experimental collaborator level**, and UMA handles the non-classical archetype correctly. |
-| H252 | terpene/A4 | Does UMA reproduce the monoterpene C10H17⁺ branch-point ordering at mPW1PW91/6-31G(d)? | ✅ | Yes — **max |UMA−DFT| = 1.4 kcal and the ordering is preserved** (pinyl < terpinen-4-yl < α-terpinyl in both). UMA reproduces the terpene-cyclization branch point at the reviewer's exact level of theory. Closes R4/A4 rigorously. |
+| H250 | non-classical | Does UMA over-stabilize the C4H7⁺ non-classical manifold (cyclopropylcarbinyl/cyclobutyl/homoallyl) at mPW1PW91/6-31G(d)? | ✅ | No — **cross-confirmed, max \|UMA−DFT\| = 2.3 kcal** (UMA slightly *under*-stabilizes cyclobutyl). The over-stabilization flaw does NOT extend to σ-delocalized larger carbocations — it's confined to the smallest *bare* bridged ions (vinyl, halonium). |
+| H251 | non-classical | Does UMA get the 2-norbornyl (non-classical archetype) vs 1-norbornyl (bridgehead) gap right at mPW1PW91/6-31G(d)? | ✅ | Yes — UMA −3.1 vs DFT −2.8 (UMA−DFT 0.4 kcal). Both put the bridgehead ~3 kcal below 2-norbornyl → the iter-1 "bridgehead below secondary" is **real chemistry, cross-confirmed at the study's level**, and UMA handles the non-classical archetype correctly. |
+| H252 | terpene/A4 | Does UMA reproduce the monoterpene C10H17⁺ branch-point ordering at mPW1PW91/6-31G(d)? | ✅ | Yes — **max \|UMA−DFT\| = 1.4 kcal and the ordering is preserved** (pinyl < terpinen-4-yl < α-terpinyl in both). UMA reproduces the terpene-cyclization branch point at the study's exact level of theory. Closes R4/A4 rigorously. |
 | H253 | aromaticity | tropylium (6π) vs benzyl (C7H7⁺) aromatic stabilization at DFT | ✅ | Cross-confirmed (ordering right); UMA **under**-values the aromatic gap by 2.6 kcal. |
 | H254 | aromaticity | cyclopropenyl (2π) vs propargyl (C3H3⁺) at DFT | ✅ | Cross-confirmed; UMA under-values the aromatic gap by 2.8 kcal. |
 | H255 | resonance | allyl vs 2-propenyl (C3H5⁺) resonance at DFT | ✅ | Cross-confirmed; UMA under-values the resonance gap by 1.8 kcal. **Pattern (H253–255): UMA systematically *under*-stabilizes delocalized π/aromatic/resonance by ~2–3 kcal — a small, consistent bias, OPPOSITE in sign to the bare-empty-p over-stabilization.** |
@@ -45,8 +45,8 @@ Status: ✅ confirmed · ➖ demoted/not-UMA-specific · 🌀 nuanced · ⏳ ope
 
 ## Infrastructure — parallel DFT on Modal (removes the throughput ceiling)
 
-| # | Item | Status | Key result |
-|---|---|---|---|
+| # | Workstream | Hypothesis | Status | Key result |
+|---|---|---|---|---|
 | — | Modal DFT backend (`modal_dft.py`), calibrated vs local PySCF | ✅ | `pip install 'modal[api-proxy-support]'` routes gRPC through the sandbox proxy; MODAL_TOKEN_* already set. Remote mPW1PW91/6-31G(d) on tert-butyl cation = **−4285.996393 eV vs local −4285.996395 eV (0.0023 meV)** → lossless. Single points/optimizations now fan out in parallel via `.starmap`; ~10 s/warm call after a one-time image build. **The DFT bottleneck that capped W3/W4/A1 is lifted.** |
 | H257 | W2 rigor | Full DFT//DFT bridgehead validation (parallel on Modal) — does the //UMA shortcut hold across the whole series? | ✅ | **8 DFT geometry optimizations in 182 s parallel** (vs ~1–2 h serial). DFT//DFT Stab (adamantyl +12.6, [2.2.2] +3.2, norbornyl −12.9) == the H202 DFT//UMA values within 0.2 kcal → shortcut validated on all three. **UMA within 2.6 kcal of the gold-standard DFT//DFT** — the W2 headline holds against fully-optimized DFT, not just //UMA. |
 
@@ -216,7 +216,7 @@ error, case-dependent; UMA is not uniformly closer to CCSD(T). Do NOT generalize
 from cyclopropenyl. Needs tropylium/benzene at CCSD(T) to see which way it leans
 (H277).
 
-| # | comparison | CCSD(T) | mPW1PW/6-31G(d) err | UMA err vs CCSD(T) |
+| # | Workstream | Hypothesis | Status | Key result |
 |---|---|---|---|---|
 | H275 | W4 saddle | Real DFT saddle-point barrier for 2-butyl 1,2-H shift (vs rigid-scan upper bound) | ✅ | DFT TS-opt → **0.34 kcal (n_imag=0): the shift is essentially barrierless.** The rigid-scan upper bound (3.1) over-estimated by ~3 kcal, as expected; UMA tracks DFT at the flat TS (−0.5 kcal). No genuine saddle here → tried a higher-barrier case (H276). |
 | H276 | W4 saddle | DFT saddle for pinacolyl 1,2-methyl shift (n_imag=1 target) | ➖ | **TS-opt did NOT yield a validated saddle** (n_imag=0; barrier 16.9 > rigid-scan 11.9, physically impossible for a true saddle → the DFT reactant likely slid to the tertiary product, inflating ΔE). **Honest limit: quick `geometric transition=True` from a midpoint guess is unreliable for floppy carbocation shifts** — robust saddles need NEB-CI guesses + eigenvector-following + reactant-identity checks. The rigid-scan barriers (H240–H245, with the H248 linear correction) remain the usable estimate. |
@@ -263,6 +263,7 @@ H203 for these rigid minima). "UMA−DFT" is the max over the set.
 front: these are single comparisons each (n=1–2), single-points on DFT geometries,
 and CCSD(T)/def2-TZVP is not the exact/CBS limit — so read the arrows below as
 "which way the evidence points," not "settled."*
+
 1. **Keto–enol (H313/H314) — the gap may sit with the reference, not UMA.** H324
    (CCSD(T)/def2-TZVP) puts enol−keto at 12.68 (acetone) / 13.49 (butanone); UMA is
    −0.96 / −1.30 from CCSD(T), mPW1PW91/6-31G(d) is +4.08 / +3.59 from it — i.e. on
@@ -303,6 +304,7 @@ the reviewer's core domain (cation stability ladders) plus ring/chain isomerism.
 | H323 | C8H9⁺ o-/m-/p-methylbenzyl | 0.5 | ✅ excellent |
 
 **CCSD(T)/def2-TZVP spot-checks of the flagged edges (suggestive, n small):**
+
 - **H324 keto-enol** — UMA within ~1 kcal of CCSD(T); DFT/6-31G(d) ~4 kcal from it.
   On these 2 molecules UMA is nearer CCSD(T). (re-frames H313/H314)
 - **H325 ring/chain** — UMA within ≤0.6 kcal of CCSD(T); DFT/6-31G(d) ~4 kcal
@@ -320,6 +322,7 @@ the reviewer's core domain (cation stability ladders) plus ring/chain isomerism.
 
 **A tentative rule (needs more anchoring):** when UMA and 6-31G(d) DFT disagree,
 which one is off may depend on the axis —
+
 - **empty-p / bare-cation character** → evidence points to **UMA** being off (H327:
   −48 kcal, and here DFT *and* CCSD(T) agree, so this direction is solid). Detect-
   and-defer, per W5.
@@ -356,6 +359,7 @@ structure-validated, and cross-checked against DFT (and CCSD(T) where a UMA–DF
 gap needed a gold-standard tie-breaker). Testing phase complete.
 
 ## Workstream tracker
+
 - **W1** conformer-search rule set (R6/A5) — ✅ H210–H216. **Rule set below.**
 - **W2** non-planar carbocations (A3) — ✅ H201 (ordinary), H202 (bridgehead series), H203 (//UMA validated). **Headline: for non-planar/bridgehead cations UMA ≫ xTB, matching DFT within 2.5 kcal.**
 - **W3** taxadiene / the experimental collaborator scale-up (A4) — ✅ H230/H231. **UMA conformer search runs at C20 (taxa-4,11-diene structure-validated intact); low conformers within ~4–7 kcal; mPW1PW91/6-31G(d) pipeline confirmed at C20 (326 s/SPE). DFT is the throughput ceiling → a cluster would let per-basin refinement keep pace with UMA.**
@@ -376,6 +380,7 @@ global basin is the DFT global.
 | farnesol | neutral floppy alcohol (O) | C15 | (no DFT) | — | 8.5 | 0.72 | 0..3.9 |
 
 **Rules (keyed on size / bonding / atoms):**
+
 1. **Accuracy:** for systems that stay one constitutional isomer (neutral chains/
    alcohols, cyclic cations, heteroatom-bearing), **UMA-relaxed conformers rank
    better than xTB** — UMA's global basin is the DFT global in 4/4 refined such

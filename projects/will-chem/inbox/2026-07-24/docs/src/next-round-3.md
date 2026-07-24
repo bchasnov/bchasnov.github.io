@@ -4,6 +4,7 @@ Source: `feedback/verdicts_2026-07-22.json`. Round 2 (H101–H200) is
 reviewer-validated; round 3 turns the reviewer's "chase" signals into a concrete program.
 
 ## Decoded verdicts
+
 - **Receipts accepted.** No pushback on methyl / vinyl / bridgehead (R1–R3);
   terpene questions "good enough, verified with DFT" (R4, hold); F₂ "boring, move
   on" (R5). The iteration-2 conclusions stand.

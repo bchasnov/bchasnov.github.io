@@ -1,13 +1,14 @@
 # Iteration 3 — launch brief (H201–H300)
 
 **You are the iteration-3 agent.** Iterations 1–2 built and DFT/CCSD(T)-confirmed
-a failure map of UMA on carbocation chemistry; the domain reviewer (the reviewer the experimental collaborator,
-the experimental collaborator group → the aromaticity group) has now triaged round 2 and said *chase*. Your job:
+a failure map of UMA on carbocation chemistry; the domain reviewer (whose work spans the experimental-group and
+aromaticity-group areas) has now triaged round 2 and said *chase*. Your job:
 run ~100 hypotheses (H201–H300) driven by the reviewer's verdicts, keeping the same rigor.
 
 Branch: `uma-carbocation-study/iteration-3` (you are on it). Commit each batch.
 
 ## Read first
+
 - `feedback/verdicts_2026-07-22.json` — the reviewer's round-2 reactions + comments (the mandate).
 - `NEXT_ROUND_3.md` — the reviewer's verdicts decoded into workstreams.
 - `SUMMARY_ITER2.md`, `UMA_FLAWS.md`, `RETRAIN_SPEC.md` — what's already established.
@@ -19,6 +20,7 @@ fairchem for UMA + pyscf/geometric for DFT; needs `HF_TOKEN` with gate access to
 facebook/UMA, or a checkpoint at `uma_core/weights/uma-s-1p1.pt`).
 
 ## Tooling already in place (reuse it — do not rebuild)
+
 - `uma_core/iter2.py` — dual-method harness: `compare()` (isomeric UMA+xTB),
   `stab_ladder()` (isodesmic hydride transfer), `relax_multistart`, conformer
   fingerprints, durable logging to `results/iter2_results.json`.
@@ -78,6 +80,7 @@ artifact → the science). Do the boring correctness work — it licenses the
 exciting claims.
 
 ## Start here
+
 1. `bash setup_env.sh`
 2. `python3 -m uma_core.round3` (H201, non-planar — confirms the pipeline).
 3. Build the W1 conformer-search matrix (highest-value, answers the reviewer's richest
